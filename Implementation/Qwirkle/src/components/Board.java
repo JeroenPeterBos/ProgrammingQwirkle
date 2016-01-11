@@ -47,7 +47,7 @@ public class Board {
 		updateBounds(p);
 	}
 	
-	public void updateBounds(Position p){
+	private void updateBounds(Position p){
 		if(p.x - 1 < xLow){ xLow = p.x - 1; }
 		if(p.x + 1 > xHigh){ xHigh = p.x + 1; }
 		

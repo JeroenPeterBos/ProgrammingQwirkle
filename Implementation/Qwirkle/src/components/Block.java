@@ -63,10 +63,4 @@ public class Block {
 		// TODO implement method such that Block.instance(block.toInt()).equals(block);
 		return null;
 	}
-	
-	public static void main(String[] args){
-		Block b = new Block(Color.GREEN, Shape.SQUARE);
-		System.out.println(b.toString());
-		System.out.println(b.toShortString());
-	}
 }
