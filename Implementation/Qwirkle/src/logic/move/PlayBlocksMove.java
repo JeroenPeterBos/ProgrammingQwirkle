@@ -88,12 +88,27 @@ public class PlayBlocksMove extends Move{
 			return false;
 		}
 		
+		// define orientation
+		
+		Board.RowOrientation ro;
+		
+		if(blocks.size() > 1){
+			if(allOnX){
+				ro = Board.RowOrientation.Y;
+			} else {
+				ro = Board.RowOrientation.X;
+			}
+		} else {
+			ro = Board.RowOrientation.UNDEFINED;
+		}
+		
 		// validate that the to be executed move creates valid rows
 		
 		blocks.sort(comp);
 		
-		List<Board.Row> rows = game.getBoard().getCreatingRows(this, allOnX ? Board.RowOrientation.X : Board.RowOrientation.Y);
+		List<Board.Row> rows = game.getBoard().getCreatingRows(this, ro);
 		for(Board.Row row: rows){
+			System.out.println("Checking " + row.toTUIString());
 			if(!game.getBoard().validRow(row)){
 				return false;
 			}
@@ -174,6 +189,24 @@ public class PlayBlocksMove extends Move{
 	
 	public Entry getEntry(int i){
 		return blocks.get(i);
+	}
+	
+	public boolean hasPosition(Position p){
+		for(Entry e : blocks){
+			if(p.equals(e.getCoords())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Block getBlock(Position p){
+		for(Entry e : blocks){
+			if(p.equals(e.getCoords())){
+				return e.getBlock();
+			}
+		}
+		return null;
 	}
 	
 	public class Entry{
