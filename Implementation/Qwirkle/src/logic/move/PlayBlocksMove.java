@@ -30,7 +30,7 @@ public class PlayBlocksMove extends Move{
 	
 	public void execute() throws IllegalMoveStateException{
 		if(!valid){
-			throw new IllegalMoveStateException();
+			throw new IllegalMoveStateException(valid);
 		}
 		
 		for(Entry e: blocks){
@@ -86,8 +86,21 @@ public class PlayBlocksMove extends Move{
 			return false;
 		}
 		
-		// validate 
+		// validate that there are no equivalent blocks in the move
 		
+		for(int i = 0; i < blocks.size() - 1; i++){
+			for(int j = i + 1; j < blocks.size(); j++){
+				if(blocks.get(i).equals(blocks.get(j))){
+					return false;
+				}
+			}
+		}
+		
+		// validate that the to be executed move creates valid rows
+		
+		game.getBoard().
+		
+		calculateScore();
 		valid = true;
 		return valid;
 	}
@@ -95,7 +108,7 @@ public class PlayBlocksMove extends Move{
 	public void addBlock(Block b, Position p){
 		if(valid){
 			try {
-				throw new IllegalMoveStateException();
+				throw new IllegalMoveStateException(valid);
 			} catch (IllegalMoveStateException e) {
 				System.err.println(e.getMessage());
 			}
@@ -110,6 +123,32 @@ public class PlayBlocksMove extends Move{
 			}
 		}
 		blocks.add(new Entry(b, p));
+	}
+	
+	private void calculateScore(){
+		if(valid){
+			try {
+				throw new IllegalMoveStateException(valid);
+			} catch (IllegalMoveStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		// TODO calculate Score and put in score field
+	}
+	
+	public void unlock(){
+		if(!valid){
+			try {
+				throw new IllegalMoveStateException(valid);
+			} catch (IllegalMoveStateException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		
+		score = 0;
+		valid = false;
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //

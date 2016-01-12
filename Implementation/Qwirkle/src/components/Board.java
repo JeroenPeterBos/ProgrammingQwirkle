@@ -1,19 +1,23 @@
 package components;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import exceptions.PositionNotAvailableException;
 import exceptions.protocol.FirstPositionNotOriginException;
-import logic.move.PlayBlocksMove;
 
 public class Board {
-
+	
+	// ------------------------------- Instance Variables ------------------------------ //
+	
 	private ArrayList<Position> openPositions;
 	private Map<Position, Block> filledPositions;
 	
 	private int xLow = 0, xHigh = 0, yLow = 0, yHigh = 0;
+	
+	// ------------------------------- Constructors ------------------------------------ //
 	
 	public Board(){
 		this.openPositions = new ArrayList<Position>();
@@ -22,6 +26,8 @@ public class Board {
 		this.openPositions.add(new Position(0,0));
 	}
 	
+	// ------------------------------- Commands ---------------------------------------- //		
+		
 	public void fill(Position p, Block b){
 		if(filledPositions.size() == 0 && !p.equals(new Position(0,0))){
 			try {
@@ -63,10 +69,53 @@ public class Board {
 		openPosition(new Position(p.x, p.y-1));
 	}
 	
-	private void openPosition(Position p){
-		if(!openPositions.contains(p) && !filledPositions.containsKey(p)){
-			openPositions.add(p);
+	private void openPositionIn(Position p, List<Position> pos){
+		if(!pos.contains(p) && !filledPositions.containsKey(p)){
+			pos.add(p);
 		}
+	}
+	
+	private void openPosition(Position p){
+		openPositionIn(p, openPositions);
+	}
+	
+	public getCreatedRows(){
+		
+	}
+
+	// ------------------------------- Queries ----------------------------------------- //
+	
+	public boolean validRow(List<Block> row){
+		if(row.size() > 6 || row.size() < 1){
+			return false;
+		}
+		
+		// validate that there are only unique blocks in the row
+		
+		for(int i = 0; i < row.size() - 1; i++){
+			for(int j = i + 1; j < row.size(); j++){
+				if(row.get(i).equals(row.get(j))){
+					return false;
+				}
+			}
+		}
+		
+		boolean allSameColor = true;
+		boolean allSameShape = true;
+		
+		Block.Color c = row.get(0).getColor();
+		Block.Shape s = row.get(0).getShape();
+		
+		for(int i = 1; i < row.size(); i++){
+			if(!row.get(i).getColor().equals(c)){	allSameColor = false;	}
+			if(!row.get(i).getShape().equals(s)){	allSameShape = false;	}
+		}
+		
+		if(!allSameColor && !allSameShape){
+			return false;
+		}
+		
+		return true;
 	}
 	
 	public String toTUIString(){
@@ -94,6 +143,8 @@ public class Board {
 		return result;
 	}
 
+	// Internal class
+	
 	public class Position implements Comparable{
 		
 		public int x;
@@ -136,6 +187,7 @@ public class Board {
 		}
 	}
 	
+	// TODO remove testing method main
 	public static void main(String[] args){		
 		Board b = new Board();
 		

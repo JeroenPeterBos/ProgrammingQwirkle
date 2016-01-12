@@ -29,7 +29,7 @@ public class LocalGame extends HostGame{
 			System.out.println(getBoard().toTUIString());
 			
 			Move m = players.get(turn).determineMove();
-			while(!m.validate()){
+			while(!m.validate(players.get(turn))){
 				m = players.get(turn).determineMove();
 			}
 			
