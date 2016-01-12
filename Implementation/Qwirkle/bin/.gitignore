@@ -1,4 +1,7 @@
-/logic/
-/exceptions/
-/components/
 /TestFile.class
+/commands/
+/components/
+/exceptions/
+/logic/
+/network/
+/players/
