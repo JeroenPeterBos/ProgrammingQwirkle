@@ -30,10 +30,20 @@ public class Bag {
 		Collections.shuffle(blocks);
 	}
 	
+	public Block exchange(Block b){
+		Block res = getBlock();
+		blocks.add(b);
+		Collections.shuffle(blocks);
+		return res;
+	}
+	
 	public Block getBlock(){
 		return blocks.pop();
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	
+	public int noBlocks(){
+		return blocks.size();
+	}
 }

@@ -59,6 +59,16 @@ public class Block {
 		return color.c + Integer.toString(shape.s);
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		if(!(o instanceof Block)){
+			throw new IllegalArgumentException();
+		}
+		
+		Block b = (Block) o;
+		return b.getColor() == color && b.getShape() == shape;
+	}
+	
 	public static Block instance(int i){
 		// TODO implement method such that Block.instance(block.toInt()).equals(block);
 		return null;

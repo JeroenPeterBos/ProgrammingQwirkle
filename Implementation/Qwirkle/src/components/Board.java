@@ -6,6 +6,7 @@ import java.util.TreeMap;
 
 import exceptions.PositionNotAvailableException;
 import exceptions.protocol.FirstPositionNotOriginException;
+import logic.move.PlayBlocksMove;
 
 public class Board {
 

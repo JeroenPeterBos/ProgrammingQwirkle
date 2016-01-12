@@ -1,4 +1,6 @@
-/components/
-/network/
-/exceptions/
 /logic/
+/network/
+/Move/
+/players/
+/exceptions/
+/components/

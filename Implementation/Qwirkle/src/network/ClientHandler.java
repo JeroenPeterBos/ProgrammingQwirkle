@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import logic.game.ServerGame;
+
 public class ClientHandler extends Thread{
 
 	// ------------------------------- Instance Variables ------------------------------ //
