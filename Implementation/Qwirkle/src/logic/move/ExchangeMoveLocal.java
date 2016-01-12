@@ -28,11 +28,11 @@ public class ExchangeMoveLocal extends ExchangeMove{
 		}
 	}
 	
-	public boolean validate(){
+	public boolean validate(Player p){
 		if(game.getBag().noBlocks() < blocks.size()){
 			return false;
 		} else {
-			return super.validate();
+			return super.validate(p);
 		}
 	}
 	

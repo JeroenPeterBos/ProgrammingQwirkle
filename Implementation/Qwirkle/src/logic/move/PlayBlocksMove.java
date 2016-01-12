@@ -39,22 +39,68 @@ public class PlayBlocksMove extends Move{
 		}
 	}
 	
-	public boolean validate(){
-		boolean result = true;
+	public boolean validate(Player p){
+		// validate that its the current players turn and that the move has at least 1 block
+		
+		if(!p.equals(player) || blocks.size() < 1){
+			return false;
+		}
+		
+		// validate that player actually owns these blocks
+		
 		for(Entry e : blocks){
 			if(!player.hasBlock(e.getBlock())){
 				return false;
 			}
 		}
 		
+		// validate if all blocks are of one type or one shape and are in the same direction
 		
-		// TODO IMPLEMENT VALIDATION
+		boolean allSameColor = true;
+		boolean allSameShape = true;
+		Block.Color c = blocks.get(0).getBlock().getColor();
+		Block.Shape s = blocks.get(0).getBlock().getShape();
 		
-		valid = result;
-		return result;
+		boolean allOnX = true;
+		boolean allOnY = true;
+		int x = blocks.get(0).getCoords().x;
+		int y = blocks.get(0).getCoords().y;
+		
+		for(Entry e: blocks){
+			if(!e.getBlock().getColor().equals(c)){
+				allSameColor = false;
+			}
+			if(!e.getBlock().getShape().equals(s)){
+				allSameShape = false;
+			}
+			
+			if(e.getCoords().x != x){
+				allOnX = false;
+			}
+			if(e.getCoords().y != y){
+				allOnY = false;
+			}
+		}
+		
+		if((!allOnX && !allOnY) || (!allSameColor && !allSameShape)){
+			return false;
+		}
+		
+		// validate 
+		
+		valid = true;
+		return valid;
 	}
 	
 	public void addBlock(Block b, Position p){
+		if(valid){
+			try {
+				throw new IllegalMoveStateException();
+			} catch (IllegalMoveStateException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		
 		if(blocks.size() >= 6){
 			try {
 				throw new MoveFullException(blocks.size());

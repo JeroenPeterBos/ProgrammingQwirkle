@@ -24,7 +24,7 @@ public abstract class Move {
 	
 	public abstract void execute() throws IllegalMoveStateException;
 	
-	public abstract boolean validate();
+	public abstract boolean validate(Player p);
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	

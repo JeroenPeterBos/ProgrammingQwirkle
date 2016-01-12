@@ -32,7 +32,11 @@ public class ExchangeMove extends Move{
 		}
 	}
 	
-	public boolean validate(){
+	public boolean validate(Player p){
+		if(!p.equals(player)){
+			return false;
+		}
+		
 		boolean result = true;
 		for(Block b : blocks){
 			if(!player.hasBlock(b)){
