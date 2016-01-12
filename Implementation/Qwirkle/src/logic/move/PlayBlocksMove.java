@@ -1,11 +1,13 @@
 package logic.move;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import components.Block;
 import components.Board;
 import components.Board.Position;
+import components.Board.Row;
 import exceptions.IllegalMoveStateException;
 import exceptions.MoveFullException;
 import logic.game.Game;
@@ -17,6 +19,18 @@ public class PlayBlocksMove extends Move{
 	
 	private List<Entry> blocks;
 	private int score;
+	
+	private Comparator<Entry> comp = new Comparator<Entry>(){
+		@Override
+		public int compare(Entry e1, Entry e2){
+			if(e1.getCoords().x == e2.getCoords().x){
+				return e1.getCoords().y - e2.getCoords().y;
+			} else if(e1.getCoords().y == e2.getCoords().y){
+				return e1.getCoords().x - e2.getCoords().x;
+			}
+			throw new IllegalArgumentException();
+		}
+	};
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
@@ -54,26 +68,14 @@ public class PlayBlocksMove extends Move{
 			}
 		}
 		
-		// validate if all blocks are of one type or one shape and are in the same direction
-		
-		boolean allSameColor = true;
-		boolean allSameShape = true;
-		Block.Color c = blocks.get(0).getBlock().getColor();
-		Block.Shape s = blocks.get(0).getBlock().getShape();
+		// validate if all blocks are in the same direction
 		
 		boolean allOnX = true;
 		boolean allOnY = true;
 		int x = blocks.get(0).getCoords().x;
 		int y = blocks.get(0).getCoords().y;
 		
-		for(Entry e: blocks){
-			if(!e.getBlock().getColor().equals(c)){
-				allSameColor = false;
-			}
-			if(!e.getBlock().getShape().equals(s)){
-				allSameShape = false;
-			}
-			
+		for(Entry e: blocks){			
 			if(e.getCoords().x != x){
 				allOnX = false;
 			}
@@ -82,25 +84,22 @@ public class PlayBlocksMove extends Move{
 			}
 		}
 		
-		if((!allOnX && !allOnY) || (!allSameColor && !allSameShape)){
+		if((!allOnX && !allOnY)){
 			return false;
-		}
-		
-		// validate that there are no equivalent blocks in the move
-		
-		for(int i = 0; i < blocks.size() - 1; i++){
-			for(int j = i + 1; j < blocks.size(); j++){
-				if(blocks.get(i).equals(blocks.get(j))){
-					return false;
-				}
-			}
 		}
 		
 		// validate that the to be executed move creates valid rows
 		
-		game.getBoard().
+		blocks.sort(comp);
 		
-		calculateScore();
+		List<Board.Row> rows = game.getBoard().getCreatingRows(this, allOnX ? Board.RowOrientation.X : Board.RowOrientation.Y);
+		for(Board.Row row: rows){
+			if(!game.getBoard().validRow(row)){
+				return false;
+			}
+		}
+		
+		calculateScore(rows);
 		valid = true;
 		return valid;
 	}
@@ -125,7 +124,7 @@ public class PlayBlocksMove extends Move{
 		blocks.add(new Entry(b, p));
 	}
 	
-	private void calculateScore(){
+	private void calculateScore(List<Board.Row> rows){
 		if(valid){
 			try {
 				throw new IllegalMoveStateException(valid);
@@ -134,8 +133,12 @@ public class PlayBlocksMove extends Move{
 				e.printStackTrace();
 			}
 		}
+		int result = 0;
+		for(Row row : rows){
+			result += row.getBlocks().size();
+		}
 		
-		// TODO calculate Score and put in score field
+		score = result;
 	}
 	
 	public void unlock(){
@@ -154,11 +157,23 @@ public class PlayBlocksMove extends Move{
 	// ------------------------------- Queries ----------------------------------------- //
 	
 	public int getScore(){
+		if(!valid){
+			try {
+				throw new IllegalMoveStateException(valid);
+			} catch (IllegalMoveStateException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		
 		return score;
 	}
 	
 	public int getNoBlocks(){
 		return blocks.size();
+	}
+	
+	public Entry getEntry(int i){
+		return blocks.get(i);
 	}
 	
 	public class Entry{
@@ -178,5 +193,9 @@ public class PlayBlocksMove extends Move{
 		public Block getBlock(){
 			return block;
 		}
+	}
+	
+	public static void main(String[] args){
+		
 	}
 }

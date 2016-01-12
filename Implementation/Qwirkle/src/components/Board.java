@@ -1,14 +1,20 @@
 package components;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import exceptions.PositionNotAvailableException;
 import exceptions.protocol.FirstPositionNotOriginException;
+import logic.move.PlayBlocksMove;
 
 public class Board {
+	
+	public enum RowOrientation{
+		X, Y;
+	}
 	
 	// ------------------------------- Instance Variables ------------------------------ //
 	
@@ -79,36 +85,89 @@ public class Board {
 		openPositionIn(p, openPositions);
 	}
 	
-	public getCreatedRows(){
-		
+	public List<Row> getCreatingRows(PlayBlocksMove m, RowOrientation ro){
+		List<Row> rows = new LinkedList<Row>();
+		switch(ro){
+		case X:
+			Row r = new Row();
+			r.getBlocks().add(m.getEntry(0).getBlock());
+			
+			int x = m.getEntry(0).getCoords().x;
+			
+			int y = m.getEntry(0).getCoords().y;
+			while(filledPositions.containsKey(new Position(x, y - 1))){
+				r.getBlocks().add(filledPositions.get(new Position(x, y - 1)));
+				y--;
+			}
+			
+			y = m.getEntry(0).getCoords().y;
+			int i = 1;
+			while(filledPositions.containsKey(new Position(x, y + 1)) || m.getEntry(i).getCoords().equals(new Position(x, y + 1))){
+				if(filledPositions.containsKey(new Position(x, y + 1))){
+					r.getBlocks().add(filledPositions.get(new Position(x, y + 1)));
+				} else if (m.getEntry(i).getCoords().equals(new Position(x, y + 1))){
+					r.getBlocks().add(m.getEntry(i).getBlock());
+				}
+				y++;
+			}
+			break;
+		case Y:
+			Row r2 = new Row();
+			r2.getBlocks().add(m.getEntry(0).getBlock());
+			
+			int y2 = m.getEntry(0).getCoords().y;
+			
+			int x2 = m.getEntry(0).getCoords().x;
+			while(filledPositions.containsKey(new Position(x2-1, y2))){
+				r2.getBlocks().add(filledPositions.get(new Position(x2-1, y2)));
+				x2--;
+			}
+			
+			y = m.getEntry(0).getCoords().y;
+			int i2 = 1;
+			while(filledPositions.containsKey(new Position(x2 + 1, y2)) || m.getEntry(i2).getCoords().equals(new Position(x2 + 1, y2))){
+				if(filledPositions.containsKey(new Position(x2 + 1, y2))){
+					r2.getBlocks().add(filledPositions.get(new Position(x2 + 1, y)));
+				} else if (m.getEntry(i2).getCoords().equals(new Position(x2 + 1, y))){
+					r2.getBlocks().add(m.getEntry(i2).getBlock());
+				}
+				x2++;
+			}
+			break;
+		default:
+			throw new IllegalArgumentException();
+		}
+		return rows;
 	}
 
 	// ------------------------------- Queries ----------------------------------------- //
 	
-	public boolean validRow(List<Block> row){
-		if(row.size() > 6 || row.size() < 1){
+	public boolean validRow(Board.Row row){
+		if(row.getBlocks().size() > 6 || row.getBlocks().size() < 1){
 			return false;
 		}
 		
 		// validate that there are only unique blocks in the row
 		
-		for(int i = 0; i < row.size() - 1; i++){
-			for(int j = i + 1; j < row.size(); j++){
-				if(row.get(i).equals(row.get(j))){
+		for(int i = 0; i < row.getBlocks().size() - 1; i++){
+			for(int j = i + 1; j < row.getBlocks().size(); j++){
+				if(row.getBlocks().get(i).equals(row.getBlocks().get(j))){
 					return false;
 				}
 			}
 		}
 		
+		// validate that all blocks have or the same shape or the same color
+		
 		boolean allSameColor = true;
 		boolean allSameShape = true;
 		
-		Block.Color c = row.get(0).getColor();
-		Block.Shape s = row.get(0).getShape();
+		Block.Color c = row.getBlocks().get(0).getColor();
+		Block.Shape s = row.getBlocks().get(0).getShape();
 		
-		for(int i = 1; i < row.size(); i++){
-			if(!row.get(i).getColor().equals(c)){	allSameColor = false;	}
-			if(!row.get(i).getShape().equals(s)){	allSameShape = false;	}
+		for(int i = 1; i < row.getBlocks().size(); i++){
+			if(!row.getBlocks().get(i).getColor().equals(c)){	allSameColor = false;	}
+			if(!row.getBlocks().get(i).getShape().equals(s)){	allSameShape = false;	}
 		}
 		
 		if(!allSameColor && !allSameShape){
@@ -184,6 +243,28 @@ public class Board {
 			
 			Position p = (Position) o;
 			return p.x == x && p.y == y;
+		}
+	}
+	
+	public class Row{
+		
+		private List<Block> blocks;
+		private RowOrientation ro;
+		
+		public Row(){
+			this.blocks = new LinkedList<Block>();
+		}
+		
+		public List<Block> getBlocks(){
+			return blocks;
+		}
+		
+		public RowOrientation getRowOrientation(){
+			return ro;
+		}
+		
+		public void setRowOrientation(RowOrientation r){
+			ro = r;
 		}
 	}
 	
