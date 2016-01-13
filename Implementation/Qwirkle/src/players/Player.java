@@ -22,6 +22,14 @@ public abstract class Player {
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
+	/**
+	 * Constructor of player creates a new Player
+	 * the constructor sets name to n, hand to a new LinkedList<Block>(), 
+	 * score to and game to g
+	 * @param n
+	 * @param g
+	 */
+	
 	protected Player(String n, Game g){
 		this.name = n;
 		this.hand = new LinkedList<Block>();
@@ -31,7 +39,20 @@ public abstract class Player {
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
+	/**
+	 * determineMove will give the move decided by the computer or human
+	 * The move will be an exchangeMove or PlayBlocksMove, with specified blocks and coordinates
+	 * @return move
+	 */
+	
 	public abstract Move determineMove();
+	
+	/**
+	 * removeBlock removes a block of the player's hand
+	 * @throws HandEmptyException if the player's hand is empty
+	 * @throws BlockNotInHandException if the player doesn't have block b
+	 * @param b
+	 */
 	
 	public void removeBlock(Block b){
 		try {
@@ -49,6 +70,12 @@ public abstract class Player {
 		hand.remove(b);
 	}
 	
+	/**
+	 * giveBlock will give the player a new block
+	 * @throws HandFullException if the player's hand is full
+	 * @param b
+	 */
+	
 	public void giveBlock(Block b){
 		if(hand.size() >= 6){
 			try {
@@ -61,11 +88,21 @@ public abstract class Player {
 		hand.add(b);
 	}
 	
+	/**
+	 * addScore will add the score got from the turn to the total score
+	 * @param s
+	 */
+	
 	public void addScore(int s){
 		score += s;
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
+	
+	/**
+	 * 
+	 * @return
+	 */
 	
 	public int maxMove(){
 		int res = 1;
@@ -78,6 +115,13 @@ public abstract class Player {
 		}
 		return res;
 	}
+	
+	/**
+	 * maxSet checks what is the maximum length that can be done in a move
+	 * checks if the colour and shape are the same, the biggest set of both collections will be saved
+	 * @param b
+	 * @return biggest set
+	 */
 	
 	private int maxSet(Block b){
 		List<Block> set = new LinkedList<Block>();

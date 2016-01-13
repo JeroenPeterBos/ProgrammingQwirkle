@@ -20,7 +20,16 @@ public class PlayBlocksMove extends Move{
 	private List<Entry> blocks;
 	private int score;
 	
+
 	private Comparator<Entry> comp = new Comparator<Entry>(){
+		
+		/** 
+		 * Method compare compares the x and y coordinates.
+		 * One coordinate has to be equal to each other, otherways it is not a legal move
+		 * If the move is not legal, IllegalArgumentException() will be thrown
+		 * Returns the difference of the coordinate that is not equal to each other
+		 */
+		
 		@Override
 		public int compare(Entry e1, Entry e2){
 			if(e1.getCoords().x == e2.getCoords().x){
@@ -34,6 +43,13 @@ public class PlayBlocksMove extends Move{
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
+	/**
+	 * Constructor of PlayBlocksMove, uses the extended class Move.
+	 * @param p = player
+	 * @param g = game
+	 * blocks = new LinkedList<Entry>();
+	 */
+	
 	public PlayBlocksMove(Player p, Game g){
 		super(p, g);
 		
@@ -41,6 +57,11 @@ public class PlayBlocksMove extends Move{
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //
+	
+	/**
+	 * execute() fills the board with a specified block and removes block in the hand of the player
+	 * if the move is not valid, IllegalMoveStateException(valid) will be thrown
+	 */
 	
 	public void execute() throws IllegalMoveStateException{
 		if(!valid){
@@ -52,6 +73,16 @@ public class PlayBlocksMove extends Move{
 			game.getBoard().fill(e.getCoords(), e.getBlock());
 		}
 	}
+	
+	/**
+	 * validate checks the current player's turn if it are legal moves
+	 * It must be the current player's turn and he must have at least 1 block
+	 * The player must own the blocks he entered
+	 * The blocks must be placed in the same direction, x or y
+	 * Defines rowOrientation to use in the validation of the row, type/colour check
+	 * If all checks succeed, the move is valid, the score of the move will be calculated
+	 * @return valid
+	 */
 	
 	public boolean validate(Player p){
 		// validate that its the current players turn and that the move has at least 1 block
@@ -119,6 +150,14 @@ public class PlayBlocksMove extends Move{
 		return valid;
 	}
 	
+	/**
+	 * addBlock adds new blocks to the hand of the player, if the player misses blocks
+	 * Checks the validation of the move, if valid is false, IllegalMoveStateException(valid) will be thrown
+	 * Checks how many blocks the player has, if it are more then 6, MoveFullException will be thrown
+	 * @param b = block to be added
+	 * @param p = position where the block will be added
+	 */
+	
 	public void addBlock(Block b, Position p){
 		if(valid){
 			try {
@@ -139,6 +178,13 @@ public class PlayBlocksMove extends Move{
 		blocks.add(new Entry(b, p));
 	}
 	
+	/**
+	 * calculateScore calculates the score off the move
+	 * Checks the validation of the move, if valid is false, IllegalMoveStateException(valid) will be thrown
+	 * Checks all the rows that are changed by the move and calculates the total score
+	 * @param rows are all the rows that are changed by the move
+	 */
+	
 	private void calculateScore(List<Board.Row> rows){
 		if(valid){
 			try {
@@ -151,10 +197,19 @@ public class PlayBlocksMove extends Move{
 		int result = 0;
 		for(Row row : rows){
 			result += row.getBlocks().size();
+			if (row.getBlocks().size() == 6) {
+				result += 6;
+			}
 		}
 		
 		score = result;
 	}
+	
+	/**
+	 * unlock() makes it possible to add more moves
+	 * Sets valid to false and score to 0
+	 * Throws IllegalMoveStateException(valid) if valid is false
+	 */
 	
 	public void unlock(){
 		if(!valid){
@@ -171,6 +226,12 @@ public class PlayBlocksMove extends Move{
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	
+	/**
+	 * getScore will provide the score of the current player
+	 * If valid != true, an IllegalMoveStateException(valid) will be thrown
+	 * @return score
+	 */
+	
 	public int getScore(){
 		if(!valid){
 			try {
@@ -183,13 +244,30 @@ public class PlayBlocksMove extends Move{
 		return score;
 	}
 	
+	/**
+	 * getNoBlocks will provide the number of blocks that will be moved
+	 * @return blocks.size()
+	 */
+	
 	public int getNoBlocks(){
 		return blocks.size();
 	}
 	
+	/**
+	 * getEntry will give you the block of the i th move
+	 * @param i = the number of the move you want to know
+	 * @return block.get(i)
+	 */
+	
 	public Entry getEntry(int i){
 		return blocks.get(i);
 	}
+	
+	/**
+	 * hasPosition checks whether the position will have a move this turn
+	 * @param p
+	 * @return boolean
+	 */
 	
 	public boolean hasPosition(Position p){
 		for(Entry e : blocks){
@@ -199,6 +277,13 @@ public class PlayBlocksMove extends Move{
 		}
 		return false;
 	}
+	
+	/**
+	 * getBlock will return the block attached to the position
+	 * If the position hasn't a block, null will be returned
+	 * @param p
+	 * @return block
+	 */
 	
 	public Block getBlock(Position p){
 		for(Entry e : blocks){
@@ -214,21 +299,34 @@ public class PlayBlocksMove extends Move{
 		private Board.Position coords;
 		private Block block;
 		
+		/**
+		 * Entry is an constructor, which sets block to b and coords to p
+		 * @param b
+		 * @param p
+		 */
+		
 		public Entry(Block b, Position p){
 			this.coords = p;
 			this.block = b;
 		}
 		
+		/**
+		 * getCoords will get the block's coordinates
+		 * @return coords
+		 */
+		
 		public Board.Position getCoords(){
 			return coords;
 		}
+		
+		/**
+		 * getBlock will get the block
+		 * @return block
+		 */
 		
 		public Block getBlock(){
 			return block;
 		}
 	}
 	
-	public static void main(String[] args){
-		
-	}
 }
