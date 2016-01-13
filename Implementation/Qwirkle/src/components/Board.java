@@ -60,20 +60,17 @@ public class Board {
 	 * @param p the position where the block will be put
 	 * @param b the Block that will be added to the Board
 	 */
-	public void fill(Position p, Block b){
+	public boolean fill(Position p, Block b){
 		if(filledPositions.size() == 0 && !p.equals(new Position(0,0))){
 			try {
 				throw new FirstPositionNotOriginException(p);
 			} catch (FirstPositionNotOriginException e) {
 				System.err.println(e.getMessage());
+				return false;
 			}
 		}
 		if(!openPositions.contains(p)){
-			try {
-				throw new PositionNotAvailableException(p);
-			} catch (PositionNotAvailableException e) {
-				System.err.println(e.getMessage());
-			}
+			return false;
 		}
 		if(b == null){
 			throw new NullPointerException();
@@ -84,6 +81,7 @@ public class Board {
 		openNewPositions(p);
 		
 		updateBounds(p);
+		return true;
 	}
 	
 	/**
@@ -139,11 +137,16 @@ public class Board {
 		
 		System.out.println("Base orientation " + ro);
 		
-		Row baseRow = determineRow(m.getEntry(0).getCoords(), ro == RowOrientation.UNDEFINED ? RowOrientation.X : ro, m);
+		ro = ro == RowOrientation.UNDEFINED ? RowOrientation.X : ro;
+		Row baseRow = determineRow(m.getEntry(0).getCoords(), ro, m);
+		baseRow.addBlock(m.getEntry(0).getBlock());
+		
+		System.out.println("base = " + m.getEntry(0).getCoords() +  ", or = " + ro + ", " + baseRow.toTUIString());
 		System.out.println("Just created " + baseRow.toTUIString());
+		
 		if(baseRow.getBlocks().size() > 1){
 			rows.add(baseRow);
-			
+		}	
 			RowOrientation opposite = (ro == RowOrientation.X || ro == RowOrientation.UNDEFINED) ? RowOrientation.Y : RowOrientation.X;
 			for(int i = 0; i < m.getNoBlocks(); i++){
 				Row r = determineRow(m.getEntry(i).getCoords(), opposite);
@@ -155,9 +158,10 @@ public class Board {
 					System.out.println("this row was not allowed: base = " + m.getEntry(i).getCoords() +  ", or = " + opposite + ", " + r.toTUIString());
 				}
 			}
-		} else {
-			rows.add(determineRow(m.getEntry(0).getCoords(), RowOrientation.Y));
-		}
+		//} else {
+		//	
+		//	rows.add(determineRow(m.getEntry(0).getCoords(), RowOrientation.Y));
+		//}
 		return rows;
 	}
 	
@@ -190,13 +194,17 @@ public class Board {
 			if(filledPositions.containsKey(current)){
 				r.addBlock(filledPositions.get(current));
 				current = determineNextPosition(current, ro, -1);
+			} else if(moveRow != null && moveRow.hasPosition(current)) {
+				r.addBlock(moveRow.getBlock(current));
+				current = determineNextPosition(current, ro, -1);
 			} else {
+				System.out.println("filledPosition has not block at " + current.toString());
 				hasLower = false;
 			}
 		}
 		
 		// determine which blocks are in this row and are on a higher position than the base block
-		current = base;
+		current = determineNextPosition(base, ro, 1);
 		boolean hasUpper = true;
 		while(hasUpper){
 			if(filledPositions.containsKey(current)){
@@ -206,6 +214,7 @@ public class Board {
 				r.addBlock(moveRow.getBlock(current));
 				current = determineNextPosition(current, ro, 1);
 			} else {
+				System.out.println("filledPosition has not block at " + current.toString());
 				hasUpper = false;
 			}
 		}
