@@ -13,7 +13,7 @@ import logic.move.PlayBlocksMove;
 public class Board {
 	
 	public enum RowOrientation{
-		X, Y;
+		X, Y, UNDEFINED;
 	}
 	
 	// ------------------------------- Instance Variables ------------------------------ //
@@ -87,61 +87,72 @@ public class Board {
 	
 	public List<Row> getCreatingRows(PlayBlocksMove m, RowOrientation ro){
 		List<Row> rows = new LinkedList<Row>();
-		switch(ro){
-		case X:
-			Row r = new Row();
-			r.getBlocks().add(m.getEntry(0).getBlock());
+		
+		System.out.println("Base orientation " + ro);
+		
+		Row baseRow = determineRow(m.getEntry(0).getCoords(), ro == RowOrientation.UNDEFINED ? RowOrientation.X : ro, m);
+		System.out.println("Just created " + baseRow.toTUIString());
+		if(baseRow.getBlocks().size() > 1){
+			rows.add(baseRow);
 			
-			int x = m.getEntry(0).getCoords().x;
-			
-			int y = m.getEntry(0).getCoords().y;
-			while(filledPositions.containsKey(new Position(x, y - 1))){
-				r.getBlocks().add(filledPositions.get(new Position(x, y - 1)));
-				y--;
-			}
-			
-			y = m.getEntry(0).getCoords().y;
-			int i = 1;
-			while(filledPositions.containsKey(new Position(x, y + 1)) || m.getEntry(i).getCoords().equals(new Position(x, y + 1))){
-				if(filledPositions.containsKey(new Position(x, y + 1))){
-					r.getBlocks().add(filledPositions.get(new Position(x, y + 1)));
-				} else if (m.getEntry(i).getCoords().equals(new Position(x, y + 1))){
-					r.getBlocks().add(m.getEntry(i).getBlock());
+			RowOrientation opposite = (ro == RowOrientation.X || ro == RowOrientation.UNDEFINED) ? RowOrientation.Y : RowOrientation.X;
+			for(int i = 0; i < m.getNoBlocks(); i++){
+				Row r = determineRow(m.getEntry(i).getCoords(), opposite);
+				r.addBlock(m.getEntry(i).getBlock());
+				System.out.println("Just created branch" + r.toTUIString());
+				if(r != null && r.getBlocks().size() > 1){
+					rows.add(r);
+				} else{
+					System.out.println("this row was not allowed: base = " + m.getEntry(i).getCoords() +  ", or = " + opposite + ", " + r.toTUIString());
 				}
-				y++;
 			}
-			
-			rows.add(r);
-			break;
-		case Y:
-			Row r2 = new Row();
-			r2.getBlocks().add(m.getEntry(0).getBlock());
-			
-			int y2 = m.getEntry(0).getCoords().y;
-			
-			int x2 = m.getEntry(0).getCoords().x;
-			while(filledPositions.containsKey(new Position(x2-1, y2))){
-				r2.getBlocks().add(filledPositions.get(new Position(x2-1, y2)));
-				x2--;
-			}
-			
-			y = m.getEntry(0).getCoords().y;
-			int i2 = 1;
-			while(filledPositions.containsKey(new Position(x2 + 1, y2)) || m.getEntry(i2).getCoords().equals(new Position(x2 + 1, y2))){
-				if(filledPositions.containsKey(new Position(x2 + 1, y2))){
-					r2.getBlocks().add(filledPositions.get(new Position(x2 + 1, y)));
-				} else if (m.getEntry(i2).getCoords().equals(new Position(x2 + 1, y))){
-					r2.getBlocks().add(m.getEntry(i2).getBlock());
-				}
-				x2++;
-			}
-			
-			rows.add(r2);
-			break;
-		default:
-			throw new IllegalArgumentException();
+		} else {
+			rows.add(determineRow(m.getEntry(0).getCoords(), RowOrientation.Y));
 		}
 		return rows;
+	}
+	
+	private Row determineRow(Position base, RowOrientation ro){
+		return determineRow(base, ro, null);
+	}
+	
+	private Row determineRow(Position base, RowOrientation ro, PlayBlocksMove moveRow){
+		Row r = new Row();
+		r.setRowOrientation(ro);
+		
+		Position current = determineNextPosition(base, ro, -1);
+		
+		boolean hasLower = true;
+		while(hasLower){
+			if(filledPositions.containsKey(current)){
+				r.addBlock(filledPositions.get(current));
+				current = determineNextPosition(current, ro, -1);
+			} else {
+				hasLower = false;
+			}
+		}
+		
+		current = base;
+		boolean hasUpper = true;
+		while(hasUpper){
+			if(filledPositions.containsKey(current)){
+				r.addBlock(filledPositions.get(current));
+				current = determineNextPosition(current, ro, 1);
+			} else if(moveRow != null && moveRow.hasPosition(current)) {
+				r.addBlock(moveRow.getBlock(current));
+				current = determineNextPosition(current, ro, 1);
+			} else {
+				hasUpper = false;
+			}
+		}
+		
+		return r;
+	}
+	
+	private Position determineNextPosition(Position now, RowOrientation ro, int diff){
+		int newX = ro == RowOrientation.X ? now.x + diff : now.x;
+		int newY = ro == RowOrientation.Y ? now.y + diff : now.y;
+		return new Position(newX, newY);
 	}
 
 	// ------------------------------- Queries ----------------------------------------- //
@@ -248,6 +259,10 @@ public class Board {
 			Position p = (Position) o;
 			return p.x == x && p.y == y;
 		}
+		
+		public String toString(){
+			return "(" + x + "," + y + ")";
+		}
 	}
 	
 	public class Row{
@@ -263,12 +278,32 @@ public class Board {
 			return blocks;
 		}
 		
+		public void addBlock(Block b){
+			blocks.add(b);
+		}
+		
 		public RowOrientation getRowOrientation(){
 			return ro;
 		}
 		
 		public void setRowOrientation(RowOrientation r){
 			ro = r;
+		}
+		
+		public String toString(){
+			String res = "Row : ";
+			for(Block b : blocks){
+				res += b.toString() + " ";
+			}
+			return res;
+		}
+		
+		public String toTUIString(){
+			String res = "Row : ";
+			for(Block b : blocks){
+				res += b.toShortString() + " ";
+			}
+			return res;
 		}
 	}
 	

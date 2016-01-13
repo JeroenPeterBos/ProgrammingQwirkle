@@ -24,7 +24,7 @@ public class ExchangeMove extends Move{
 	
 	public void execute() throws IllegalMoveStateException{
 		if(!valid){
-			throw new IllegalMoveStateException();
+			throw new IllegalMoveStateException(valid);
 		}
 		
 		for(Block b : blocks){
