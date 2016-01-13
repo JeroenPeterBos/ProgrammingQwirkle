@@ -100,8 +100,8 @@ public abstract class Player {
 	// ------------------------------- Queries ----------------------------------------- //
 	
 	/**
-	 * 
-	 * @return
+	 * maxMove checks for every block what maxSet it can form on the board
+	 * @return res
 	 */
 	
 	public int maxMove(){
@@ -154,13 +154,28 @@ public abstract class Player {
 		return set.size() > res ? set.size() : res;
 	}
 	
+	/**
+	 * hasBlock checks whether the player has block b or not
+	 * @param b
+	 * @return boolean
+	 */
+	
 	public boolean hasBlock(Block b){
 		return hand.contains(b);
 	}
+	/**
+	 * getName gets the name of the player
+	 * @return name
+	 */
 	
 	public String getName(){
 		return name;
 	}
+	
+	/**
+	 * getScore gets the score of the player
+	 * @return score
+	 */
 	
 	public int getScore(){
 		return score;

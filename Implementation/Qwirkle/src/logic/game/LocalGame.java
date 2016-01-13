@@ -31,7 +31,7 @@ public class LocalGame extends HostGame{
 			System.out.println(players.get(turn).getName());
 
 			Move m = players.get(turn).determineMove();
-			while(!m.validate(players.get(turn))){
+			while(m == null || !m.validate(players.get(turn))){
 				System.out.println("invalid move");
 				m = players.get(turn).determineMove();
 			}
