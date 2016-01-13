@@ -110,6 +110,8 @@ public class Board {
 				}
 				y++;
 			}
+			
+			rows.add(r);
 			break;
 		case Y:
 			Row r2 = new Row();
@@ -133,6 +135,8 @@ public class Board {
 				}
 				x2++;
 			}
+			
+			rows.add(r2);
 			break;
 		default:
 			throw new IllegalArgumentException();
