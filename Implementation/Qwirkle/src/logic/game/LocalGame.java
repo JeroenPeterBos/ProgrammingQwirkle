@@ -26,10 +26,13 @@ public class LocalGame extends HostGame{
 		init();
 		turn = getStartingPlayer();
 		while(running){
+			System.out.println();
 			System.out.println(getBoard().toTUIString());
-			
+			System.out.println(players.get(turn).getName());
+
 			Move m = players.get(turn).determineMove();
 			while(!m.validate(players.get(turn))){
+				System.out.println("invalid move");
 				m = players.get(turn).determineMove();
 			}
 			
@@ -41,6 +44,7 @@ public class LocalGame extends HostGame{
 			
 			if(m instanceof PlayBlocksMove){
 				players.get(turn).addScore(((PlayBlocksMove)m).getScore());
+				System.out.println(players.get(turn).getName() + " received " + ((PlayBlocksMove) m).getScore() + " points.");
 				for(int i = 0; i < m.getNoBlocks(); i++){
 					players.get(turn).giveBlock(bag.getBlock());
 				}
@@ -59,7 +63,7 @@ public class LocalGame extends HostGame{
 		
 		LocalGame lg = new LocalGame(players);
 		lg.addPlayer(new HumanTUIPlayer("Jeroen", lg));
-		lg.addPlayer(new HumanTUIPlayer("Mark", lg));
+		lg.addPlayer(new HumanTUIPlayer("Freek", lg));
 		
 		lg.run();
 	}
