@@ -265,12 +265,19 @@ public class PlayBlocksMove extends Move{
 		
 		score = 0;
 		valid = false;
-	}
+	}	
 	
-
-	public void sortOnConnectivity(Board board){
-		int i = 0;
+	public void clearBlocks(){
+		if(valid){
+			try {
+				throw new IllegalMoveStateException(valid);
+			} catch (IllegalMoveStateException e) {
+				System.err.println(e.getMessage());
+				return;
+			}
+		}
 		
+		blocks.clear();
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //

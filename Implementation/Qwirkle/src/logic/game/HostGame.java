@@ -34,7 +34,9 @@ public abstract class HostGame extends Game{
 		turn = (turn + 1) % getNoPlayers();
 	}
 	
-	
+	protected boolean hasPossibleMove(){
+		return players.get(turn).hasPossibleMove();
+	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	

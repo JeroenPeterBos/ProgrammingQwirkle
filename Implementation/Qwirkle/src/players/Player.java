@@ -4,11 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import components.Block;
+import components.Board.Position;
 import exceptions.BlockNotInHandException;
 import exceptions.HandEmptyException;
 import exceptions.HandFullException;
 import logic.game.Game;
 import logic.move.Move;
+import logic.move.PlayBlocksMove;
 
 public abstract class Player {
 
@@ -98,6 +100,24 @@ public abstract class Player {
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
+	
+	public boolean hasPossibleMove(){
+		for(Block b : hand){
+			PlayBlocksMove m = new PlayBlocksMove(this, game);
+			
+			for(Position p: game.getBoard().getOpenPositions()){
+				m.addBlock(b, p);
+				
+				if(m.validate(this, false)){
+					return true;
+				}
+				
+				m.unlock();
+				m.clearBlocks();
+			}
+		}
+		return false;
+	}
 	
 	/**
 	 * maxMove checks for every block what maxSet it can form on the board

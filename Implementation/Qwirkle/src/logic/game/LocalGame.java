@@ -27,11 +27,28 @@ public class LocalGame extends HostGame{
 		turn = getStartingPlayer();
 		playTurn(true);
 		while(running){
+			if(bag.noBlocks() <= 0){
+				if(checkIfStuck(players.size())){
+					running = false;
+					continue;
+				}
+			}
 			playTurn();
 		}
 		printScores();
 		
 		// TODO notify view that game is finished
+	}
+	
+	private boolean checkIfStuck(int playersLeft){
+		if(playersLeft <= 0){
+			return true;
+		}
+		if(!hasPossibleMove()){
+			incrementTurn();
+			return checkIfStuck(playersLeft - 1);
+		}
+		return false;
 	}
 
 	private void playTurn() {

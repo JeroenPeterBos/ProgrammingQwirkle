@@ -43,7 +43,7 @@ public abstract class Move {
 	 */
 	
 	public abstract boolean validate(Player p, boolean firstMove);
-	
+
 	// ------------------------------- Queries ----------------------------------------- //
 	
 	/**

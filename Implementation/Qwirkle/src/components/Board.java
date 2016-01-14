@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import exceptions.PositionNotAvailableException;
 import exceptions.protocol.FirstPositionNotOriginException;
 import logic.move.PlayBlocksMove;
 
@@ -375,6 +374,10 @@ public class Board {
 		}
 		
 		return result;
+	}
+	
+	public List<Position> getOpenPositions(){
+		return openPositions;
 	}
 
 	// Internal class
