@@ -301,6 +301,14 @@ public class Board {
 
 	// ------------------------------- Queries ----------------------------------------- //
 	
+	public boolean isPerfectSquare(){
+		if(filledPositions.size() == 36){
+			if(xHigh - xLow - 1 == 6 && yHigh - yLow - 1 == 6){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Validates if a given row follows the rules of the game.
@@ -372,6 +380,8 @@ public class Board {
 		for(int i = 0; i < bounds.length; i++){
 			result += bounds[i] + "\n";
 		}
+		
+		System.out.println("Bounds " + xLow + xHigh + " , " + yLow + yHigh);
 		
 		return result;
 	}

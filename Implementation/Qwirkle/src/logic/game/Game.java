@@ -10,7 +10,7 @@ public abstract class Game implements Runnable{
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
-	private Board board;
+	protected Board board;
 	protected List<Player> players;
 	
 	protected boolean running = true;

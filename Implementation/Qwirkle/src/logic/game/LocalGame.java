@@ -27,11 +27,9 @@ public class LocalGame extends HostGame{
 		turn = getStartingPlayer();
 		playTurn(true);
 		while(running){
-			if(bag.noBlocks() <= 0){
-				if(checkIfStuck(players.size())){
-					running = false;
-					continue;
-				}
+			if((bag.noBlocks() <= 0 && checkIfStuck(players.size())) || board.isPerfectSquare()){
+				running = false;
+				continue;
 			}
 			playTurn();
 		}
