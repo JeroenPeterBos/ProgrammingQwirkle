@@ -152,7 +152,7 @@ public class PlayBlocksMove extends Move{
 		
 		// sortOnConnectivity(game.getBoard());
 		
-		// Print the blocks of this move TODO remove
+		// Print the blocks of this move TODO remove print
 		String result = "MoveBlocks: ";
 		for(Entry e : blocks){
 			result += e.getCoords().toString() + " " + e.getBlock().toShortString() + " ";
@@ -160,6 +160,9 @@ public class PlayBlocksMove extends Move{
 		System.out.println(result);
 		
 		List<Board.Row> rows = game.getBoard().getCreatingRows(this, ro);
+		if(rows.size() < 1){
+			return false;
+		}
 		for(Board.Row row: rows){
 			System.out.println("Checking " + row.toTUIString());
 			if(!game.getBoard().validRow(row)){
@@ -296,6 +299,16 @@ public class PlayBlocksMove extends Move{
 	 * @param p
 	 * @return boolean
 	 */
+	
+	public List<Position> getPositionList(){
+		List<Position> positions = new LinkedList<>();
+		
+		for(Entry e: blocks){
+			positions.add(e.getCoords());
+		}
+		
+		return positions;
+	}
 	
 	public boolean hasPosition(Position p){
 		for(Entry e : blocks){
