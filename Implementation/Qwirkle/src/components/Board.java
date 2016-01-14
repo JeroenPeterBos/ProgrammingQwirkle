@@ -113,7 +113,7 @@ public class Board {
 	}
 	
 
-	/**.
+	/**
 	 * Opens the positions next to position p
 	 * @param p the Position from where will be expanded.
 	 */
@@ -125,6 +125,11 @@ public class Board {
 		openPosition(new Position(p.x, p.y - 1));
 	}
 	
+	/**
+	 * Opens all adjecent Positions into the given list.
+	 * @param p the central postion
+	 * @param pos the list in which the positions will be opened.
+	 */
 	private void openNewPositions(Position p, List<Position> pos) {
 		openPositionIn(new Position(p.x + 1, p.y), pos);
 		openPositionIn(new Position(p.x - 1, p.y), pos);
@@ -139,7 +144,6 @@ public class Board {
 	 * @param p the Position that will be opened
 	 * @param pos the list in which the position will be opened
 	 */
-
 	private void openPositionIn(Position p, List<Position> pos) {
 		if (!pos.contains(p) && !filledPositions.containsKey(p)) {
 			pos.add(p);
@@ -151,17 +155,30 @@ public class Board {
 	 * Open a position in the default List openPositions.
 	 * @param p the Position that will be opened
 	 */
-
 	private void openPosition(Position p) {
 		openPositionIn(p, openPositions);
 	}
 	
+	/**
+	 * Check if a given list of positions are connected to the Board by creating an empty list and passing it to checkNextPosition.
+	 * @param positions the list with the positions that will be checked
+	 * @return wether the possitions are connected to the main board
+	 */
 	private boolean connectedToFilledPositions(List<Position> positions) {
 		List<Position> freePositions = new LinkedList<Position>();
 		
 		return checkNextPosition(positions, freePositions);
 	}
 	
+	/**
+	 * Check if a given list of positions are connected to the Board.
+	 * The positions can be connected in several ways.
+	 * At first all positions can be directly connected to the filledPositions on the board.
+	 * Secondly the positions can be connected to the Board via the other Positions in the given List.
+	 * But also a combination of these two is possible.
+	 * @param positions the positions that are checked
+	 * @return wether the possitions are connected to the main board
+	 */
 	private boolean checkNextPosition(List<Position> positions, List<Position> freePositions) {
 		if (positions.size() < 1) {
 			return true;
@@ -198,7 +215,8 @@ public class Board {
 		Row baseRow = determineRow(m.getEntry(0).getCoords(), ro, m);
 		baseRow.addBlock(m.getEntry(0).getBlock());
 		
-		System.out.println("base = " + m.getEntry(0).getCoords() +  ", or = " + ro + ", " + baseRow.toTUIString());
+		System.out.println("base = " + m.getEntry(0).getCoords() + 
+				", or = " + ro + ", " + baseRow.toTUIString());
 		System.out.println("Just created " + baseRow.toTUIString());
 		
 		if(baseRow.getBlocks().size() > 1){
@@ -216,13 +234,6 @@ public class Board {
 				System.out.println("this row was not allowed: base = " + m.getEntry(i).getCoords() +  ", or = " + opposite + ", " + r.toTUIString());
 			}
 		}
-		
-		
-		
-		//} else {
-		//	
-		//	rows.add(determineRow(m.getEntry(0).getCoords(), RowOrientation.Y));
-		//}
 		return rows;
 	}
 	
@@ -311,6 +322,10 @@ public class Board {
 
 	// ------------------------------- Queries ----------------------------------------- //
 	
+	/**
+	 * Checks if the board is a PerfectSquare which would mean that the game got stuck and must be ended.
+	 * @return if the field is a perfectSquare
+	 */
 	public boolean isPerfectSquare(){
 		if(filledPositions.size() == 36){
 			if(xHigh - xLow - 1 == 6 && yHigh - yLow - 1 == 6){
@@ -396,13 +411,15 @@ public class Board {
 		return result;
 	}
 	
+	/**
+	 * returns a list of the open Positions on the board
+	 * @return
+	 */
 	public List<Position> getOpenPositions(){
 		return openPositions;
 	}
 
 	// Internal class
-	
-
 	/**
 	 * Class that represents Positions on the Board.
 	 * @author Jeroen
@@ -563,21 +580,5 @@ public class Board {
 			}
 			return res;
 		}
-	}
-	
-	// TODO remove testing method main
-	public static void main(String[] args){		
-		Board b = new Board();
-		
-		System.out.println("Fill board");
-		
-		b.fill(b.new Position(0,0), new Block(Block.Color.GREEN, Block.Shape.CIRCLE));
-		b.fill(b.new Position(0,1), new Block(Block.Color.PURPLE, Block.Shape.CIRCLE));
-		b.fill(b.new Position(1,1), new Block(Block.Color.PURPLE, Block.Shape.DIAMOND));
-		b.fill(b.new Position(1,0), new Block(Block.Color.GREEN, Block.Shape.CIRCLE));
-		
-		System.out.println("Print board");
-		System.out.println(b.toTUIString());
-		System.out.println("Finished");
 	}
 }
