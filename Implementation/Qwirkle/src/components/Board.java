@@ -175,6 +175,9 @@ public class Board {
 				System.out.println("this row was not allowed: base = " + m.getEntry(i).getCoords() +  ", or = " + opposite + ", " + r.toTUIString());
 			}
 		}
+		
+		
+		
 		//} else {
 		//	
 		//	rows.add(determineRow(m.getEntry(0).getCoords(), RowOrientation.Y));

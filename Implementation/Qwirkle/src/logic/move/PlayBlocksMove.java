@@ -143,9 +143,9 @@ public class PlayBlocksMove extends Move{
 			ro = Board.RowOrientation.UNDEFINED;
 		}
 		
+		
 		// validate that the to be executed move creates valid rows
 		
-
 		// blocks.sort(comp);
 		
 		// sort the move on connectivity to the board
@@ -158,8 +158,6 @@ public class PlayBlocksMove extends Move{
 			result += e.getCoords().toString() + " " + e.getBlock().toShortString() + " ";
 		}
 		System.out.println(result);
-		
-
 		
 		List<Board.Row> rows = game.getBoard().getCreatingRows(this, ro);
 		for(Board.Row row: rows){
