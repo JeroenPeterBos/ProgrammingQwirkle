@@ -118,6 +118,13 @@ public class Board {
 		openPosition(new Position(p.x, p.y-1));
 	}
 	
+	private void openNewPositions(Position p, List<Position> pos){
+		openPositionIn(new Position(p.x+1, p.y), pos);
+		openPositionIn(new Position(p.x-1, p.y), pos);
+		openPositionIn(new Position(p.x, p.y+1), pos);
+		openPositionIn(new Position(p.x, p.y-1), pos);
+	}
+	
 
 	/**
 	 * The position that will be opened. Opening can happen in the global openPositions list or in an external list.
@@ -141,6 +148,27 @@ public class Board {
 		openPositionIn(p, openPositions);
 	}
 	
+	private boolean connectedToFilledPositions(List<Position> positions){
+		List<Position> freePositions = new LinkedList<Position>();
+		
+		return checkNextPosition(positions, freePositions);
+	}
+	
+	private boolean checkNextPosition(List<Position> positions, List<Position> freePositions){
+		if(positions.size() < 1){
+			return true;
+		}
+		
+		for(Position p: positions){
+			if(openPositions.contains(p) || freePositions.contains(p)){
+				positions.remove(p);
+				openNewPositions(p, freePositions);
+				return checkNextPosition(positions, freePositions);
+			}
+		}
+		
+		return false;
+	}
 
 	/**
 	 * Creates a List of Row objects that represent all the individual rows that will be expanded or created by executing PlayBlocksMove m.
@@ -148,9 +176,12 @@ public class Board {
 	 * @param ro the orientation in which the PlayBlockMove blocks are oriented
 	 * @return A List of Rows that the move will create or expand
 	 */
-
 	public List<Row> getCreatingRows(PlayBlocksMove m, RowOrientation ro){
 		List<Row> rows = new LinkedList<Row>();
+		
+		if(!connectedToFilledPositions(m.getPositionList())){
+			return rows;
+		}
 		
 		System.out.println("Base orientation " + ro);
 		
@@ -163,7 +194,8 @@ public class Board {
 		
 		if(baseRow.getBlocks().size() > 1){
 			rows.add(baseRow);
-		}	
+		}		
+		
 		RowOrientation opposite = (ro == RowOrientation.X || ro == RowOrientation.UNDEFINED) ? RowOrientation.Y : RowOrientation.X;
 		for(int i = 0; i < m.getNoBlocks(); i++){
 			Row r = determineRow(m.getEntry(i).getCoords(), opposite);
@@ -328,7 +360,7 @@ public class Board {
 				} else if(filledPositions.containsKey(current)){
 					bounds[y] += String.format("%-6s", filledPositions.get(current).toShortString());
 				} else {
-					bounds[y] += String.format("%-6s", "x");
+					bounds[y] += String.format("%-6s", "");
 				}
 			}
 			bounds[y] += "\n";
