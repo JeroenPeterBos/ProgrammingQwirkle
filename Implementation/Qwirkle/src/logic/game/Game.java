@@ -6,7 +6,7 @@ import components.Bag;
 import components.Board;
 import players.Player;
 
-public abstract class Game implements Runnable{
+public abstract class Game implements Runnable {
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
@@ -17,32 +17,32 @@ public abstract class Game implements Runnable{
 	
 	// ------------------------------- Constructors ------------------------------------ //
 
-	public Game(List<Player> players){
+	public Game(List<Player> players) {
 		this.board = new Board();
 		this.players = players;
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
-	public void shutDown(){
+	public void shutDown() {
 		running = false;
 	}
 	
-	public void addPlayer(Player p){
+	public void addPlayer(Player p) {
 		players.add(p);
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	
-	public Board getBoard(){
+	public Board getBoard() {
 		return board;
 	}
 	
-	public int getScore(Player p){
+	public int getScore(Player p) {
 		return p.getScore();
 	}
 	
-	public int getNoPlayers(){
+	public int getNoPlayers() {
 		return players.size();
 	}
 }

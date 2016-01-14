@@ -9,7 +9,7 @@ import java.net.Socket;
 
 import logic.game.ServerGame;
 
-public class ClientHandler extends Thread{
+public class ClientHandler extends Thread {
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
@@ -24,7 +24,7 @@ public class ClientHandler extends Thread{
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	public ClientHandler(Server server, Socket socket) throws IOException{
+	public ClientHandler(Server server, Socket socket) throws IOException {
 		this.server = server;
 		this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 		this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -33,7 +33,7 @@ public class ClientHandler extends Thread{
 	}
 	// ------------------------------- Commands ---------------------------------------- //
 	
-	public void writeToClient(String msg){
+	public void writeToClient(String msg) {
 		try {
 			out.write(msg);
 			out.newLine();
@@ -43,11 +43,11 @@ public class ClientHandler extends Thread{
 		}
 	}
 	
-	public void run(){
+	public void run() {
 		boolean running = init();
 	}
 	
-	public boolean init(){
+	public boolean init() {
 		String msg = null;
 		try {
 			msg = in.readLine();
@@ -55,28 +55,31 @@ public class ClientHandler extends Thread{
 			e.printStackTrace();
 		}
 		
-		if(!(msg.startsWith(IProtocol.CLIENT_IDENTIFY))){
-			writeToClient(IProtocol.command(IProtocol.Error.COMMAND_NOT_FOUND, "First message should be IDENTIFY"));
+		if (!(msg.startsWith(IProtocol.CLIENT_IDENTIFY))) {
+			writeToClient(IProtocol.command(IProtocol.Error.COMMAND_NOT_FOUND, 
+							"First message should be IDENTIFY"));
 			return false;
 		}
 		
 		// split the message to receive the name
 		String[] params = msg.replaceAll(IProtocol.CLIENT_IDENTIFY + " ", "").split(" ");
-		if(params.length < 1 || params.length > 2){
-			writeToClient(IProtocol.command(IProtocol.Error.NAME_INVALID, "Invalid amount of parameters. Spaces are not allowed in names."));
+		if (params.length < 1 || params.length > 2) {
+			writeToClient(IProtocol.command(IProtocol.Error.NAME_INVALID, 
+							"Invalid amount of parameters. Spaces are not allowed in names."));
 			return false;
 		}
-		String name = params[0];
+		String naam = params[0];
 		
 		// check if the name is allowed
-		if(name.matches("[a-zA-Z0-9-_]")){
+		if (naam.matches("[a-zA-Z0-9-_]")) {
 			// TODO check if name is valid
 		}
 		
 		// check if name is unique
-		for(ClientHandler client : server.getClients()){
-			if(client.getName().equals(name)){
-				writeToClient(IProtocol.command(IProtocol.Error.NAME_USED, "Name is already in use"));
+		for (ClientHandler client : server.getClients()) {
+			if (client.getName().equals(naam)) {
+				writeToClient(IProtocol.command(IProtocol.Error.NAME_USED, 
+								"Name is already in use"));
 				return false;
 			}
 		}
@@ -87,7 +90,7 @@ public class ClientHandler extends Thread{
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	
-	public String getClientName(){
+	public String getClientName() {
 		return name;
 	}
 }

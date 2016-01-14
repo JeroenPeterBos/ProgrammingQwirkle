@@ -20,7 +20,7 @@ public class Bag {
 	 * Bag constructor which initializes the blocks list and resets it.
 	 */
 
-	public Bag(){
+	public Bag() {
 		this.blocks = new LinkedList<Block>();
 		reset();
 	}
@@ -33,11 +33,11 @@ public class Bag {
 	 * After that the list is shuffled.
 	 */
 
-	public void reset(){
+	public void reset() {
 		blocks.clear();
-		for(Block.Color c : Block.Color.values()){
-			for(Block.Shape s : Block.Shape.values()){
-				for(int i = 0; i < 3; i++){
+		for (Block.Color c : Block.Color.values()) {
+			for (Block.Shape s : Block.Shape.values()) {
+				for (int i = 0; i < 3; i++) {
 					blocks.add(new Block(c, s));
 				}
 			}
@@ -46,13 +46,13 @@ public class Bag {
 	}
 	
 
-	/**
+	/**.
 	 * Swaps a given block with a new one and after that shuffles the bag again
 	 * @param b the block that is returned to the bag.
 	 * @return the new block
 	 */
 
-	public Block exchange(Block b){
+	public Block exchange(Block b) {
 		Block res = getBlock();
 		blocks.add(b);
 		Collections.shuffle(blocks);
@@ -65,7 +65,7 @@ public class Bag {
 	 * @return the deleted block.
 	 */
 
-	public Block getBlock(){
+	public Block getBlock() {
 		return blocks.pop();
 	}
 	
@@ -76,7 +76,7 @@ public class Bag {
 	 * @return the amount of blocks left in the bag.
 	 */
 
-	public int noBlocks(){
+	public int noBlocks() {
 		return blocks.size();
 	}
 }

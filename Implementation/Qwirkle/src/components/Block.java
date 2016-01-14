@@ -11,11 +11,11 @@ public class Block {
 	 * Holds a character c to represent its type in a short way.
 	 */
 
-	public enum Color{
+	public enum Color {
 		GREEN('g'), RED('r'), BLUE('b'), ORANGE('o'), PURPLE('p'), YELLOW('y');
 		
 		public final char c;
-		private Color(char c){
+		private Color(char c) {
 			this.c = c;
 		}
 	}
@@ -31,7 +31,7 @@ public class Block {
 		STAR(0), CIRCLE(1), SQUARE(2), DIAMOND(3), CLOVER(4), CROSS(5);
 		
 		public int s;
-		private Shape(int s){
+		private Shape(int s) {
 			this.s = s;
 		}
 	}
@@ -58,7 +58,7 @@ public class Block {
 	 * @param s the shape that the block should have
 	 */
 
-	public Block(Color c, Shape s){
+	public Block(Color c, Shape s) {
 		this.color = c;
 		this.shape = s;
 	}
@@ -72,7 +72,7 @@ public class Block {
 	 * @return the color of this block
 	 */
 
-	public Color getColor(){
+	public Color getColor() {
 		return color;
 	}
 	
@@ -81,7 +81,7 @@ public class Block {
 	 * @return the shape of this block
 	 */
 
-	public Shape getShape(){
+	public Shape getShape() {
 		return shape;
 	}
 	
@@ -90,18 +90,18 @@ public class Block {
 	 * Converts this block to an Integer based on the IProtocol.
 	 */
 
-	public int toInt(){
+	public int toInt() {
 		// TODO implement method according to protocol
 		return 0;
 	}
 	
 
-	/**
+	/**.
 	 * Converts this block to represent itself in a combination of color and shape
 	 */
 
-	public String toString(){
-		return (color + " " + shape);
+	public String toString() {
+		return color + " " + shape;
 	}
 	
 
@@ -110,7 +110,7 @@ public class Block {
 	 * @return character combination of this Block.
 	 */
 
-	public String toShortString(){
+	public String toShortString() {
 		return color.c + Integer.toString(shape.s);
 	}
 	
@@ -121,8 +121,8 @@ public class Block {
 	 */
 
 	@Override
-	public boolean equals(Object o){
-		if(!(o instanceof Block)){
+	public boolean equals(Object o) {
+		if (!(o instanceof Block)) {
 			throw new IllegalArgumentException();
 		}
 		
@@ -131,13 +131,13 @@ public class Block {
 	}
 	
 
-	/**
+	/**.
 	 * Converts an Integer to a Block object based on the IProtocol;
 	 * @param i integer that represents a block and a color
 	 * @return an instance of type block based on the given integer.
 	 */
 
-	public static Block instance(int i){
+	public static Block instance(int i) {
 		// TODO implement method such that Block.instance(block.toInt()).equals(block);
 		return null;
 	}

@@ -27,7 +27,7 @@ public class Server {
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	public Server(int port){
+	public Server(int port) {
 		this.port = port;
 		this.clients = new CopyOnWriteArrayList<ClientHandler>();
 		this.supportedFeatures = new IProtocol.Feature[0];
@@ -35,7 +35,7 @@ public class Server {
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
-	public void run(){
+	public void run() {
 		ServerSocket ss = null;
 		try {
 			ss = new ServerSocket(port);
@@ -44,13 +44,13 @@ public class Server {
 		}
 		
 		boolean running = true;
-		while(running){
+		while (running) {
 			Socket clientSocket = null;
 			try {
-				 clientSocket = ss.accept();
-				 ClientHandler ch = new ClientHandler(this, clientSocket);
-				 clients.add(ch);
-				 ch.start();
+				clientSocket = ss.accept();
+				ClientHandler ch = new ClientHandler(this, clientSocket);
+				clients.add(ch);
+				ch.start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -65,7 +65,7 @@ public class Server {
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	
-	public List<ClientHandler> getClients(){
+	public List<ClientHandler> getClients() {
 		return clients;
 	}
 }

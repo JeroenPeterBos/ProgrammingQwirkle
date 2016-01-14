@@ -9,7 +9,8 @@ public class InvalidIndexException extends Exception {
 	}
 	
 	public String getMessage() {
-		return "The given block (" + given + ") does not exist. Please choose a block with values between 0 and 5";
+		return "The given block (" + given + ") does not exist. "
+				+ "Please choose a block with values between 0 and 5";
 	}
 
 }
