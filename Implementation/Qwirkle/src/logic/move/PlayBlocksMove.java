@@ -68,6 +68,7 @@ public class PlayBlocksMove extends Move{
 			throw new IllegalMoveStateException(valid);
 		}
 		
+
 		boolean done = false;
 		while(!done){
 			boolean allDone = true;
@@ -144,6 +145,7 @@ public class PlayBlocksMove extends Move{
 		
 		// validate that the to be executed move creates valid rows
 		
+
 		// blocks.sort(comp);
 		
 		// sort the move on connectivity to the board
@@ -157,7 +159,7 @@ public class PlayBlocksMove extends Move{
 		}
 		System.out.println(result);
 		
-		
+
 		
 		List<Board.Row> rows = game.getBoard().getCreatingRows(this, ro);
 		for(Board.Row row: rows){
@@ -246,6 +248,7 @@ public class PlayBlocksMove extends Move{
 		valid = false;
 	}
 	
+
 	public void sortOnConnectivity(Board board){
 		int i = 0;
 		

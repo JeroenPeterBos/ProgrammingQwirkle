@@ -12,17 +12,20 @@ import logic.move.PlayBlocksMove;
 
 public class Board {
 	
+
 	/**
 	 * Enumeration that can be used to indicate in what direction a set of stones is oriented.
 	 * @author Jeroen
 	 * UNDEFINED is for rows of length 1
 	 */
+
 	public enum RowOrientation{
 		X, Y, UNDEFINED;
 	}
 	
 	// ------------------------------- Instance Variables ------------------------------ //
 	
+
 	/**
 	 * List that holds all the positions that are open.
 	 * Open means that it is a valid location to place a block.
@@ -37,14 +40,17 @@ public class Board {
 	/**
 	 * For each bound a integer that indicates the size of the current field.
 	 */
+
 	private int xLow = 0, xHigh = 0, yLow = 0, yHigh = 0;
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
+
 	/**
 	 * Constructs a Board and initializes the openPositions List and the filledPositions map.
 	 * It also opens the starting point of the Board
 	 */
+
 	public Board(){
 		this.openPositions = new ArrayList<Position>();
 		this.filledPositions = new TreeMap<Position, Block>();
@@ -54,6 +60,7 @@ public class Board {
 	
 	// ------------------------------- Commands ---------------------------------------- //		
 		
+
 	/**
 	 * Fills the given position with the given Block.
 	 * Also opens up new positions according to the given position.
@@ -81,6 +88,7 @@ public class Board {
 		openNewPositions(p);
 		
 		updateBounds(p);
+
 		return true;
 	}
 	
@@ -88,6 +96,7 @@ public class Board {
 	 * Updates the bounds according to the position p.
 	 * @param p the Position from where will be expanded
 	 */
+
 	private void updateBounds(Position p){
 		if(p.x - 1 < xLow){ xLow = p.x - 1; }
 		if(p.x + 1 > xHigh){ xHigh = p.x + 1; }
@@ -96,10 +105,12 @@ public class Board {
 		if(p.y + 1 > yHigh){ yHigh = p.y + 1; }
 	}
 	
+
 	/**
 	 * Opens the positions next to position p
 	 * @param p the Position from where will be expanded.
 	 */
+
 	private void openNewPositions(Position p){
 		openPosition(new Position(p.x+1, p.y));
 		openPosition(new Position(p.x-1, p.y));
@@ -107,31 +118,37 @@ public class Board {
 		openPosition(new Position(p.x, p.y-1));
 	}
 	
+
 	/**
 	 * The position that will be opened. Opening can happen in the global openPositions list or in an external list.
 	 * @param p the Position that will be opened
 	 * @param pos the list in which the position will be opened
 	 */
+
 	private void openPositionIn(Position p, List<Position> pos){
 		if(!pos.contains(p) && !filledPositions.containsKey(p)){
 			pos.add(p);
 		}
 	}
 	
+
 	/**
 	 * Open a position in the default List openPositions.
 	 * @param p the Position that will be opened
 	 */
+
 	private void openPosition(Position p){
 		openPositionIn(p, openPositions);
 	}
 	
+
 	/**
 	 * Creates a List of Row objects that represent all the individual rows that will be expanded or created by executing PlayBlocksMove m.
 	 * @param m the move that will create the rows
 	 * @param ro the orientation in which the PlayBlockMove blocks are oriented
 	 * @return A List of Rows that the move will create or expand
 	 */
+
 	public List<Row> getCreatingRows(PlayBlocksMove m, RowOrientation ro){
 		List<Row> rows = new LinkedList<Row>();
 		
@@ -147,17 +164,17 @@ public class Board {
 		if(baseRow.getBlocks().size() > 1){
 			rows.add(baseRow);
 		}	
-			RowOrientation opposite = (ro == RowOrientation.X || ro == RowOrientation.UNDEFINED) ? RowOrientation.Y : RowOrientation.X;
-			for(int i = 0; i < m.getNoBlocks(); i++){
-				Row r = determineRow(m.getEntry(i).getCoords(), opposite);
-				r.addBlock(m.getEntry(i).getBlock());
-				System.out.println("Just created branch" + r.toTUIString());
-				if(r != null && r.getBlocks().size() > 1){
-					rows.add(r);
-				} else{
-					System.out.println("this row was not allowed: base = " + m.getEntry(i).getCoords() +  ", or = " + opposite + ", " + r.toTUIString());
-				}
+		RowOrientation opposite = (ro == RowOrientation.X || ro == RowOrientation.UNDEFINED) ? RowOrientation.Y : RowOrientation.X;
+		for(int i = 0; i < m.getNoBlocks(); i++){
+			Row r = determineRow(m.getEntry(i).getCoords(), opposite);
+			r.addBlock(m.getEntry(i).getBlock());
+			System.out.println("Just created branch" + r.toTUIString());
+			if(r != null && r.getBlocks().size() > 1){
+				rows.add(r);
+			} else{
+				System.out.println("this row was not allowed: base = " + m.getEntry(i).getCoords() +  ", or = " + opposite + ", " + r.toTUIString());
 			}
+		}
 		//} else {
 		//	
 		//	rows.add(determineRow(m.getEntry(0).getCoords(), RowOrientation.Y));
@@ -171,10 +188,12 @@ public class Board {
 	 * @param ro in which orientation the returned row needs to be
 	 * @return A new Row based on the orientation and the base position
 	 */
+
 	private Row determineRow(Position base, RowOrientation ro){
 		return determineRow(base, ro, null);
 	}
 	
+
 	/**
 	 * Creates a Row from the base in the Orientation ro, the blocks can come from the filledPositions List or from the blocks in the PlayBlocksMove moveRow
 	 * @param base the Position from where to start
@@ -182,29 +201,36 @@ public class Board {
 	 * @param moveRow the PlayBlocksMove from where blocks can be used to create the row
 	 * @return A new Row based on the orientation, base position and the new blocks.
 	 */
+
 	private Row determineRow(Position base, RowOrientation ro, PlayBlocksMove moveRow){
 		Row r = new Row();
 		r.setRowOrientation(ro);
 		
 		Position current = determineNextPosition(base, ro, -1);
 		
+
 		// determine which blocks are in this row and are on a lower position than the base block
+
 		boolean hasLower = true;
 		while(hasLower){
 			if(filledPositions.containsKey(current)){
 				r.addBlock(filledPositions.get(current));
 				current = determineNextPosition(current, ro, -1);
+
 			} else if(moveRow != null && moveRow.hasPosition(current)) {
 				r.addBlock(moveRow.getBlock(current));
 				current = determineNextPosition(current, ro, -1);
 			} else {
 				System.out.println("filledPosition has not block at " + current.toString());
+
 				hasLower = false;
 			}
 		}
 		
+
 		// determine which blocks are in this row and are on a higher position than the base block
 		current = determineNextPosition(base, ro, 1);
+
 		boolean hasUpper = true;
 		while(hasUpper){
 			if(filledPositions.containsKey(current)){
@@ -214,7 +240,9 @@ public class Board {
 				r.addBlock(moveRow.getBlock(current));
 				current = determineNextPosition(current, ro, 1);
 			} else {
+
 				System.out.println("filledPosition has not block at " + current.toString());
+
 				hasUpper = false;
 			}
 		}
@@ -222,6 +250,7 @@ public class Board {
 		return r;
 	}
 	
+
 	/**
 	 * Returns the following position based on the current Position, the orientation and the difference.
 	 * @param now the current Position
@@ -229,6 +258,7 @@ public class Board {
 	 * @param diff the distance that the current Position is away from the next Position
 	 * @return the new position
 	 */
+
 	private Position determineNextPosition(Position now, RowOrientation ro, int diff){
 		int newX = ro == RowOrientation.X ? now.x + diff : now.x;
 		int newY = ro == RowOrientation.Y ? now.y + diff : now.y;
@@ -237,6 +267,7 @@ public class Board {
 
 	// ------------------------------- Queries ----------------------------------------- //
 	
+
 	/**
 	 * Validates if a given row follows the rules of the game.
 	 * Such that there are only unique blocks in the row.
@@ -244,6 +275,7 @@ public class Board {
 	 * @param row the to be validated row
 	 * @return whether the row is valid or not
 	 */
+
 	public boolean validRow(Board.Row row){
 		if(row.getBlocks().size() > 6 || row.getBlocks().size() < 1){
 			return false;
@@ -279,10 +311,12 @@ public class Board {
 		return true;
 	}
 	
+
 	/**
 	 * Converts the Board into a TUI usable String using the shortstrings form Block to represent blocks.
 	 * @return string that represents the Board in a textual way.
 	 */
+
 	public String toTUIString(){
 		String[] bounds = new String[(yHigh - yLow) + 1];
 		for(int y = 0; y < bounds.length; y++){
@@ -310,6 +344,7 @@ public class Board {
 
 	// Internal class
 	
+
 	/**
 	 * Class that represents Positions on the Board.
 	 * @author Jeroen
@@ -330,14 +365,17 @@ public class Board {
 		 * @param x
 		 * @param y
 		 */
+
 		public Position(int x, int y){
 			this.x = x;
 			this.y = y;
 		}
 		
+
 		/**
 		 * Compares this Position with an other position to determine which is the greater one. X is prioritized for the TreeMap.
 		 */
+
 		@Override
 		public int compareTo(Object o){
 			if(!(o instanceof Position)){
@@ -359,9 +397,11 @@ public class Board {
 			return res;
 		}
 		
+
 		/**
 		 * Determines wether this Position is equal to the given Position.
 		 */
+
 		@Override
 		public boolean equals(Object o){
 			if(!(o instanceof Position)){
@@ -372,14 +412,17 @@ public class Board {
 			return p.x == x && p.y == y;
 		}
 		
+
 		/**
 		 * @return a textual representation of a coordinate. (x,y)
 		 */
+
 		public String toString(){
 			return "(" + x + "," + y + ")";
 		}
 	}
 	
+
 	/**
 	 * Class Row that holds a set of blocks that represent a row on the board.
 	 * @author Jeroen
@@ -398,28 +441,35 @@ public class Board {
 		/**
 		 * Constructs a Row and initializes the List
 		 */
+
 		public Row(){
 			this.blocks = new LinkedList<Block>();
 		}
 		
+
 		/**
 		 * @return the list with blocks.
 		 */
+
 		public List<Block> getBlocks(){
 			return blocks;
 		}
 		
+
 		/**
 		 * Extends the list with the given Block
 		 * @param b the block that is added to the List
 		 */
+
 		public void addBlock(Block b){
 			blocks.add(b);
 		}
 		
+
 		/** 
 		 * @return the orientation of this row
 		 */
+
 		public RowOrientation getRowOrientation(){
 			return ro;
 		}
@@ -447,6 +497,7 @@ public class Board {
 		 * Converts this Row to a combination of the TuiString version of the blocks
 		 * @return
 		 */
+
 		public String toTUIString(){
 			String res = "Row : ";
 			for(Block b : blocks){

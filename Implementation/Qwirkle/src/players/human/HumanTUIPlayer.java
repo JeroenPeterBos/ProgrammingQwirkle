@@ -2,6 +2,7 @@ package players.human;
 
 import java.util.Scanner;
 
+import exceptions.InvalidIndexException;
 import exceptions.UnknownInputFormatException;
 import logic.game.Game;
 import logic.game.HostGame;
@@ -62,11 +63,27 @@ public class HumanTUIPlayer extends HumanPlayer{
 			if(response.length < 1){
 				throw new UnknownInputFormatException("1 2", "");
 			}
+			for(String blocks : response) {
+				Integer.parseInt(blocks);
+					
+			}
+
+			for(String blocks : response) {
+				if(Integer.parseInt(blocks) > 5 || Integer.parseInt(blocks) < 0) {
+					throw new InvalidIndexException(blocks);
+				}
+			}
 			for(String blocks : response){
 				m.addBlock(hand.get(Integer.parseInt(blocks))); 
 			}
 		} catch(UnknownInputFormatException e) {
 			System.out.println(e.getMessage());
+		} catch(InvalidIndexException e) {
+			System.out.println(e.getMessage());
+			return null;
+		} catch(NumberFormatException e) {
+			System.out.println("The given block contained characters. Please give input between 0 and 5");
+			return null;
 		}
 		return m;
 	}
@@ -81,6 +98,16 @@ public class HumanTUIPlayer extends HumanPlayer{
 			}
 			for(String res : response){
 				String[] blockPos = res.split("@");
+				for(String blo : blockPos) {
+					String[] singles = blo.split(",");
+					for(String sin : singles) {
+						Integer.parseInt(sin);
+					}
+				}
+			}
+			
+			for(String res : response){
+				String[] blockPos = res.split("@");
 				if(blockPos.length != 2){
 					throw new UnknownInputFormatException("1@1,1 2@1,2", res);
 				}
@@ -90,6 +117,8 @@ public class HumanTUIPlayer extends HumanPlayer{
 			}
 		} catch(UnknownInputFormatException e) {
 			System.out.println(e.getMessage());
+		} catch(NumberFormatException e) {
+			System.out.println("Please enter a format of the form 0@0,0. Characters won't be accepted");
 		}
 		return m;
 	}

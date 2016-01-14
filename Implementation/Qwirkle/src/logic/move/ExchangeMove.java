@@ -1,5 +1,6 @@
 package logic.move;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import components.Block;
@@ -18,6 +19,7 @@ public class ExchangeMove extends Move{
 	
 	public ExchangeMove(Player p, Game g){
 		super(p, g);
+		this.blocks = new LinkedList<Block>();
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //
@@ -36,6 +38,7 @@ public class ExchangeMove extends Move{
 		if(!p.equals(player)){
 			return false;
 		}
+		
 		
 		boolean result = true;
 		for(Block b : blocks){
