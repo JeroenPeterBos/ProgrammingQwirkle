@@ -94,7 +94,25 @@ public class PlayBlocksMove extends Move{
 	 * @return valid
 	 */
 	
-	public boolean validate(Player p){
+	public boolean validate(Player p, boolean firstMove){
+		// validate that the first move is always started at 0,0
+		
+		if(firstMove){
+			boolean hasOrigin = false;
+			for(Entry e: blocks){
+				if(e.getCoords().x < 0 || e.getCoords().y < 0){
+					return false;
+				}
+				if(e.getCoords().equals(game.getBoard().new Position(0,0))){
+					hasOrigin = true;
+				}
+			}
+			
+			if(!hasOrigin){
+				return false;
+			}
+		}
+		
 		// validate that its the current players turn and that the move has at least 1 block
 		
 		if(!p.equals(player) || blocks.size() < 1){

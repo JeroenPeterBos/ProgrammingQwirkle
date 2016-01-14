@@ -34,6 +34,8 @@ public abstract class HostGame extends Game{
 		turn = (turn + 1) % getNoPlayers();
 	}
 	
+	
+	
 	// ------------------------------- Queries ----------------------------------------- //
 	
 	public int getStartingPlayer(){

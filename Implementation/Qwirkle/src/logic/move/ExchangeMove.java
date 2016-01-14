@@ -34,7 +34,10 @@ public class ExchangeMove extends Move{
 		}
 	}
 	
-	public boolean validate(Player p){
+	public boolean validate(Player p, boolean firstMove){
+		if(firstMove){
+			return false;
+		}
 		if(!p.equals(player)){
 			return false;
 		}
