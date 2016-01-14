@@ -6,11 +6,20 @@ import java.util.LinkedList;
 public class Bag {
 
 	// ------------------------------- Instance Variables ------------------------------ //
-	
+
+	/**
+	 * A list that represents all the blocks left in the bag.
+	 */
+
 	private LinkedList<Block> blocks;
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
+
+	/**
+	 * Bag constructor which initializes the blocks list and resets it.
+	 */
+
 	public Bag(){
 		this.blocks = new LinkedList<Block>();
 		reset();
@@ -18,6 +27,12 @@ public class Bag {
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
+
+	/**
+	 * Resets the blocks list and fills it again.
+	 * After that the list is shuffled.
+	 */
+
 	public void reset(){
 		blocks.clear();
 		for(Block.Color c : Block.Color.values()){
@@ -30,6 +45,13 @@ public class Bag {
 		Collections.shuffle(blocks);
 	}
 	
+
+	/**
+	 * Swaps a given block with a new one and after that shuffles the bag again
+	 * @param b the block that is returned to the bag.
+	 * @return the new block
+	 */
+
 	public Block exchange(Block b){
 		Block res = getBlock();
 		blocks.add(b);
@@ -37,12 +59,23 @@ public class Bag {
 		return res;
 	}
 	
+
+	/**
+	 * Deletes a block from the list and returns it.
+	 * @return the deleted block.
+	 */
+
 	public Block getBlock(){
 		return blocks.pop();
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	
+
+	/**
+	 * @return the amount of blocks left in the bag.
+	 */
+
 	public int noBlocks(){
 		return blocks.size();
 	}

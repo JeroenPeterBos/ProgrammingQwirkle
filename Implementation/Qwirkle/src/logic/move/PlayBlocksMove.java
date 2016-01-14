@@ -68,9 +68,19 @@ public class PlayBlocksMove extends Move{
 			throw new IllegalMoveStateException(valid);
 		}
 		
-		for(Entry e: blocks){
-			player.removeBlock(e.getBlock());
-			game.getBoard().fill(e.getCoords(), e.getBlock());
+
+		boolean done = false;
+		while(!done){
+			boolean allDone = true;
+			for(Entry e: blocks){
+				if(player.hasBlock(e.getBlock())){
+					if(game.getBoard().fill(e.getCoords(), e.getBlock())){
+						player.removeBlock(e.getBlock());
+						allDone = false;
+					}
+				}
+			}
+			done = allDone;
 		}
 	}
 	
@@ -135,7 +145,21 @@ public class PlayBlocksMove extends Move{
 		
 		// validate that the to be executed move creates valid rows
 		
-		blocks.sort(comp);
+
+		// blocks.sort(comp);
+		
+		// sort the move on connectivity to the board
+		
+		// sortOnConnectivity(game.getBoard());
+		
+		// Print the blocks of this move TODO remove
+		String result = "MoveBlocks: ";
+		for(Entry e : blocks){
+			result += e.getCoords().toString() + " " + e.getBlock().toShortString() + " ";
+		}
+		System.out.println(result);
+		
+
 		
 		List<Board.Row> rows = game.getBoard().getCreatingRows(this, ro);
 		for(Board.Row row: rows){
@@ -222,6 +246,12 @@ public class PlayBlocksMove extends Move{
 		
 		score = 0;
 		valid = false;
+	}
+	
+
+	public void sortOnConnectivity(Board board){
+		int i = 0;
+		
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //

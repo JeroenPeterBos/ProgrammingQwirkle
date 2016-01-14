@@ -35,6 +35,7 @@ public class LocalGame extends HostGame{
 				System.out.println("invalid move");
 				m = players.get(turn).determineMove();
 			}
+			System.out.println("The move was valid");
 			
 			try {
 				m.execute();
@@ -52,8 +53,16 @@ public class LocalGame extends HostGame{
 			
 			incrementTurn();
 		}
+		printScores();
 		
 		// TODO notify view that game is finished
+	}
+	
+	// temp method
+	public void printScores(){
+		for(Player p: players){
+			System.out.println(p.getName() + "  " + p.getScore());
+		}
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
