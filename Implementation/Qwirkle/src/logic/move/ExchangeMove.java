@@ -9,7 +9,7 @@ import exceptions.MoveFullException;
 import logic.game.Game;
 import players.Player;
 
-public class ExchangeMove extends Move{
+public class ExchangeMove extends Move {
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
@@ -17,35 +17,35 @@ public class ExchangeMove extends Move{
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	public ExchangeMove(Player p, Game g){
+	public ExchangeMove(Player p, Game g) {
 		super(p, g);
 		this.blocks = new LinkedList<Block>();
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
-	public void execute() throws IllegalMoveStateException{
-		if(!valid){
+	public void execute() throws IllegalMoveStateException {
+		if (!valid) {
 			throw new IllegalMoveStateException(valid);
 		}
 		
-		for(Block b : blocks){
+		for (Block b : blocks) {
 			player.removeBlock(b);
 		}
 	}
 	
-	public boolean validate(Player p, boolean firstMove){
-		if(firstMove){
+	public boolean validate(Player p, boolean firstMove) {
+		if (firstMove) {
 			return false;
 		}
-		if(!p.equals(player)){
+		if (!p.equals(player)) {
 			return false;
 		}
 		
 		
 		boolean result = true;
-		for(Block b : blocks){
-			if(!player.hasBlock(b)){
+		for (Block b : blocks) {
+			if (!player.hasBlock(b)) {
 				result = false;
 				break;
 			}
@@ -55,8 +55,8 @@ public class ExchangeMove extends Move{
 		return result;
 	}
 	
-	public void addBlock(Block b){
-		if(blocks.size() >= 6){
+	public void addBlock(Block b) {
+		if (blocks.size() >= 6) {
 			try {
 				throw new MoveFullException(blocks.size());
 			} catch (MoveFullException e) {
@@ -69,7 +69,7 @@ public class ExchangeMove extends Move{
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	
-	public int getNoBlocks(){
+	public int getNoBlocks() {
 		return blocks.size();
 	}
 }

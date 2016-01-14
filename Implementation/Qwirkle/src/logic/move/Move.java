@@ -15,27 +15,27 @@ public abstract class Move {
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	/**
+	/**.
 	 * Move constructor sets player to p and game to g
 	 * @param p
 	 * @param g
 	 */
 	
-	public Move(Player p, Game g){
+	public Move(Player p, Game g) {
 		this.player = p;
 		this.game = g;
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
-	/**
+	/**.
 	 * execute() will fill the positions on the board with the to be moved blocks
 	 * @throws IllegalMoveStateException if move is not valid
 	 */
 	
 	public abstract void execute() throws IllegalMoveStateException;
 	
-	/**
+	/**.
 	 * validate checks the validation of the moves
 	 * sets valid to true and calculates the score of the moves if the moves are valid
 	 * @param p
@@ -46,7 +46,7 @@ public abstract class Move {
 
 	// ------------------------------- Queries ----------------------------------------- //
 	
-	/**
+	/**.
 	 * getNoBlocks gives the number of the to be moved blocks
 	 * @return blocks
 	 */

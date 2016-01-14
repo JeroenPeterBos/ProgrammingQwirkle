@@ -18,7 +18,7 @@ public class Board {
 	 * UNDEFINED is for rows of length 1
 	 */
 
-	public enum RowOrientation{
+	public enum RowOrientation {
 		X, Y, UNDEFINED;
 	}
 	
@@ -50,11 +50,11 @@ public class Board {
 	 * It also opens the starting point of the Board
 	 */
 
-	public Board(){
+	public Board() {
 		this.openPositions = new ArrayList<Position>();
 		this.filledPositions = new TreeMap<Position, Block>();
 		
-		this.openPositions.add(new Position(0,0));
+		this.openPositions.add(new Position(0, 0));
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //		
@@ -66,8 +66,8 @@ public class Board {
 	 * @param p the position where the block will be put
 	 * @param b the Block that will be added to the Board
 	 */
-	public boolean fill(Position p, Block b){
-		if(filledPositions.size() == 0 && !p.equals(new Position(0,0))){
+	public boolean fill(Position p, Block b) {
+		if (filledPositions.size() == 0 && !p.equals(new Position(0, 0))) {
 			try {
 				throw new FirstPositionNotOriginException(p);
 			} catch (FirstPositionNotOriginException e) {
@@ -75,10 +75,10 @@ public class Board {
 				return false;
 			}
 		}
-		if(!openPositions.contains(p)){
+		if (!openPositions.contains(p)) {
 			return false;
 		}
-		if(b == null){
+		if (b == null) {
 			throw new NullPointerException();
 		}
 		
@@ -96,43 +96,52 @@ public class Board {
 	 * @param p the Position from where will be expanded
 	 */
 
-	private void updateBounds(Position p){
-		if(p.x - 1 < xLow){ xLow = p.x - 1; }
-		if(p.x + 1 > xHigh){ xHigh = p.x + 1; }
+	private void updateBounds(Position p) {
+		if (p.x - 1 < xLow) { 
+			xLow = p.x - 1;
+		}
+		if (p.x + 1 > xHigh) { 
+			xHigh = p.x + 1; 
+		}
 		
-		if(p.y - 1 < yLow){ yLow = p.y - 1; }
-		if(p.y + 1 > yHigh){ yHigh = p.y + 1; }
+		if (p.y - 1 < yLow) { 
+			yLow = p.y - 1; 
+		}
+		if (p.y + 1 > yHigh) { 
+			yHigh = p.y + 1;
+		}
 	}
 	
 
-	/**
+	/**.
 	 * Opens the positions next to position p
 	 * @param p the Position from where will be expanded.
 	 */
 
-	private void openNewPositions(Position p){
-		openPosition(new Position(p.x+1, p.y));
-		openPosition(new Position(p.x-1, p.y));
-		openPosition(new Position(p.x, p.y+1));
-		openPosition(new Position(p.x, p.y-1));
+	private void openNewPositions(Position p) {
+		openPosition(new Position(p.x + 1, p.y));
+		openPosition(new Position(p.x - 1, p.y));
+		openPosition(new Position(p.x, p.y + 1));
+		openPosition(new Position(p.x, p.y - 1));
 	}
 	
-	private void openNewPositions(Position p, List<Position> pos){
-		openPositionIn(new Position(p.x+1, p.y), pos);
-		openPositionIn(new Position(p.x-1, p.y), pos);
-		openPositionIn(new Position(p.x, p.y+1), pos);
-		openPositionIn(new Position(p.x, p.y-1), pos);
+	private void openNewPositions(Position p, List<Position> pos) {
+		openPositionIn(new Position(p.x + 1, p.y), pos);
+		openPositionIn(new Position(p.x - 1, p.y), pos);
+		openPositionIn(new Position(p.x, p.y + 1), pos);
+		openPositionIn(new Position(p.x, p.y - 1), pos);
 	}
 	
 
 	/**
-	 * The position that will be opened. Opening can happen in the global openPositions list or in an external list.
+	 * The position that will be opened. 
+	 * Opening can happen in the global openPositions list or in an external list.
 	 * @param p the Position that will be opened
 	 * @param pos the list in which the position will be opened
 	 */
 
-	private void openPositionIn(Position p, List<Position> pos){
-		if(!pos.contains(p) && !filledPositions.containsKey(p)){
+	private void openPositionIn(Position p, List<Position> pos) {
+		if (!pos.contains(p) && !filledPositions.containsKey(p)) {
 			pos.add(p);
 		}
 	}
@@ -143,23 +152,23 @@ public class Board {
 	 * @param p the Position that will be opened
 	 */
 
-	private void openPosition(Position p){
+	private void openPosition(Position p) {
 		openPositionIn(p, openPositions);
 	}
 	
-	private boolean connectedToFilledPositions(List<Position> positions){
+	private boolean connectedToFilledPositions(List<Position> positions) {
 		List<Position> freePositions = new LinkedList<Position>();
 		
 		return checkNextPosition(positions, freePositions);
 	}
 	
-	private boolean checkNextPosition(List<Position> positions, List<Position> freePositions){
-		if(positions.size() < 1){
+	private boolean checkNextPosition(List<Position> positions, List<Position> freePositions) {
+		if (positions.size() < 1) {
 			return true;
 		}
 		
-		for(Position p: positions){
-			if(openPositions.contains(p) || freePositions.contains(p)){
+		for (Position p: positions) {
+			if (openPositions.contains(p) || freePositions.contains(p)) {
 				positions.remove(p);
 				openNewPositions(p, freePositions);
 				return checkNextPosition(positions, freePositions);
@@ -170,15 +179,16 @@ public class Board {
 	}
 
 	/**
-	 * Creates a List of Row objects that represent all the individual rows that will be expanded or created by executing PlayBlocksMove m.
+	 * Creates a List of Row objects that represent all the individual 
+	 * 				rows that will be expanded or created by executing PlayBlocksMove m.
 	 * @param m the move that will create the rows
 	 * @param ro the orientation in which the PlayBlockMove blocks are oriented
 	 * @return A List of Rows that the move will create or expand
 	 */
-	public List<Row> getCreatingRows(PlayBlocksMove m, RowOrientation ro){
+	public List<Row> getCreatingRows(PlayBlocksMove m, RowOrientation ro) {
 		List<Row> rows = new LinkedList<Row>();
 		
-		if(!connectedToFilledPositions(m.getPositionList())){
+		if (!connectedToFilledPositions(m.getPositionList())) {
 			return rows;
 		}
 		

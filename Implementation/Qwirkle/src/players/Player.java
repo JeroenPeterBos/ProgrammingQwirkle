@@ -24,7 +24,7 @@ public abstract class Player {
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	/**
+	/**.
 	 * Constructor of player creates a new Player
 	 * the constructor sets name to n, hand to a new LinkedList<Block>(), 
 	 * score to and game to g
@@ -32,7 +32,7 @@ public abstract class Player {
 	 * @param g
 	 */
 	
-	protected Player(String n, Game g){
+	protected Player(String n, Game g) {
 		this.name = n;
 		this.hand = new LinkedList<Block>();
 		this.score = 0;
@@ -41,7 +41,7 @@ public abstract class Player {
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
-	/**
+	/**.
 	 * determineMove will give the move decided by the computer or human
 	 * The move will be an exchangeMove or PlayBlocksMove, with specified blocks and coordinates
 	 * @return move
@@ -49,30 +49,32 @@ public abstract class Player {
 	
 	public abstract Move determineMove();
 	
-	/**
+	/**.
 	 * removeBlock removes a block of the player's hand
 	 * @throws HandEmptyException if the player's hand is empty
 	 * @throws BlockNotInHandException if the player doesn't have block b
 	 * @param b
 	 */
 	
-	public void removeBlock(Block b){
+	public void removeBlock(Block b) {
 		try {
-			if(hand.size() <= 0){
+			if (hand.size() <= 0) {
 				throw new HandEmptyException(this, hand.size());
 			}
-			if(!hasBlock(b)){
+			if (!hasBlock(b)) {
 				throw new BlockNotInHandException(this, b);
 			}
-		} catch (Exception e){
+		} catch (HandEmptyException e) {
 			System.err.println(e.getMessage());
 			return;
+		} catch (BlockNotInHandException e) {
+			System.err.println(e.getMessage());
 		}
 		
 		hand.remove(b);
 	}
 	
-	/**
+	/**.
 	 * giveBlock will give the player a new block
 	 * @throws HandFullException if the player's hand is full
 	 * @param b
@@ -174,30 +176,30 @@ public abstract class Player {
 		return set.size() > res ? set.size() : res;
 	}
 	
-	/**
+	/**.
 	 * hasBlock checks whether the player has block b or not
 	 * @param b
 	 * @return boolean
 	 */
 	
-	public boolean hasBlock(Block b){
+	public boolean hasBlock(Block b) {
 		return hand.contains(b);
 	}
-	/**
+	/**.
 	 * getName gets the name of the player
 	 * @return name
 	 */
 	
-	public String getName(){
+	public String getName() {
 		return name;
 	}
 	
-	/**
+	/**.
 	 * getScore gets the score of the player
 	 * @return score
 	 */
 	
-	public int getScore(){
+	public int getScore() {
 		return score;
 	}
 }

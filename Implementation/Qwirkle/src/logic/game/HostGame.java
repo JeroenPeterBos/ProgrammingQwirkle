@@ -5,7 +5,7 @@ import java.util.List;
 import components.Bag;
 import players.Player;
 
-public abstract class HostGame extends Game{
+public abstract class HostGame extends Game {
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
@@ -14,7 +14,7 @@ public abstract class HostGame extends Game{
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	public HostGame(List<Player> players){
+	public HostGame(List<Player> players) {
 		super(players);
 		
 		this.bag = new Bag();
@@ -22,29 +22,29 @@ public abstract class HostGame extends Game{
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
-	protected void init(){
-		for(Player p: players){
-			for(int i = 0; i < 6 ; i++){
+	protected void init() {
+		for (Player p: players) {
+			for (int i = 0; i < 6; i++) {
 				p.giveBlock(bag.getBlock());
 			}
 		}
 	}
 	
-	protected void incrementTurn(){
+	protected void incrementTurn() {
 		turn = (turn + 1) % getNoPlayers();
 	}
 	
-	protected boolean hasPossibleMove(){
+	protected boolean hasPossibleMove() {
 		return players.get(turn).hasPossibleMove();
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	
-	public int getStartingPlayer(){
+	public int getStartingPlayer() {
 		int res = 0;
 		
-		for(int i = 0; i < players.size(); i++){
-			if(players.get(res).maxMove() < players.get(i).maxMove()){
+		for (int i = 0; i < players.size(); i++) {
+			if (players.get(res).maxMove() < players.get(i).maxMove()) {
 				res = i;
 			}
 		}
@@ -52,7 +52,7 @@ public abstract class HostGame extends Game{
 		return res;
 	}
 	
-	public Bag getBag(){
+	public Bag getBag() {
 		return bag;
 	}
 }
