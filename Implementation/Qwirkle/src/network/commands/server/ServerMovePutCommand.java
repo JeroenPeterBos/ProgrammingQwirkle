@@ -1,15 +1,14 @@
-package network.commands.client;
+package network.commands.server;
 
-import logic.Move;
 import logic.move.PlayBlocksMove;
 import network.IProtocol;
 import network.commands.Command;
 
-public class ClientMovePutCommand extends Command{
+public class ServerMovePutCommand extends Command{
 
 	private PlayBlocksMove move;
 	
-	public ClientMovePutCommand(PlayBlocksMove m){
+	public ServerMovePutCommand(PlayBlocksMove m){
 		this.move = m;
 	}
 	
@@ -19,11 +18,11 @@ public class ClientMovePutCommand extends Command{
 	
 	@Override
 	public String toCommandString(){
-		String command = IProtocol.CLIENT_MOVE_PUT;
+		String command = IProtocol.SERVER_MOVE_PUT;
 		
 		for(int i = 0; i < move.getNoBlocks(); i++){
 			PlayBlocksMove.Entry e = move.getEntry(i);
-			command += e.getBlock().toInt() + "@" + e.getCoords().x + "," + e.getCoords().y;
+			command += " " + e.getBlock() + "@" + e.getCoords().x + "," + e.getCoords().y;
 		}
 		
 		return command;

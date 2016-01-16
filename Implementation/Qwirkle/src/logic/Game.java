@@ -1,4 +1,4 @@
-package logic.game;
+package logic;
 
 import java.util.List;
 

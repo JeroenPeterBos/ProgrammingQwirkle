@@ -10,7 +10,8 @@ import components.Board.Position;
 import components.Board.Row;
 import exceptions.IllegalMoveStateException;
 import exceptions.MoveFullException;
-import logic.game.Game;
+import logic.Game;
+import logic.Move;
 import players.Player;
 
 public class PlayBlocksMove extends Move {

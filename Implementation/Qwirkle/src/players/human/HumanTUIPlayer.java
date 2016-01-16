@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 import exceptions.InvalidIndexException;
 import exceptions.UnknownInputFormatException;
-import logic.game.Game;
+import logic.Game;
+import logic.Move;
 import logic.game.HostGame;
 import logic.move.ExchangeMove;
 import logic.move.ExchangeMoveLocal;
-import logic.move.Move;
 import logic.move.PlayBlocksMove;
 import logic.move.PlayBlocksMoveLocal;
 

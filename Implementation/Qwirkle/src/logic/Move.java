@@ -1,7 +1,6 @@
-package logic.move;
+package logic;
 
 import exceptions.IllegalMoveStateException;
-import logic.game.Game;
 import players.Player;
 
 public abstract class Move {

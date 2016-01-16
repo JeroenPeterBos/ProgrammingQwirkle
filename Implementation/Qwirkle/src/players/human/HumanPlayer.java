@@ -1,6 +1,6 @@
 package players.human;
 
-import logic.game.Game;
+import logic.Game;
 import players.Player;
 
 public abstract class HumanPlayer extends Player{

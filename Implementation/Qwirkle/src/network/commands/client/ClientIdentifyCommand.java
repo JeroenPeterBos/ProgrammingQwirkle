@@ -17,8 +17,11 @@ public class ClientIdentifyCommand extends Command{
 	public String toCommandString(){
 		String command = IProtocol.CLIENT_IDENTIFY + " " + name + " ";
 		
-		for(IProtocol.Feature f : features){
-			command += f + " ";
+		if(features.length > 0){
+			command += features[0];
+		}
+		for(int i = 1; i < features.length; i++){
+			command += "," + features[i];
 		}
 		
 		return command;

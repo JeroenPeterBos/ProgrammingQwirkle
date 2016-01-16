@@ -6,7 +6,8 @@ import java.util.List;
 import components.Block;
 import exceptions.IllegalMoveStateException;
 import exceptions.MoveFullException;
-import logic.game.Game;
+import logic.Game;
+import logic.Move;
 import players.Player;
 
 public class ExchangeMove extends Move {

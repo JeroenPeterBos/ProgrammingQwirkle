@@ -8,8 +8,8 @@ import components.Board.Position;
 import exceptions.BlockNotInHandException;
 import exceptions.HandEmptyException;
 import exceptions.HandFullException;
-import logic.game.Game;
-import logic.move.Move;
+import logic.Game;
+import logic.Move;
 import logic.move.PlayBlocksMove;
 
 public abstract class Player {

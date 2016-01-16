@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import exceptions.IllegalMoveStateException;
-import logic.move.Move;
+import logic.Move;
 import logic.move.PlayBlocksMove;
 import players.Player;
 import players.human.HumanTUIPlayer;
