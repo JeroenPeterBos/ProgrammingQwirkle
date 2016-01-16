@@ -72,4 +72,8 @@ public class ExchangeMove extends Move {
 	public int getNoBlocks() {
 		return blocks.size();
 	}
+	
+	public Block getBlock(int i) {
+		return blocks.get(i);
+	}
 }

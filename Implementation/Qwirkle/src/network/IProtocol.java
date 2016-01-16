@@ -360,30 +360,4 @@ public interface IProtocol {
      * </dl>
      */
     String SERVER_LOBBY = "LOBBYOK";
-    
-    
-    /**
-     * Converts the giver parameter to a usable error command
-     * @param e
-     * @param message
-     * @return
-     */
-    public static String command(IProtocol.Error e, String message){
-    	return SERVER_ERROR + " " + e + " " + message;
-    }
-    
-    /**
-     * Converts the given parameters to a usable command
-     * @param command
-     * @param param1
-     * @param param2
-     * @return
-     */
-    public static String command(String command, String param1, String param2){
-    	return command + " " + param1 + " " + param2;
-    }
-    
-    public static String command(String command, String param1){
-    	return command + " " + param1;
-    }
 }
