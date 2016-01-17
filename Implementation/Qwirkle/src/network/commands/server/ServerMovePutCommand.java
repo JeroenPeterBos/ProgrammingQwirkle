@@ -2,9 +2,9 @@ package network.commands.server;
 
 import logic.move.PlayBlocksMove;
 import network.IProtocol;
-import network.commands.Command;
+import network.commands.GameCommand;
 
-public class ServerMovePutCommand extends Command{
+public class ServerMovePutCommand extends GameCommand{
 
 	private PlayBlocksMove move;
 	

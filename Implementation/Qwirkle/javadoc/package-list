@@ -1,9 +1,16 @@
-commands
 components
 exceptions
 exceptions.protocol
+logic
 logic.game
 logic.move
 network
+network.commands
+network.commands.client
+network.commands.client.features
+network.commands.server
+network.commands.server.features
+network.io
 players
 players.human
+test.components

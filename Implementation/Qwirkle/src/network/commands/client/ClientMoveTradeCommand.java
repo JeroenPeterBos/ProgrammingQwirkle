@@ -2,9 +2,9 @@ package network.commands.client;
 
 import logic.move.ExchangeMove;
 import network.IProtocol;
-import network.commands.Command;
+import network.commands.GameCommand;
 
-public class ClientMoveTradeCommand extends Command{
+public class ClientMoveTradeCommand extends GameCommand{
 
 	private ExchangeMove move;
 	

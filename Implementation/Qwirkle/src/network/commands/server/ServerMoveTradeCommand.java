@@ -1,9 +1,9 @@
 package network.commands.server;
 
 import network.IProtocol;
-import network.commands.Command;
+import network.commands.GameCommand;
 
-public class ServerMoveTradeCommand extends Command{
+public class ServerMoveTradeCommand extends GameCommand{
 
 	private int amount;
 	
