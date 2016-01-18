@@ -11,6 +11,16 @@ public class ClientQueueCommand extends Command{
 		this.queues = queues;
 	}
 	
+	public ClientQueueCommand(String[] commandParts){
+		int[] queues = new int[commandParts.length - 1];
+		
+		for(int i = 1; i < commandParts.length; i++){
+			queues[i-1] = Integer.parseInt(commandParts[i]);
+		}
+		
+		this.queues = queues;
+	}
+	
 	@Override
 	public String toCommandString(){
 		String command = IProtocol.CLIENT_QUEUE + " ";

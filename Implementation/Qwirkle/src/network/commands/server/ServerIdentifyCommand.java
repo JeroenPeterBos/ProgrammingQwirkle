@@ -11,6 +11,19 @@ public class ServerIdentifyCommand extends Command{
 		this.features = f;
 	}
 	
+	public ServerIdentifyCommand(String[] commandParts){
+		if(commandParts.length > 1){
+			String[] f = commandParts[1].split(",");
+			this.features = new IProtocol.Feature[f.length];
+			
+			for(int i = 0; i < f.length; i++){
+				this.features[i] = IProtocol.Feature.valueOf(f[i]);
+			}
+		} else {
+			this.features = new IProtocol.Feature[0];
+		}
+	}
+	
 	@Override
 	public String toCommandString(){
 		String command = IProtocol.SERVER_IDENTIFY;

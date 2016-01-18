@@ -15,6 +15,18 @@ public class ServerGameendCommand extends GameCommand{
 		this.players = p;
 	}
 	
+	public ServerGameendCommand(String[] commandParts){
+		this.win = commandParts[1] == "WIN";
+		this.scores = new int[commandParts.length - 2];
+		this.players = new String[commandParts.length - 2];
+		
+		for(int i = 2; i < commandParts.length; i++){
+			String[] parts = commandParts[i].split(",");
+			scores[i-2] = Integer.parseInt(parts[0]);
+			players[i-2] = parts[1];
+		}
+	}
+	
 	@Override
 	public String toCommandString(){
 		String command = IProtocol.SERVER_GAMEEND + " ";

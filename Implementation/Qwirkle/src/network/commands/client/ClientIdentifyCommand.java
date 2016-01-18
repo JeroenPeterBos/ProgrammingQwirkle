@@ -5,13 +5,31 @@ import network.commands.Command;
 
 public class ClientIdentifyCommand extends Command{
 
+	// ------------------------------- Enumerations ------------------------------------ //
+	
+	// ------------------------------- Instance Variables ------------------------------ //
+	
 	private String name;
 	private IProtocol.Feature[] features;
+	
+	// ------------------------------- Constructors ------------------------------------ //
 	
 	public ClientIdentifyCommand(String name, IProtocol.Feature[] features){
 		this.name = name;
 		this.features = features;
 	}
+	
+	public ClientIdentifyCommand(String[] commandParts){
+		IProtocol.Feature[] features = new IProtocol.Feature[commandParts.length - 2];
+		for(int i = 2; i < commandParts.length; i++){
+			features[i - 2] = IProtocol.Feature.valueOf(commandParts[i]);
+		}
+		this.name = commandParts[1];
+		this.features = features;
+	}
+	// ------------------------------- Commands ---------------------------------------- //
+	
+	// ------------------------------- Queries ----------------------------------------- //
 	
 	@Override
 	public String toCommandString(){

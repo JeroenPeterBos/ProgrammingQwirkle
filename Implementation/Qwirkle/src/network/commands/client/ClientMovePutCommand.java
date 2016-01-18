@@ -1,5 +1,8 @@
 package network.commands.client;
 
+import components.Block;
+import components.Board.Position;
+import logic.game.ServerGame;
 import logic.move.PlayBlocksMove;
 import network.IProtocol;
 import network.commands.GameCommand;
@@ -10,6 +13,20 @@ public class ClientMovePutCommand extends GameCommand{
 	
 	public ClientMovePutCommand(PlayBlocksMove m){
 		this.move = m;
+	}
+	
+	public ClientMovePutCommand(String[] commandParts, ServerGame g){
+		PlayBlocksMove playmove = new PlayBlocksMove(g.getCurrentPlayer(), g);
+		
+		for(int i = 1; i < commandParts.length; i++){
+			String[] parts = commandParts[i].split("@");
+			Block b = Block.instance(Integer.parseInt(parts[0]));
+			int x = Integer.parseInt(parts[1].split(",")[0]);
+			int y = Integer.parseInt(parts[1].split(",")[1]);
+			playmove.addBlock(b, g.getBoard().new Position(x, y));
+		}
+		
+		this.move = playmove;
 	}
 	
 	public PlayBlocksMove getMove(){

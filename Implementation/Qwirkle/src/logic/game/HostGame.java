@@ -53,6 +53,10 @@ public abstract class HostGame extends Game {
 		return res;
 	}
 	
+	public Player getCurrentPlayer(){
+		return players.get(turn);
+	}
+	
 	public Bag getBag() {
 		return bag;
 	}
