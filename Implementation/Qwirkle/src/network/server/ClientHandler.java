@@ -1,4 +1,4 @@
-package network;
+package network.server;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,6 +8,9 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import logic.game.ServerGame;
+import network.IProtocol;
+import network.IProtocol.Error;
+import network.IProtocol.Feature;
 
 public class ClientHandler extends Thread {
 

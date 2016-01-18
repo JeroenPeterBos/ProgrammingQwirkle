@@ -1,10 +1,13 @@
-package network;
+package network.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import network.IProtocol;
+import network.IProtocol.Feature;
 
 public class Server {
 
@@ -51,6 +54,8 @@ public class Server {
 				ClientHandler ch = new ClientHandler(this, clientSocket);
 				clients.add(ch);
 				ch.start();
+				
+				System.out.println("Client connected");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
