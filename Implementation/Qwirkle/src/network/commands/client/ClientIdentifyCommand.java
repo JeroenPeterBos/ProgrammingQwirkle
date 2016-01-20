@@ -44,4 +44,8 @@ public class ClientIdentifyCommand extends Command{
 		
 		return command;
 	}
+	
+	public String getName(){
+		return name;
+	}
 }

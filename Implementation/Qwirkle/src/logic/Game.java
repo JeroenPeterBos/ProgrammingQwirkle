@@ -12,6 +12,7 @@ public abstract class Game implements Runnable {
 	
 	protected Board board;
 	protected List<Player> players;
+	protected int turn;
 	
 	protected boolean running = true;
 	
@@ -32,10 +33,31 @@ public abstract class Game implements Runnable {
 		players.add(p);
 	}
 	
+	protected void incrementTurn() {
+		turn = (turn + 1) % getNoPlayers();
+	}
+	
+	public void setTurn(Player p){
+		for(int i = 0; i < players.size(); i++){
+			if(players.get(i).equals(p)){
+				turn = i;
+			}
+		}
+	}
+	
 	// ------------------------------- Queries ----------------------------------------- //
 	
 	public Board getBoard() {
 		return board;
+	}
+	
+	public Player getPlayer(String n){
+		for(Player p : players){
+			if(p.getName().equals(n)){
+				return p;
+			}
+		}
+		return null;
 	}
 	
 	public int getScore(Player p) {
@@ -44,5 +66,9 @@ public abstract class Game implements Runnable {
 	
 	public int getNoPlayers() {
 		return players.size();
+	}
+	
+	public Player getCurrentPlayer(){
+		return players.get(turn);
 	}
 }

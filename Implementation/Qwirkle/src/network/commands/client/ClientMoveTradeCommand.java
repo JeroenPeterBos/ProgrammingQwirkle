@@ -4,9 +4,9 @@ import components.Block;
 import logic.game.HostGame;
 import logic.move.ExchangeMove;
 import network.IProtocol;
-import network.commands.GameCommand;
+import network.commands.Command;
 
-public class ClientMoveTradeCommand extends GameCommand{
+public class ClientMoveTradeCommand extends Command{
 
 	private ExchangeMove move;
 	

@@ -1,7 +1,5 @@
 package network.server;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -9,90 +7,84 @@ import java.net.Socket;
 
 import logic.game.ServerGame;
 import network.IProtocol;
-import network.IProtocol.Error;
-import network.IProtocol.Feature;
+import network.commands.Command;
+import network.commands.client.ClientIdentifyCommand;
+import network.commands.server.ServerErrorCommand;
+import network.io.CommandReader;
+import network.io.CommandWriter;
 
 public class ClientHandler extends Thread {
 
-	// ------------------------------- Instance Variables ------------------------------ //
-	
+	// ------------------------------- Instance Variables
+	// ------------------------------ //
+
 	private Server server;
-	private BufferedWriter out;
-	private BufferedReader in;
+	private CommandWriter out;
+	private CommandReader in;
 	private String name;
 	private IProtocol.Feature[] features;
-	
+
 	private ServerGame game;
 	private boolean myTurn;
-	
-	// ------------------------------- Constructors ------------------------------------ //
-	
+
+	// ------------------------------- Constructors
+
 	public ClientHandler(Server server, Socket socket) throws IOException {
 		this.server = server;
-		this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-		this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		this.out = new CommandWriter(new OutputStreamWriter(socket.getOutputStream()));
+		this.in = new CommandReader(new InputStreamReader(socket.getInputStream()));
 		this.game = null;
 		this.myTurn = false;
 	}
-	// ------------------------------- Commands ---------------------------------------- //
-	
-	public void writeToClient(String msg) {
-		try {
-			out.write(msg);
-			out.newLine();
-			out.flush();
-		} catch (IOException e) {
-			// TODO determine action when io exception
-		}
-	}
-	
+	// ------------------------------- Commands
+
 	public void run() {
 		boolean running = init();
+
+		while (running) {
+			
+		}
 	}
-	
+
 	public boolean init() {
-		String msg = null;
+		Command input = null;
 		try {
-			msg = in.readLine();
-		} catch (IOException e) {
-			e.printStackTrace();
+			input = in.readClientCommand(null);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		
-		if (!(msg.startsWith(IProtocol.CLIENT_IDENTIFY))) {
-			writeToClient(IProtocol.command(IProtocol.Error.COMMAND_NOT_FOUND, 
-							"First message should be IDENTIFY"));
+
+		if (!(input instanceof ClientIdentifyCommand)) {
+			try {
+				out.write(new ServerErrorCommand(IProtocol.Error.COMMAND_NOT_FOUND,
+						"First client should identify itself"));
+			} catch (IOException e) {
+				// TODO terminate this client
+			}
 			return false;
 		}
-		
-		// split the message to receive the name
-		String[] params = msg.replaceAll(IProtocol.CLIENT_IDENTIFY + " ", "").split(" ");
-		if (params.length < 1 || params.length > 2) {
-			writeToClient(IProtocol.command(IProtocol.Error.NAME_INVALID, 
-							"Invalid amount of parameters. Spaces are not allowed in names."));
-			return false;
-		}
-		String naam = params[0];
-		
-		// check if the name is allowed
-		if (naam.matches("[a-zA-Z0-9-_]")) {
-			// TODO check if name is valid
-		}
-		
+
+		String name = ((ClientIdentifyCommand) input).getName();
 		// check if name is unique
 		for (ClientHandler client : server.getClients()) {
-			if (client.getName().equals(naam)) {
-				writeToClient(IProtocol.command(IProtocol.Error.NAME_USED, 
-								"Name is already in use"));
+			if (!client.equals(this) && client.getName().equals(name)) {
+				try {
+					out.write(new ServerErrorCommand(IProtocol.Error.NAME_USED, "Name is already in use"));
+				} catch (IOException e) {
+					// TODO Terminate this client
+				}
 				return false;
 			}
 		}
-		
+
 		// check feature compatibility
-		
+
+		return true;
 	}
-	
-	// ------------------------------- Queries ----------------------------------------- //
-	
+
+	// ------------------------------- Queries
+
 	public String getClientName() {
 		return name;
 	}

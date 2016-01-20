@@ -1,9 +1,9 @@
 package network.commands.server;
 
 import network.IProtocol;
-import network.commands.GameCommand;
+import network.commands.Command;
 
-public class ServerGameendCommand extends GameCommand{
+public class ServerGameendCommand extends Command{
 
 	private boolean win;
 	private int[] scores;

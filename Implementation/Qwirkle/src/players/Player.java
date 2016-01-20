@@ -101,6 +101,9 @@ public abstract class Player {
 		score += s;
 	}
 	
+	public void setGame(Game g){
+		this.game = g;
+	}
 	// ------------------------------- Queries ----------------------------------------- //
 	
 	public boolean hasPossibleMove(){
@@ -201,5 +204,9 @@ public abstract class Player {
 	
 	public int getScore() {
 		return score;
+	}
+	
+	public Game getGame() {
+		return game;
 	}
 }
