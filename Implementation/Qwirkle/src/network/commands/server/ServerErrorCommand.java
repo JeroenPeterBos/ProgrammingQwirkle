@@ -18,7 +18,7 @@ public class ServerErrorCommand extends Command {
 
 		String mes = "";
 		for (int i = 2; i < commandParts.length; i++) {
-			mes += commandParts[i];
+			mes += commandParts[i] + " ";
 		}
 
 		this.message = mes;

@@ -11,7 +11,7 @@ public abstract class HostGame extends Game {
 	// ------------------------------- Instance Variables ------------------------------ //
 	
 	protected Bag bag;
-	protected int turn;
+	
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
@@ -29,10 +29,6 @@ public abstract class HostGame extends Game {
 				p.giveBlock(bag.getBlock());
 			}
 		}
-	}
-	
-	protected void incrementTurn() {
-		turn = (turn + 1) % getNoPlayers();
 	}
 	
 	protected boolean hasPossibleMove() {
@@ -53,9 +49,7 @@ public abstract class HostGame extends Game {
 		return res;
 	}
 	
-	public Player getCurrentPlayer(){
-		return players.get(turn);
-	}
+	
 	
 	public Bag getBag() {
 		return bag;

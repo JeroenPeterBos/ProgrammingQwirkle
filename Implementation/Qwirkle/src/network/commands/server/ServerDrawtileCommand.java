@@ -5,9 +5,9 @@ import java.util.List;
 
 import components.Block;
 import network.IProtocol;
-import network.commands.GameCommand;
+import network.commands.Command;
 
-public class ServerDrawtileCommand extends GameCommand{
+public class ServerDrawtileCommand extends Command{
 
 	private List<Block> blocks;
 	

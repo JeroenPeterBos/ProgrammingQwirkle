@@ -1,9 +1,9 @@
 package network.commands.server;
 
 import network.IProtocol;
-import network.commands.GameCommand;
+import network.commands.Command;
 
-public class ServerGamestartCommand extends GameCommand {
+public class ServerGamestartCommand extends Command {
 
 	private String[] players;
 	

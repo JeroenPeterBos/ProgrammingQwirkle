@@ -14,6 +14,9 @@ import network.commands.server.ServerErrorCommand;
 import network.commands.server.ServerGameendCommand;
 import network.commands.server.ServerGamestartCommand;
 import network.commands.server.ServerIdentifyCommand;
+import network.commands.server.ServerMovePutCommand;
+import network.commands.server.ServerMoveTradeCommand;
+import network.commands.server.ServerTurnCommand;
 
 public abstract class Command {
 
@@ -73,11 +76,11 @@ public abstract class Command {
 		case IProtocol.SERVER_IDENTIFY:
 			return new ServerIdentifyCommand(words);
 		case IProtocol.SERVER_MOVE_PUT:
-			break;
+			return new ServerMovePutCommand(words, g);
 		case IProtocol.SERVER_MOVE_TRADE:
-			break;
+			return new ServerMoveTradeCommand(words);
 		case IProtocol.SERVER_TURN:
-			break;
+			return new ServerTurnCommand(words);
 		default:
 			throw new CommandException(IProtocol.Error.COMMAND_NOT_FOUND, c);
 		}

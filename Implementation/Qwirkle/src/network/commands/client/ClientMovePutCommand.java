@@ -1,13 +1,12 @@
 package network.commands.client;
 
 import components.Block;
-import components.Board.Position;
 import logic.game.ServerGame;
 import logic.move.PlayBlocksMove;
 import network.IProtocol;
-import network.commands.GameCommand;
+import network.commands.Command;
 
-public class ClientMovePutCommand extends GameCommand{
+public class ClientMovePutCommand extends Command{
 
 	private PlayBlocksMove move;
 	
