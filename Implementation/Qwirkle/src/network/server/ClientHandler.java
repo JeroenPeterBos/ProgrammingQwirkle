@@ -5,13 +5,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
-import logic.game.ServerGame;
+import exceptions.protocol.CommandException;
 import network.IProtocol;
 import network.commands.Command;
+import network.commands.GameCommand;
 import network.commands.client.ClientIdentifyCommand;
+import network.commands.client.ClientQueueCommand;
+import network.commands.client.ClientQuitCommand;
 import network.commands.server.ServerErrorCommand;
 import network.io.CommandReader;
 import network.io.CommandWriter;
+import players.distant.SocketPlayer;
 
 public class ClientHandler extends Thread {
 
@@ -21,11 +25,9 @@ public class ClientHandler extends Thread {
 	private Server server;
 	private CommandWriter out;
 	private CommandReader in;
-	private String name;
+	
+	private SocketPlayer player;
 	private IProtocol.Feature[] features;
-
-	private ServerGame game;
-	private boolean myTurn;
 
 	// ------------------------------- Constructors
 
@@ -33,8 +35,6 @@ public class ClientHandler extends Thread {
 		this.server = server;
 		this.out = new CommandWriter(new OutputStreamWriter(socket.getOutputStream()));
 		this.in = new CommandReader(new InputStreamReader(socket.getInputStream()));
-		this.game = null;
-		this.myTurn = false;
 	}
 	// ------------------------------- Commands
 
@@ -42,14 +42,35 @@ public class ClientHandler extends Thread {
 		boolean running = init();
 
 		while (running) {
+			Command c;
+			try {
+				c = Command.toClientCommand(in.readLine(), player, player.getGame());
+			} catch (CommandException e) {
+				e.printStackTrace();
+				continue;
+			} catch (IOException e) {
+				running = false;
+				continue;
+			}
 			
+			if(c instanceof GameCommand){
+				player.getGame().addMove(((GameCommand) c).getMove());
+			} else if(c instanceof ClientQueueCommand){
+				for(int i: ((ClientQueueCommand) c).getQueues()){
+					server.getGameCreator().addPlayer(player, i);
+				}
+			} else if(c instanceof ClientQuitCommand){
+				player.getGame().shutDown();
+			}
 		}
+		
+		shutDown();
 	}
 
 	public boolean init() {
 		Command input = null;
 		try {
-			input = in.readClientCommand(null);
+			input = in.readClientCommand(null, player);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -57,7 +78,7 @@ public class ClientHandler extends Thread {
 
 		if (!(input instanceof ClientIdentifyCommand)) {
 			try {
-				out.write(new ServerErrorCommand(IProtocol.Error.COMMAND_NOT_FOUND,
+				out.write(new ServerErrorCommand(IProtocol.Error.INVALID_COMMAND,
 						"First client should identify itself"));
 			} catch (IOException e) {
 				// TODO terminate this client
@@ -68,7 +89,7 @@ public class ClientHandler extends Thread {
 		String name = ((ClientIdentifyCommand) input).getName();
 		// check if name is unique
 		for (ClientHandler client : server.getClients()) {
-			if (!client.equals(this) && client.getName().equals(name)) {
+			if (!client.equals(this) && client.getClientName().equals(name)) {
 				try {
 					out.write(new ServerErrorCommand(IProtocol.Error.NAME_USED, "Name is already in use"));
 				} catch (IOException e) {
@@ -80,12 +101,37 @@ public class ClientHandler extends Thread {
 
 		// check feature compatibility
 
+		this.player = new SocketPlayer(name, this, null);
+		System.out.println(name + ": connected");
+		
+		
+		server.getClients().add(this);
 		return true;
+	}
+	
+	public void send(Command c){
+		try {
+			out.write(c);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void shutDown() {
+		server.getClients().remove(this);
+		server.getGameCreator().removeFromQueues(player);
+		try {
+			in.close();
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(player.getName() + ": disconnected");
 	}
 
 	// ------------------------------- Queries
 
 	public String getClientName() {
-		return name;
+		return player.getName();
 	}
 }

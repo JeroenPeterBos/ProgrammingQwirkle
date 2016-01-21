@@ -8,6 +8,7 @@ import exceptions.protocol.InvalidSocketInputException;
 import logic.Game;
 import logic.game.ServerGame;
 import network.commands.Command;
+import players.Player;
 
 public class CommandReader extends BufferedReader{
 
@@ -15,14 +16,14 @@ public class CommandReader extends BufferedReader{
 		super(in);
 	}
 	
-	public Command readClientCommand(ServerGame g) throws IOException{
+	public Command readClientCommand(ServerGame g, Player p) throws IOException{
 		String line = readLine();
 		
 		if(line == null || line.split(" ").length < 1){
 			throw new InvalidSocketInputException(line);
 		}
 		
-		return Command.toClientCommand(line, g);
+		return Command.toClientCommand(line, p, g);
 	}
 	
 	public Command readServerCommand(Game g) throws IOException{

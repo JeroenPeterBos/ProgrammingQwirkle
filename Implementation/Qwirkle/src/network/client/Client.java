@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 import network.IProtocol;
 import network.commands.Command;
@@ -13,7 +14,8 @@ import network.commands.client.ClientIdentifyCommand;
 import network.io.CommandReader;
 import network.io.CommandWriter;
 import players.Player;
-import players.human.HumanTUIPlayer;
+import players.local.LocalPlayer;
+import players.local.human.HumanTUIPlayer;
 
 public class Client extends Thread{
 
@@ -43,9 +45,12 @@ public class Client extends Thread{
 			Client client = new Client(args[0], host, port);
 			client.start();
 			
-			client.write(new ClientIdentifyCommand(client.getName(), supported));
+			client.write(new ClientIdentifyCommand(client.getClientName(), supported));
+			
+			Scanner scanner = new Scanner(System.in);
 			do{
-				
+				String resp = scanner.nextLine();
+				client.write(Command.toClientCommand(resp, client.getPlayer(), null));
 			}while(true);
 			
 		} catch (IOException e) {
@@ -57,7 +62,7 @@ public class Client extends Thread{
 	private Socket sock;
 	private CommandReader in;
 	private CommandWriter out;
-	private Player player;
+	private LocalPlayer player;
 
 	/**
 	 * Constructs a Client-object and tries to make a socket connection
@@ -78,10 +83,15 @@ public class Client extends Thread{
 				incomming = in.readServerCommand(player.getGame());
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
-			// TODO handle commandException
+				running = false;
+				continue;
+			}
+			if(incomming == null){
+				running = false;
+				continue;
 			}
 			
-			// TODO Deligate command, see drive G
+			// TODO Deligate command, see googledrive
 			System.out.println(incomming.toCommandString());
 		}
 	}
@@ -99,6 +109,15 @@ public class Client extends Thread{
 	}
 	
 	public void write(Command c) throws IOException{
+		System.out.println("send: " + c.toCommandString());
 		out.write(c);
+	}
+	
+	public String getClientName(){
+		return player.getName();
+	}
+	
+	public LocalPlayer getPlayer(){
+		return player;
 	}
 }

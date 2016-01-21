@@ -7,16 +7,24 @@ import exceptions.IllegalMoveStateException;
 import logic.Move;
 import logic.move.PlayBlocksMove;
 import players.Player;
-import players.human.HumanTUIPlayer;
+import players.local.LocalPlayer;
 
 public class LocalGame extends HostGame{
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
+	private List<LocalPlayer> players;
+	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	public LocalGame(List<Player> players){
-		super(players);
+	public LocalGame(List<LocalPlayer> players){
+		super(new LinkedList<Player>());
+		
+		for(LocalPlayer p: players){
+			super.addPlayer(p);
+		}
+		
+		this.players = players;
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //
@@ -27,8 +35,7 @@ public class LocalGame extends HostGame{
 		turn = getStartingPlayer();
 		playTurn(true);
 		while(running){
-			if((bag.noBlocks() <= 0 && checkIfStuck(players.size())) || board.isPerfectSquare()){
-				running = false;
+			if(rareSituation()){
 				continue;
 			}
 			playTurn();
@@ -36,17 +43,6 @@ public class LocalGame extends HostGame{
 		printScores();
 		
 		// TODO notify view that game is finished
-	}
-	
-	private boolean checkIfStuck(int playersLeft){
-		if(playersLeft <= 0){
-			return true;
-		}
-		if(!hasPossibleMove()){
-			incrementTurn();
-			return checkIfStuck(playersLeft - 1);
-		}
-		return false;
 	}
 
 	private void playTurn() {
@@ -84,22 +80,22 @@ public class LocalGame extends HostGame{
 		incrementTurn();
 	}
 	
-	// temp method
+	// TODO temp method
 	public void printScores(){
 		for(Player p: players){
 			System.out.println(p.getName() + "  " + p.getScore());
 		}
 	}
 	
+	protected void init() {
+		for (Player p: players) {
+			for (int i = 0; i < 6; i++) {
+				p.giveBlock(bag.getBlock());
+			}
+		}
+	}
+	
 	// ------------------------------- Queries ----------------------------------------- //
 	
-	public static void main(String[] args){
-		List<Player> players = new LinkedList<Player>();
-		
-		LocalGame lg = new LocalGame(players);
-		lg.addPlayer(new HumanTUIPlayer("Sender", lg));
-		lg.addPlayer(new HumanTUIPlayer("EggieD", lg));
-		
-		lg.run();
-	}
+
 }

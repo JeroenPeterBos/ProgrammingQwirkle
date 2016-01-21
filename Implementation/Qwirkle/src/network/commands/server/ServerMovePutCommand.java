@@ -18,7 +18,7 @@ public class ServerMovePutCommand extends Command{
 		this.move = new PlayBlocksMove(g.getCurrentPlayer(), g);
 		
 		for(int i = 1; i < commandParts.length; i++){
-			Block b = Block.instance(Integer.parseInt(commandParts[i].split("@")[0]));
+			Block b = new Block(Integer.parseInt(commandParts[i].split("@")[0]));
 			int x = Integer.parseInt(commandParts[i].split("@")[1].split(",")[0]);
 			int y = Integer.parseInt(commandParts[i].split("@")[1].split(",")[1]);
 			this.move.addBlock(b, g.getBoard().new Position(x, y));

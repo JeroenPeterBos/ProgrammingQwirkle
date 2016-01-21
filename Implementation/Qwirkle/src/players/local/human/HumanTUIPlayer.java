@@ -1,4 +1,4 @@
-package players.human;
+package players.local.human;
 
 import java.util.Scanner;
 

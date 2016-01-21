@@ -26,6 +26,8 @@ public abstract class Game implements Runnable {
 	// ------------------------------- Commands ---------------------------------------- //
 	
 	public void shutDown() {
+		// TODO notify players
+		
 		running = false;
 	}
 	

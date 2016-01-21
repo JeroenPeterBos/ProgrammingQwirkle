@@ -5,8 +5,10 @@ import logic.game.HostGame;
 import logic.move.ExchangeMove;
 import network.IProtocol;
 import network.commands.Command;
+import network.commands.GameCommand;
+import players.Player;
 
-public class ClientMoveTradeCommand extends Command{
+public class ClientMoveTradeCommand extends Command implements GameCommand{
 
 	private ExchangeMove move;
 	
@@ -14,11 +16,11 @@ public class ClientMoveTradeCommand extends Command{
 		this.move = m;
 	}
 	
-	public ClientMoveTradeCommand(String[] commandParts, HostGame g){
+	public ClientMoveTradeCommand(String[] commandParts, Player p, HostGame g){
 		ExchangeMove exchangemove = new ExchangeMove(g.getCurrentPlayer(), g);
 		
 		for(int i = 1; i < commandParts.length; i++){
-			exchangemove.addBlock(Block.instance(Integer.parseInt(commandParts[i])));
+			exchangemove.addBlock(new Block(Integer.parseInt(commandParts[i])));
 		}
 		
 		this.move = exchangemove;

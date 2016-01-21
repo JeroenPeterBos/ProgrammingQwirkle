@@ -19,7 +19,7 @@ public class ServerDrawtileCommand extends Command{
 		this.blocks = new LinkedList<Block>();
 		
 		for(int i = 1; i < commandParts.length; i++){
-			blocks.add(Block.instance(Integer.parseInt(commandParts[i])));
+			blocks.add(new Block(Integer.parseInt(commandParts[i])));
 		}
 	}
 	

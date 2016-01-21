@@ -12,7 +12,6 @@ public abstract class HostGame extends Game {
 	
 	protected Bag bag;
 	
-	
 	// ------------------------------- Constructors ------------------------------------ //
 	
 	public HostGame(List<Player> players) {
@@ -23,16 +22,29 @@ public abstract class HostGame extends Game {
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
-	protected void init() {
-		for (Player p: players) {
-			for (int i = 0; i < 6; i++) {
-				p.giveBlock(bag.getBlock());
-			}
-		}
-	}
+	protected abstract void init();
 	
 	protected boolean hasPossibleMove() {
 		return players.get(turn).hasPossibleMove();
+	}
+	
+	public boolean rareSituation(){
+		if((bag.noBlocks() <= 0 && checkIfStuck(players.size())) || board.isPerfectSquare()){
+			running = false;
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean checkIfStuck(int playersLeft){
+		if(playersLeft <= 0){
+			return true;
+		}
+		if(!hasPossibleMove()){
+			incrementTurn();
+			return checkIfStuck(playersLeft - 1);
+		}
+		return false;
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
