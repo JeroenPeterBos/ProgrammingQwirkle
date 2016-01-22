@@ -569,8 +569,8 @@ public class Board {
 		}
 		
 		/**
-		 * Converts this Row to a combination of the TuiString version of the blocks
-		 * @return
+		 * Converts this Row to a combination of the TUIString version of the blocks
+		 * @return res string of the board
 		 */
 
 		public String toTUIString(){
