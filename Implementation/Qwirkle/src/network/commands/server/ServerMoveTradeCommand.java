@@ -16,6 +16,10 @@ public class ServerMoveTradeCommand extends Command{
 		this.amount = Integer.parseInt(words[1]);
 	}
 	
+	public int getAmount(){
+		return amount;
+	}
+	
 	@Override
 	public String toCommandString(){
 		return IProtocol.SERVER_MOVE_TRADE + " " + amount;

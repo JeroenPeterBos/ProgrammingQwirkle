@@ -9,7 +9,7 @@ import players.local.human.HumanPlayer;
 import view.QwirkleTUIView;
 import view.QwirkleView;
 
-public class LocalController {
+public class LocalController implements Controller{
 
 	private static LocalController LC;
 	

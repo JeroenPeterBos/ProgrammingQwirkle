@@ -3,6 +3,7 @@ package logic.game;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import controller.Controller;
 import exceptions.IllegalMoveStateException;
 import exceptions.protocol.WrongServerCommandException;
 import logic.Game;
@@ -23,8 +24,8 @@ public class ClientGame extends Game{
 	 private Player currentPlayer;
 	 private LocalPlayer localPlayer;
 	 
-	 public ClientGame(List<Player> players, LocalPlayer p){
-		 super(players);
+	 public ClientGame(List<Player> players, LocalPlayer p, Controller c){
+		 super(players, c);
 		 
 		 this.localPlayer = p;
 		 
@@ -63,7 +64,8 @@ public class ClientGame extends Game{
 					 }
 				 }
 			 } else if(c instanceof ServerMoveTradeCommand){
-				 // notify player
+				 setChanged();
+				 notifyObservers(((ServerMoveTradeCommand)c).)
 			 } else if(c instanceof ServerTurnCommand){
 				 setCurrentPlayer(((ServerTurnCommand)c).getPlayer());
 				 

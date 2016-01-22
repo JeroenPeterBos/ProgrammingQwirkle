@@ -5,6 +5,7 @@ import java.util.Observable;
 
 import components.Bag;
 import components.Board;
+import controller.Controller;
 import players.Player;
 
 public abstract class Game extends Observable implements Runnable {
@@ -15,6 +16,8 @@ public abstract class Game extends Observable implements Runnable {
 	
 	// ------------------------------- Instance Variables ------------------------------ //
 	
+	private Controller controller;
+	
 	protected Board board;
 	protected List<Player> players;
 	protected int turn;
@@ -23,9 +26,10 @@ public abstract class Game extends Observable implements Runnable {
 	
 	// ------------------------------- Constructors ------------------------------------ //
 
-	public Game(List<Player> players) {
+	public Game(List<Player> players, Controller c) {
 		this.board = new Board();
 		this.players = players;
+		this.controller = c;
 		
 		for(Player p: players){
 			p.setGame(this);
@@ -85,6 +89,10 @@ public abstract class Game extends Observable implements Runnable {
 	
 	public Player getCurrentPlayer(){
 		return players.get(turn);
+	}
+	
+	public Controller getController(){
+		return controller;
 	}
 	
 	public Player getPlayerByName(String name){

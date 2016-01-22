@@ -4,6 +4,7 @@ import java.util.Observer;
 
 import components.Bag;
 import components.Board;
+import logic.Game;
 import logic.Move;
 import players.Player;
 import players.local.human.HumanPlayer;
@@ -17,4 +18,5 @@ public interface QwirkleView extends Observer{
 	public void showStatus();
 
 	public Move getMove(HumanPlayer p);
+	public void setGame(Game g);
 }

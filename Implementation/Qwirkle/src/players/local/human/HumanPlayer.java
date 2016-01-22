@@ -17,6 +17,6 @@ public class HumanPlayer extends LocalPlayer{
 
 	@Override
 	public Move determineMove() {
-		return LocalController.instance().getView().getMove(this);
+		return game.getController().getView().getMove(this);
 	}
 }

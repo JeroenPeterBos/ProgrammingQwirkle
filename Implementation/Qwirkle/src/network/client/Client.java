@@ -8,7 +8,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import controller.Controller;
 import exceptions.protocol.WrongServerCommandException;
+import logic.Game;
 import logic.game.ClientGame;
 import network.IProtocol;
 import network.commands.Command;
@@ -24,9 +26,11 @@ import network.commands.server.ServerTurnCommand;
 import network.io.CommandReader;
 import network.io.CommandWriter;
 import players.local.LocalPlayer;
-import players.local.human.HumanTUIPlayer;
+import players.local.human.HumanPlayer;
+import view.QwirkleTUIView;
+import view.QwirkleView;
 
-public class Client extends Thread{
+public class Client extends Thread implements Controller{
 
 	public static IProtocol.Feature[] supported = new IProtocol.Feature[]{};
 	
@@ -52,28 +56,18 @@ public class Client extends Thread{
 
 		try {
 			Client client = new Client(args[0], host, port);
-			client.start();
-			
 			client.write(new ClientIdentifyCommand(client.getClientName(), supported));
 			
-			Scanner scanner = new Scanner(System.in);
-			do{
-				Command resp = Command.toClientCommand(scanner.nextLine(), client.getPlayer(), (ClientGame)client.getPlayer().getGame());
-				
-				if(resp instanceof GameCommand && client.getPlayer() != client.getPlayer().getGame().getCurrentPlayer()){
-					// notify that it is not his turn
-					
-					continue;
-				}
-				
-				client.write(resp);
-			}while(true);
+			client.run();
 			
 		} catch (IOException e) {
 			System.exit(0);
 		}
 
 	}
+	
+	private ClientGame game;
+	private QwirkleView view;
 	
 	private Socket sock;
 	private CommandReader in;
@@ -88,7 +82,9 @@ public class Client extends Thread{
 		this.sock = new Socket(host, port);
 		this.in = new CommandReader(new InputStreamReader(this.sock.getInputStream()));
 		this.out = new CommandWriter(new OutputStreamWriter(this.sock.getOutputStream()));
-		this.player = new HumanTUIPlayer(name, null);
+		this.player = new HumanPlayer(name);
+		
+		this.view = new QwirkleTUIView(null);
 	}
 
 	public void run() {
@@ -120,8 +116,10 @@ public class Client extends Thread{
 				}
 				((ClientGame)player.getGame()).addCommand(incomming);
 			} else if(incomming instanceof ServerGamestartCommand){
-				ClientGame game = new ClientGame(((ServerGamestartCommand)incomming).getPlayers(), player);
+				ClientGame game = new ClientGame(((ServerGamestartCommand)incomming).getPlayers(), player, this);
 				player.addGame(game);
+				view.setGame(game);
+				this.game = game;
 				new Thread(game).start();
 			} else if(incomming instanceof ServerGameendCommand){
 				player.getGame().shutDown();
@@ -153,5 +151,13 @@ public class Client extends Thread{
 	
 	public LocalPlayer getPlayer(){
 		return player;
+	}
+	
+	public ClientGame getGame(){
+		return game;
+	}
+	
+	public QwirkleView getView(){
+		return view;
 	}
 }

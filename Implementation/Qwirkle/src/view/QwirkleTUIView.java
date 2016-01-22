@@ -219,5 +219,9 @@ public class QwirkleTUIView implements QwirkleView{
 			}
 		}
 	}
+	
+	public void setGame(Game g){
+		this.game = g;
+	}
 }
 
