@@ -18,4 +18,8 @@ public abstract class LocalPlayer extends Player {
 	 */
 	
 	public abstract Move determineMove();
+	
+	public void addGame(Game g){
+		game = g;
+	}
 }

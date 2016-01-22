@@ -28,4 +28,12 @@ public class ServerErrorCommand extends Command {
 	public String toCommandString() {
 		return IProtocol.SERVER_ERROR + " " + error + " " + message;
 	}
+	
+	public IProtocol.Error getError(){
+		return error;
+	}
+	
+	public String getMessage(){
+		return message;
+	}
 }

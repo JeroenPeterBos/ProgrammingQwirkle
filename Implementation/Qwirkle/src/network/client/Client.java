@@ -8,12 +8,21 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import exceptions.protocol.WrongServerCommandException;
+import logic.game.ClientGame;
 import network.IProtocol;
 import network.commands.Command;
+import network.commands.GameCommand;
 import network.commands.client.ClientIdentifyCommand;
+import network.commands.server.ServerDrawtileCommand;
+import network.commands.server.ServerErrorCommand;
+import network.commands.server.ServerGameendCommand;
+import network.commands.server.ServerGamestartCommand;
+import network.commands.server.ServerMovePutCommand;
+import network.commands.server.ServerMoveTradeCommand;
+import network.commands.server.ServerTurnCommand;
 import network.io.CommandReader;
 import network.io.CommandWriter;
-import players.Player;
 import players.local.LocalPlayer;
 import players.local.human.HumanTUIPlayer;
 
@@ -49,8 +58,15 @@ public class Client extends Thread{
 			
 			Scanner scanner = new Scanner(System.in);
 			do{
-				String resp = scanner.nextLine();
-				client.write(Command.toClientCommand(resp, client.getPlayer(), null));
+				Command resp = Command.toClientCommand(scanner.nextLine(), client.getPlayer(), (ClientGame)client.getPlayer().getGame());
+				
+				if(resp instanceof GameCommand && client.getPlayer() != client.getPlayer().getGame().getCurrentPlayer()){
+					// notify that it is not his turn
+					
+					continue;
+				}
+				
+				client.write(resp);
 			}while(true);
 			
 		} catch (IOException e) {
@@ -91,8 +107,27 @@ public class Client extends Thread{
 				continue;
 			}
 			
-			// TODO Deligate command, see googledrive
-			System.out.println(incomming.toCommandString());
+			if(incomming instanceof ServerDrawtileCommand || 
+					incomming instanceof ServerMovePutCommand ||
+					incomming instanceof ServerMoveTradeCommand ||
+					incomming instanceof ServerTurnCommand){
+				if(player.getGame() == null){
+					try {
+						throw new WrongServerCommandException(incomming);
+					} catch (WrongServerCommandException e) {
+						e.printStackTrace();
+					}
+				}
+				((ClientGame)player.getGame()).addCommand(incomming);
+			} else if(incomming instanceof ServerGamestartCommand){
+				ClientGame game = new ClientGame(((ServerGamestartCommand)incomming).getPlayers(), player);
+				player.addGame(game);
+				new Thread(game).start();
+			} else if(incomming instanceof ServerGameendCommand){
+				player.getGame().shutDown();
+			} else if(incomming instanceof ServerErrorCommand){
+				// notify view about error
+			}
 		}
 	}
 

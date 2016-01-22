@@ -83,6 +83,8 @@ public class PlayBlocksMove extends Move {
 			}
 			done = allDone;
 		}
+		
+		player.addScore(score);
 	}
 	
 	/**.

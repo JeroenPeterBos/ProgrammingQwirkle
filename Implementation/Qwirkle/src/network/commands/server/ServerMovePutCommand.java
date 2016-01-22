@@ -5,8 +5,9 @@ import logic.Game;
 import logic.move.PlayBlocksMove;
 import network.IProtocol;
 import network.commands.Command;
+import network.commands.GameCommand;
 
-public class ServerMovePutCommand extends Command{
+public class ServerMovePutCommand extends Command implements GameCommand{
 
 	private PlayBlocksMove move;
 	

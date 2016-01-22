@@ -68,7 +68,6 @@ public class LocalGame extends HostGame{
 		}
 		
 		if(m instanceof PlayBlocksMove){
-			players.get(turn).addScore(((PlayBlocksMove)m).getScore());
 			System.out.println(players.get(turn).getName() + " received " + ((PlayBlocksMove) m).getScore() + " points.");
 			for(int i = 0; i < m.getNoBlocks(); i++){
 				if(getBag().noBlocks() > 0){

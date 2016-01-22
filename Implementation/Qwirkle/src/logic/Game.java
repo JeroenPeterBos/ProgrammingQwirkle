@@ -70,7 +70,20 @@ public abstract class Game implements Runnable {
 		return players.size();
 	}
 	
+	public Bag getBag(){
+		return null;
+	}
+	
 	public Player getCurrentPlayer(){
 		return players.get(turn);
+	}
+	
+	public Player getPlayerByName(String name){
+		for(Player p: players){
+			 if(p.getName().equals(name)){
+				 return p;
+			 }
+		}
+		return null;
 	}
 }

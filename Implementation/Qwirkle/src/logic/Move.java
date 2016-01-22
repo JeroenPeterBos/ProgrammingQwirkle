@@ -50,4 +50,8 @@ public abstract class Move {
 	 * @return blocks
 	 */
 	public abstract int getNoBlocks();
+	
+	public Player getPlayer(){
+		return player;
+	}
 }

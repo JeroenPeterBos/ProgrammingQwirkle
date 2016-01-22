@@ -53,7 +53,7 @@ public class ServerGame extends HostGame{
 	}
 
 	private synchronized void playTurn(boolean firstTurn) {
-		sendPlayers(new ServerTurnCommand(socketPlayers.get(turn).getName()));
+		sendPlayers(new ServerTurnCommand(socketPlayers.get(turn)));
 		
 		Move move = null;
 		boolean validMove = false;
@@ -87,7 +87,6 @@ public class ServerGame extends HostGame{
 		
 		if(move instanceof PlayBlocksMove){
 			sendPlayers(new ServerMovePutCommand((PlayBlocksMove) move));
-			socketPlayers.get(turn).addScore(((PlayBlocksMove) move).getScore());
 		} else if(move instanceof ExchangeMove){
 			sendPlayers(new ServerMoveTradeCommand(move.getNoBlocks()));
 		}

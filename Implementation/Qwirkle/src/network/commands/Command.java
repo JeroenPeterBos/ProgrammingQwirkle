@@ -77,7 +77,7 @@ public abstract class Command {
 		case IProtocol.SERVER_GAMEEND:
 			return new ServerGameendCommand(words);
 		case IProtocol.SERVER_GAMESTART:
-			return new ServerGamestartCommand(words, true);
+			return new ServerGamestartCommand(words);
 		case IProtocol.SERVER_IDENTIFY:
 			return new ServerIdentifyCommand(words);
 		case IProtocol.SERVER_MOVE_PUT:
@@ -85,7 +85,7 @@ public abstract class Command {
 		case IProtocol.SERVER_MOVE_TRADE:
 			return new ServerMoveTradeCommand(words);
 		case IProtocol.SERVER_TURN:
-			return new ServerTurnCommand(words);
+			return new ServerTurnCommand(words, g);
 		default:
 			throw new CommandException(IProtocol.Error.INVALID_COMMAND, c);
 		}

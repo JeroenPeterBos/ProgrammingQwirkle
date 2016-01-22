@@ -212,4 +212,12 @@ public abstract class Player {
 	public Game getGame() {
 		return game;
 	}
+	
+	public int handSize() {
+		return hand.size();
+	}
+	
+	public List<Block> getHand(){
+		return hand;
+	}
 }
