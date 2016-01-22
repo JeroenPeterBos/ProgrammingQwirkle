@@ -99,6 +99,8 @@ public class LocalGame extends HostGame{
 		LocalGame lg = new LocalGame(players);
 		lg.addPlayer(new HumanTUIPlayer("Sender", lg));
 		lg.addPlayer(new HumanTUIPlayer("EggieD", lg));
+		lg.addPlayer(new HumanTUIPlayer("WILLIE", lg));
+		lg.addPlayer(new HumanTUIPlayer("MAX", lg));
 		
 		lg.run();
 	}
