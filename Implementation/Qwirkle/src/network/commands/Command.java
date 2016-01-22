@@ -42,8 +42,6 @@ public abstract class Command {
 	 * @throws CommandException
 	 */
 	public static Command toClientCommand(String c, Player p, ServerGame g) throws CommandException {
-		System.out.println("Converting: " + c + ". To client command");
-		
 		String[] words = c.split(" ");
 		String command = words[0];
 
@@ -64,8 +62,6 @@ public abstract class Command {
 	}
 
 	public static Command toServerCommand(String c, Game g) throws CommandException {
-		System.out.println("Converting: " + c + ". To server command");
-		
 		String[] words = c.split(" ");
 		String command = words[0];
 

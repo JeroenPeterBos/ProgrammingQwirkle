@@ -62,8 +62,6 @@ public class Server {
 				clientSocket = ss.accept();
 				ClientHandler ch = new ClientHandler(this, clientSocket);
 				ch.start();
-
-				System.out.println("Client connected");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

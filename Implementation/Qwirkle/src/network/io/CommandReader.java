@@ -28,7 +28,6 @@ public class CommandReader extends BufferedReader{
 	
 	public Command readServerCommand(Game g) throws IOException{
 		String line = readLine();
-		System.out.println("ServerCommand: " + line);
 		
 		if(line == null || line.split(" ").length < 1){
 			throw new InvalidSocketInputException(line);

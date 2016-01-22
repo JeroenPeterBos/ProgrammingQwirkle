@@ -11,6 +11,10 @@ public abstract class LocalPlayer extends Player {
 		super(n, g);
 	}
 	
+	public LocalPlayer(String n){
+		super(n);
+	}
+	
 	/**.
 	 * determineMove will give the move decided by the computer or human
 	 * The move will be an exchangeMove or PlayBlocksMove, with specified blocks and coordinates

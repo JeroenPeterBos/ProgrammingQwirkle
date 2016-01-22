@@ -38,6 +38,10 @@ public abstract class Player {
 		this.game = g;
 	}
 	
+	protected Player(String n){
+		this(n, null);
+	}
+	
 	// ------------------------------- Commands ---------------------------------------- //
 	
 	/**.

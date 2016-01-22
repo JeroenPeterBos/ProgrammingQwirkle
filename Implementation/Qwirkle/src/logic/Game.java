@@ -1,13 +1,18 @@
 package logic;
 
 import java.util.List;
+import java.util.Observable;
 
 import components.Bag;
 import components.Board;
 import players.Player;
 
-public abstract class Game implements Runnable {
+public abstract class Game extends Observable implements Runnable {
 
+	public enum InputError{
+		INVALID_MOVE;
+	}
+	
 	// ------------------------------- Instance Variables ------------------------------ //
 	
 	protected Board board;
@@ -21,6 +26,10 @@ public abstract class Game implements Runnable {
 	public Game(List<Player> players) {
 		this.board = new Board();
 		this.players = players;
+		
+		for(Player p: players){
+			p.setGame(this);
+		}
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //

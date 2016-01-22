@@ -164,28 +164,11 @@ public class PlayBlocksMove extends Move {
 			ro = Board.RowOrientation.UNDEFINED;
 		}
 		
-		
-		// validate that the to be executed move creates valid rows
-		
-		// blocks.sort(comp);
-		
-		// sort the move on connectivity to the board
-		
-		// sortOnConnectivity(game.getBoard());
-		
-		// Print the blocks of this move TODO remove print
-		String result = "MoveBlocks: ";
-		for (Entry e : blocks) {
-			result += e.getCoords().toString() + " " + e.getBlock().toShortString() + " ";
-		}
-		System.out.println(result);
-		
 		List<Board.Row> rows = game.getBoard().getCreatingRows(this, ro);
 		if (rows.size() < 1) {
 			return false;
 		}
 		for (Board.Row row: rows) {
-			System.out.println("Checking " + row.toTUIString());
 			if (!game.getBoard().validRow(row)) {
 				return false;
 			}

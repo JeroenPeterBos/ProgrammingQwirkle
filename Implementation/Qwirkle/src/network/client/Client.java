@@ -144,7 +144,6 @@ public class Client extends Thread{
 	}
 	
 	public void write(Command c) throws IOException{
-		System.out.println("send: " + c.toCommandString());
 		out.write(c);
 	}
 	
