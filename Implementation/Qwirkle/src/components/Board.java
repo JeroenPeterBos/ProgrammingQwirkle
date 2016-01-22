@@ -581,20 +581,5 @@ public class Board {
 			}
 			return res;
 		}
-
-		/**
-		 * Converts this Row to a combination of the TuiString version of the
-		 * blocks
-		 * 
-		 * @return
-		 */
-
-		public String toTUIString() {
-			String res = "Row : ";
-			for (Block b : blocks) {
-				res += b.toShortString() + " ";
-			}
-			return res;
-		}
 	}
 }
