@@ -1,15 +1,29 @@
 package network.commands.server;
 
+import components.Block;
+import logic.Game;
 import logic.move.PlayBlocksMove;
 import network.IProtocol;
+import network.commands.Command;
 import network.commands.GameCommand;
 
-public class ServerMovePutCommand extends GameCommand{
+public class ServerMovePutCommand extends Command implements GameCommand{
 
 	private PlayBlocksMove move;
 	
 	public ServerMovePutCommand(PlayBlocksMove m){
 		this.move = m;
+	}
+	
+	public ServerMovePutCommand(String[] commandParts, Game g){
+		this.move = new PlayBlocksMove(g.getCurrentPlayer(), g);
+		
+		for(int i = 1; i < commandParts.length; i++){
+			Block b = new Block(Integer.parseInt(commandParts[i].split("@")[0]));
+			int x = Integer.parseInt(commandParts[i].split("@")[1].split(",")[0]);
+			int y = Integer.parseInt(commandParts[i].split("@")[1].split(",")[1]);
+			this.move.addBlock(b, g.getBoard().new Position(x, y));
+		}
 	}
 	
 	public PlayBlocksMove getMove(){

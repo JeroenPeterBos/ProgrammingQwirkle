@@ -11,7 +11,6 @@ public abstract class HostGame extends Game {
 	// ------------------------------- Instance Variables ------------------------------ //
 	
 	protected Bag bag;
-	protected int turn;
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
@@ -23,20 +22,29 @@ public abstract class HostGame extends Game {
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
-	protected void init() {
-		for (Player p: players) {
-			for (int i = 0; i < 6; i++) {
-				p.giveBlock(bag.getBlock());
-			}
-		}
-	}
-	
-	protected void incrementTurn() {
-		turn = (turn + 1) % getNoPlayers();
-	}
+	protected abstract void init();
 	
 	protected boolean hasPossibleMove() {
 		return players.get(turn).hasPossibleMove();
+	}
+	
+	public boolean rareSituation(){
+		if((bag.noBlocks() <= 0 && checkIfStuck(players.size())) || board.isPerfectSquare()){
+			running = false;
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean checkIfStuck(int playersLeft){
+		if(playersLeft <= 0){
+			return true;
+		}
+		if(!hasPossibleMove()){
+			incrementTurn();
+			return checkIfStuck(playersLeft - 1);
+		}
+		return false;
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
@@ -53,9 +61,7 @@ public abstract class HostGame extends Game {
 		return res;
 	}
 	
-	public Player getCurrentPlayer(){
-		return players.get(turn);
-	}
+	
 	
 	public Bag getBag() {
 		return bag;

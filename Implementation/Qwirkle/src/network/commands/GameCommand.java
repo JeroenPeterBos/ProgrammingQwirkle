@@ -1,5 +1,8 @@
 package network.commands;
 
-public abstract class GameCommand extends Command{
+import logic.Move;
 
+public interface GameCommand {
+
+	public Move getMove();
 }

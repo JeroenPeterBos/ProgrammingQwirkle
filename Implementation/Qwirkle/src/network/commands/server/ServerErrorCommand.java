@@ -18,7 +18,7 @@ public class ServerErrorCommand extends Command {
 
 		String mes = "";
 		for (int i = 2; i < commandParts.length; i++) {
-			mes += commandParts[i];
+			mes += commandParts[i] + " ";
 		}
 
 		this.message = mes;
@@ -27,5 +27,13 @@ public class ServerErrorCommand extends Command {
 	@Override
 	public String toCommandString() {
 		return IProtocol.SERVER_ERROR + " " + error + " " + message;
+	}
+	
+	public IProtocol.Error getError(){
+		return error;
+	}
+	
+	public String getMessage(){
+		return message;
 	}
 }

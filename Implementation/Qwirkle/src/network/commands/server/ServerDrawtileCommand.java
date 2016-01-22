@@ -5,9 +5,10 @@ import java.util.List;
 
 import components.Block;
 import network.IProtocol;
+import network.commands.Command;
 import network.commands.GameCommand;
 
-public class ServerDrawtileCommand extends GameCommand{
+public class ServerDrawtileCommand extends Command{
 
 	private List<Block> blocks;
 	
@@ -19,7 +20,7 @@ public class ServerDrawtileCommand extends GameCommand{
 		this.blocks = new LinkedList<Block>();
 		
 		for(int i = 1; i < commandParts.length; i++){
-			blocks.add(Block.instance(Integer.parseInt(commandParts[i])));
+			blocks.add(new Block(Integer.parseInt(commandParts[i])));
 		}
 	}
 	

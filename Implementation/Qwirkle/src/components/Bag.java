@@ -2,6 +2,7 @@ package components;
 
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Bag {
 
@@ -67,6 +68,16 @@ public class Bag {
 
 	public Block getBlock() {
 		return blocks.pop();
+	}
+	
+	public List<Block> getBlocks(int a){
+		List<Block> blocks = new LinkedList<Block>();
+		
+		for(int i = 0; i < a; i++){
+			blocks.add(getBlock());
+		}
+		
+		return blocks;
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //

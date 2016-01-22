@@ -14,5 +14,7 @@ public class CommandWriter extends BufferedWriter{
 	
 	public void write(Command c) throws IOException{
 		write(c.toCommandString());
+		newLine();
+		flush();
 	}
 }

@@ -12,11 +12,13 @@ public class Block {
 	 */
 
 	public enum Color {
-		GREEN('g'), RED('r'), BLUE('b'), ORANGE('o'), PURPLE('p'), YELLOW('y');
+		GREEN('g', 0), RED('r', 1), BLUE('b', 2), ORANGE('o', 3), PURPLE('p', 4), YELLOW('y', 5);
 		
+		public final int a;
 		public final char c;
-		private Color(char c) {
+		private Color(char c, int a) {
 			this.c = c;
+			this.a = a;
 		}
 	}
 	
@@ -26,11 +28,11 @@ public class Block {
 	 * @author Jeroen
 	 * Holds a integer s that represents the shape in a short way.
 	 */
-
+	
 	public enum Shape{
 		STAR(0), CIRCLE(1), SQUARE(2), DIAMOND(3), CLOVER(4), CROSS(5);
 		
-		public int s;
+		public final int s;
 		private Shape(int s) {
 			this.s = s;
 		}
@@ -46,7 +48,6 @@ public class Block {
 	/**
 	 * Private field that holds the Shape of this Block.
 	 */
-
 	private Shape shape;
 	
 	// ------------------------------- Constructors ------------------------------------ //
@@ -63,6 +64,10 @@ public class Block {
 		this.shape = s;
 	}
 	
+	public Block(int i){
+		this.color = Color.values()[i/6];
+		this.shape = Shape.values()[i%6];
+	}
 	// ------------------------------- Commands ---------------------------------------- //
 	
 	// ------------------------------- Queries ----------------------------------------- //
@@ -91,8 +96,7 @@ public class Block {
 	 */
 
 	public int toInt() {
-		// TODO implement method according to protocol
-		return 0;
+		return color.a * 6 + shape.s;
 	}
 	
 
@@ -128,17 +132,5 @@ public class Block {
 		
 		Block b = (Block) o;
 		return b.getColor() == color && b.getShape() == shape;
-	}
-	
-
-	/**.
-	 * Converts an Integer to a Block object based on the IProtocol;
-	 * @param i integer that represents a block and a color
-	 * @return an instance of type block based on the given integer.
-	 */
-
-	public static Block instance(int i) {
-		// TODO implement method such that Block.instance(block.toInt()).equals(block);
-		return null;
 	}
 }

@@ -6,7 +6,9 @@ import java.io.Reader;
 
 import exceptions.protocol.InvalidSocketInputException;
 import logic.Game;
+import logic.game.ServerGame;
 import network.commands.Command;
+import players.Player;
 
 public class CommandReader extends BufferedReader{
 
@@ -14,13 +16,24 @@ public class CommandReader extends BufferedReader{
 		super(in);
 	}
 	
-	public Command readCommand(Game g) throws IOException{
+	public Command readClientCommand(ServerGame g, Player p) throws IOException{
 		String line = readLine();
 		
 		if(line == null || line.split(" ").length < 1){
 			throw new InvalidSocketInputException(line);
 		}
 		
-		return Command.toCommand(line, g);
+		return Command.toClientCommand(line, p, g);
+	}
+	
+	public Command readServerCommand(Game g) throws IOException{
+		String line = readLine();
+		System.out.println("ServerCommand: " + line);
+		
+		if(line == null || line.split(" ").length < 1){
+			throw new InvalidSocketInputException(line);
+		}
+		
+		return Command.toServerCommand(line, g);
 	}
 }

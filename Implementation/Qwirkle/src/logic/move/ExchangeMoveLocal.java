@@ -23,9 +23,11 @@ public class ExchangeMoveLocal extends ExchangeMove {
 	public void execute() throws IllegalMoveStateException {
 		super.execute();
 		
-		for (Block b: blocks) {
-			player.giveBlock(game.getBag().exchange(b));
+		for(Block b: blocks){
+			b = game.getBag().exchange(b);
 		}
+		
+		player.giveBlocks(blocks);
 	}
 	
 	public boolean validate(Player p, boolean firstMove) {

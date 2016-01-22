@@ -14,6 +14,10 @@ import network.commands.server.ServerErrorCommand;
 import network.commands.server.ServerGameendCommand;
 import network.commands.server.ServerGamestartCommand;
 import network.commands.server.ServerIdentifyCommand;
+import network.commands.server.ServerMovePutCommand;
+import network.commands.server.ServerMoveTradeCommand;
+import network.commands.server.ServerTurnCommand;
+import players.Player;
 
 public abstract class Command {
 
@@ -37,7 +41,9 @@ public abstract class Command {
 	 * @return
 	 * @throws CommandException
 	 */
-	public static Command toClientCommand(String c, ServerGame g) throws CommandException {
+	public static Command toClientCommand(String c, Player p, ServerGame g) throws CommandException {
+		System.out.println("Converting: " + c + ". To client command");
+		
 		String[] words = c.split(" ");
 		String command = words[0];
 
@@ -45,19 +51,21 @@ public abstract class Command {
 		case IProtocol.CLIENT_IDENTIFY:
 			return new ClientIdentifyCommand(words);
 		case IProtocol.CLIENT_MOVE_PUT:
-			return new ClientMovePutCommand(words, g);
+			return new ClientMovePutCommand(words, p, g);
 		case IProtocol.CLIENT_MOVE_TRADE:
-			return new ClientMoveTradeCommand(words, g);
+			return new ClientMoveTradeCommand(words, p, g);
 		case IProtocol.CLIENT_QUEUE:
 			return new ClientQueueCommand(words);
 		case IProtocol.CLIENT_QUIT:
 			return new ClientQuitCommand();
 		default:
-			throw new CommandException(IProtocol.Error.COMMAND_NOT_FOUND, c);
+			throw new CommandException(IProtocol.Error.INVALID_COMMAND, c);
 		}
 	}
 
 	public static Command toServerCommand(String c, Game g) throws CommandException {
+		System.out.println("Converting: " + c + ". To server command");
+		
 		String[] words = c.split(" ");
 		String command = words[0];
 
@@ -69,17 +77,17 @@ public abstract class Command {
 		case IProtocol.SERVER_GAMEEND:
 			return new ServerGameendCommand(words);
 		case IProtocol.SERVER_GAMESTART:
-			return new ServerGamestartCommand(words, true);
+			return new ServerGamestartCommand(words);
 		case IProtocol.SERVER_IDENTIFY:
 			return new ServerIdentifyCommand(words);
 		case IProtocol.SERVER_MOVE_PUT:
-			break;
+			return new ServerMovePutCommand(words, g);
 		case IProtocol.SERVER_MOVE_TRADE:
-			break;
+			return new ServerMoveTradeCommand(words);
 		case IProtocol.SERVER_TURN:
-			break;
+			return new ServerTurnCommand(words, g);
 		default:
-			throw new CommandException(IProtocol.Error.COMMAND_NOT_FOUND, c);
+			throw new CommandException(IProtocol.Error.INVALID_COMMAND, c);
 		}
 	}
 }

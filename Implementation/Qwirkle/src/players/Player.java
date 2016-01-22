@@ -9,7 +9,6 @@ import exceptions.BlockNotInHandException;
 import exceptions.HandEmptyException;
 import exceptions.HandFullException;
 import logic.Game;
-import logic.Move;
 import logic.move.PlayBlocksMove;
 
 public abstract class Player {
@@ -40,14 +39,6 @@ public abstract class Player {
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //
-	
-	/**.
-	 * determineMove will give the move decided by the computer or human
-	 * The move will be an exchangeMove or PlayBlocksMove, with specified blocks and coordinates
-	 * @return move
-	 */
-	
-	public abstract Move determineMove();
 	
 	/**.
 	 * removeBlock removes a block of the player's hand
@@ -92,6 +83,18 @@ public abstract class Player {
 		hand.add(b);
 	}
 	
+	public void giveBlocks(List<Block> blocks){
+		if(hand.size() + blocks.size() > 6){
+			try {
+				throw new HandFullException(this, hand.size());
+			} catch (HandFullException e) {
+				System.err.println(e.getMessage());
+			}
+		}
+		
+		hand.addAll(blocks);
+	}
+	
 	/**
 	 * addScore will add the score got from the turn to the total score
 	 * @param s
@@ -101,6 +104,9 @@ public abstract class Player {
 		score += s;
 	}
 	
+	public void setGame(Game g){
+		this.game = g;
+	}
 	// ------------------------------- Queries ----------------------------------------- //
 	
 	public boolean hasPossibleMove(){
@@ -201,5 +207,17 @@ public abstract class Player {
 	
 	public int getScore() {
 		return score;
+	}
+	
+	public Game getGame() {
+		return game;
+	}
+	
+	public int handSize() {
+		return hand.size();
+	}
+	
+	public List<Block> getHand(){
+		return hand;
 	}
 }
