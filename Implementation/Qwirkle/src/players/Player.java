@@ -1,5 +1,6 @@
 package players;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import exceptions.BlockNotInHandException;
 import exceptions.HandEmptyException;
 import exceptions.HandFullException;
 import logic.Game;
+import logic.Move;
 import logic.move.PlayBlocksMove;
 
 public abstract class Player {
@@ -129,6 +131,24 @@ public abstract class Player {
 			}
 		}
 		return false;
+	}
+	
+	public Move getPossibleMove() {
+		List<Block> moves = new ArrayList<Block>();
+		for (Block b : hand) {
+			PlayBlocksMove m = new PlayBlocksMove(this, game);
+			
+			for (Position p : game.getBoard().getOpenPositions()) {
+				m.addBlock(b, p);
+				if (m.validate(this, false)) {
+					return m;
+				}
+				m.unlock();
+				m.clearBlocks();
+				
+			}
+		}
+		return null;
 	}
 	
 	/**
