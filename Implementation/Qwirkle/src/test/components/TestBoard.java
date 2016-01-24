@@ -9,8 +9,11 @@ import components.Block.Color;
 import components.Block.Shape;
 import exceptions.*;
 import players.Player;
+import players.local.LocalPlayer;
+import players.local.human.HumanPlayer;
 import exceptions.protocol.FirstPositionNotOriginException;
 import logic.*;
+import logic.game.LocalGame;
 
 
 
@@ -19,18 +22,18 @@ public class TestBoard {
 	private Board board1;
 	private Board board2;
 	private Game game1;
-	private Player player1;
-	private Player player2;
-	private List<Player> players;
+	private LocalPlayer player1;
+	private LocalPlayer player2;
+	private List<LocalPlayer> players;
 
 	
 	@Before
 	public void setUp() {
-		player1 = new Player("String", game1);
-		player2 = new Player("Stringetje", game1);
+		player1 = new HumanPlayer("String", game1);
+		player2 = new HumanPlayer("Stringetje", game1);
 		players.add(player1);
 		players.add(player2);
-		game1 = new Game(players);
+		game1 = new LocalGame(players);
 		board1 = new Board();
 		board2 = new Board();
 	}
