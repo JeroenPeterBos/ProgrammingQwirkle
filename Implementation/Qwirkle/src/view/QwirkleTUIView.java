@@ -93,6 +93,7 @@ public class QwirkleTUIView implements QwirkleView{
 		System.out.println("It is " + LocalController.instance().getGame().getCurrentPlayer().getName() + "'s turn");
 	}
 	
+	@Override
 	public Move getMove(HumanPlayer p){
 		// printing the current blocks to the output
 		String blocks = "";

@@ -1,17 +1,15 @@
 package logic.game;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import controller.Controller;
 import controller.LocalController;
 import exceptions.IllegalMoveStateException;
-import logic.Game;
 import logic.Move;
 import logic.move.PlayBlocksMove;
 import players.Player;
 import players.local.LocalPlayer;
-import players.local.human.HumanPlayer;
 
 public class LocalGame extends HostGame {
 

@@ -487,7 +487,7 @@ public class Board {
 		}
 
 		/**
-		 * Determines wether this Position is equal to the given Position.
+		 * Determines whether this Position is equal to the given Position.
 		 */
 
 		@Override

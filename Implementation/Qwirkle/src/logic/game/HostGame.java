@@ -3,6 +3,7 @@ package logic.game;
 import java.util.List;
 
 import components.Bag;
+import controller.Controller;
 import logic.Game;
 import players.Player;
 

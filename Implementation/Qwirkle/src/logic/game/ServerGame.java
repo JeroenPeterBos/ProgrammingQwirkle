@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import controller.Controller;
 import exceptions.IllegalMoveStateException;
 import logic.Move;
 import logic.move.ExchangeMove;

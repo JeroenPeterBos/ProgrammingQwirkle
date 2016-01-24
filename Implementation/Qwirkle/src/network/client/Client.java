@@ -116,7 +116,7 @@ public class Client extends Thread implements Controller{
 				}
 				((ClientGame)player.getGame()).addCommand(incomming);
 			} else if(incomming instanceof ServerGamestartCommand){
-				ClientGame game = new ClientGame(((ServerGamestartCommand)incomming).getPlayers(), player, this);
+				ClientGame game = new ClientGame(((ServerGamestartCommand)incomming).getPlayers(), player);
 				player.addGame(game);
 				view.setGame(game);
 				this.game = game;

@@ -8,6 +8,8 @@ import exceptions.IllegalMoveStateException;
 import exceptions.protocol.WrongServerCommandException;
 import logic.Game;
 import logic.Move;
+import logic.Game.InputError;
+import logic.move.PlayBlocksMove;
 import network.commands.Command;
 import network.commands.server.ServerDrawtileCommand;
 import network.commands.server.ServerMovePutCommand;
@@ -24,8 +26,8 @@ public class ClientGame extends Game{
 	 private Player currentPlayer;
 	 private LocalPlayer localPlayer;
 	 
-	 public ClientGame(List<Player> players, LocalPlayer p, Controller c){
-		 super(players, c);
+	 public ClientGame(List<Player> players, LocalPlayer p){
+		 super(players);
 		 
 		 this.localPlayer = p;
 		 
@@ -49,34 +51,54 @@ public class ClientGame extends Game{
 			 
 			 if(c instanceof ServerMovePutCommand){
 				 Move m = ((ServerMovePutCommand) c).getMove();
-				 
-				 if(!m.validate(getCurrentPlayer(), false)){
-					 try {
-						throw new WrongServerCommandException(c);
-					} catch (WrongServerCommandException e) {
-						e.printStackTrace();
-					}
-				 } else {
-					 try {
-						m.execute();
-					 } catch (IllegalMoveStateException e) {
-						e.printStackTrace();
-					 }
-				 }
+				 handleDistantMove(c, m);
 			 } else if(c instanceof ServerMoveTradeCommand){
 				 setChanged();
-				 notifyObservers(((ServerMoveTradeCommand)c).)
+				 notifyObservers("TRADE " + getCurrentPlayer() + " " + ((ServerMoveTradeCommand)c).getAmount());
 			 } else if(c instanceof ServerTurnCommand){
 				 setCurrentPlayer(((ServerTurnCommand)c).getPlayer());
 				 
 				 if(((ServerTurnCommand)c).getPlayer() instanceof LocalPlayer){
-					 // notify player that it is his turn
+					 LocalPlayer lp = (LocalPlayer)((ServerTurnCommand)c).getPlayer();
+					 Move m = lp.determineMove();
+						while (m == null || !m.validate(players.get(turn), false)) {
+							setChanged();
+							notifyObservers(InputError.INVALID_MOVE);
+							m = lp.determineMove();
+						}
+						
+						try {
+							m.execute();
+						} catch (IllegalMoveStateException e) {
+							System.err.println("BUG: " + e.getMessage());
+						}
+
+						setChanged();
+						notifyObservers(m);
+
+						
 				 } 
 			 } else if(c instanceof ServerDrawtileCommand){
 				 localPlayer.giveBlocks(((ServerDrawtileCommand)c).getBlocks());
 			 }
 		 }
 	 }
+
+	private void handleDistantMove(Command c, Move m) {
+		if(!m.validate(getCurrentPlayer(), false)){
+			 try {
+				throw new WrongServerCommandException(c);
+			} catch (WrongServerCommandException e) {
+				e.printStackTrace();
+			}
+		 } else {
+			 try {
+				m.execute();
+			 } catch (IllegalMoveStateException e) {
+				e.printStackTrace();
+			 }
+		 }
+	}
 	 
 	 public synchronized void addCommand(Command c){
 		 commands.add(c);
