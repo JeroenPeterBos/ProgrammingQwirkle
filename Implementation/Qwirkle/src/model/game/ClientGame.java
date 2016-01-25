@@ -28,15 +28,14 @@ public class ClientGame extends Game{
 	 }
 	 
 	 public void handlePlay(Play p){
-		 if(getCurrentPlayer() == null){
-			 System.out.println("P is null");
-		 }
-		 p.validate(getCurrentPlayer(), false);
+		 p.setValidity(true);
 		 try {
 			p.execute();
 		 } catch (IllegalMoveStateException e) {
 			e.printStackTrace();
 		 }
+		 
+		 System.out.println("just executed the move");
 		 setChanged();
 		 notifyObservers(p);
 	 }
@@ -56,11 +55,7 @@ public class ClientGame extends Game{
 	 }
 	 
 	 public void setCurrentPlayer(Player p){
-		 currentPlayer = p;
-	 }
-	 
-	 public Player getCurrentPlayer(){
-		 return currentPlayer;
+		 super.setTurn(p);
 	 }
 	 
 	 public LocalPlayer getLocalPlayer(){

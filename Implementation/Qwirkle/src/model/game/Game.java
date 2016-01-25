@@ -64,6 +64,7 @@ public abstract class Game extends Observable {
 				turn = i;
 			}
 		}
+		System.out.println("The new current Player = " + p.getName() + " | " + players.get(turn).getName());
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //

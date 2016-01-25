@@ -274,6 +274,10 @@ public class Play extends Move {
 		blocks.clear();
 	}
 	
+	public void setValidity(boolean v){
+		this.valid = v;
+	}
+	
 	// ------------------------------- Queries ----------------------------------------- //
 	
 	/**.

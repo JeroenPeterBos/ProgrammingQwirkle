@@ -43,6 +43,7 @@ public class ServerGamestartCommand extends ServerCommand {
 	
 	public void selfHandle(Client c){
 		c.setGame(new ClientGame(c, c.getPlayer()));
+		c.getGame().addObserver(c.getView());
 		
 		c.getPlayer().setGame(c.getGame());
 		c.getGame().addPlayer(c.getPlayer());
