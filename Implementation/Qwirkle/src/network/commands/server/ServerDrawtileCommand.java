@@ -5,6 +5,7 @@ import java.util.List;
 
 import client.Client;
 import model.components.Block;
+import model.game.ClientGame;
 import network.IProtocol;
 
 public class ServerDrawtileCommand extends ServerCommand{
@@ -28,7 +29,7 @@ public class ServerDrawtileCommand extends ServerCommand{
 	}
 	
 	public void selfHandle(Client c){
-		c.getGame().getCurrentPlayer().giveBlocks(blocks);
+		((ClientGame)c.getGame()).getLocalPlayer().giveBlocks(blocks);
 	}
 	
 	@Override

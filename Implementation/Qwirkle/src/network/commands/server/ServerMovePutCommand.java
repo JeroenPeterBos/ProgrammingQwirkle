@@ -21,6 +21,8 @@ public class ServerMovePutCommand extends ServerCommand implements GameCommand{
 		this.move = new Play(g.getCurrentPlayer(), g);
 		
 		for(int i = 1; i < commandParts.length; i++){
+			System.out.println(commandParts[i]);
+			System.out.println("|" + commandParts[i].split("@")[0] + "|");
 			Block b = new Block(Integer.parseInt(commandParts[i].split("@")[0]));
 			int x = Integer.parseInt(commandParts[i].split("@")[1].split(",")[0]);
 			int y = Integer.parseInt(commandParts[i].split("@")[1].split(",")[1]);
@@ -38,18 +40,13 @@ public class ServerMovePutCommand extends ServerCommand implements GameCommand{
 		
 		for(int i = 0; i < move.getNoBlocks(); i++){
 			Play.Entry e = move.getEntry(i);
-			command += " " + e.getBlock() + "@" + e.getCoords().x + "," + e.getCoords().y;
+			command += " " + e.getBlock().toInt() + "@" + e.getCoords().x + "," + e.getCoords().y;
 		}
 		
 		return command;
 	}
 	
 	public void selfHandle(Client c){
-		move.validate(c.getGame().getCurrentPlayer(), false);
-		try {
-			move.execute();
-		} catch (IllegalMoveStateException e) {
-			e.printStackTrace();
-		}
+		c.getGame().handlePlay(move);
 	}
 }

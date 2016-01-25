@@ -21,6 +21,6 @@ public class ServerMoveTradeCommand extends ServerCommand{
 	}
 	
 	public void selfHandle(Client c){
-		// notify the view on event
+		c.getGame().handleTrade(amount);
 	}
 }

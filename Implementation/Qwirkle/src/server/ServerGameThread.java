@@ -10,7 +10,7 @@ public class ServerGameThread extends Thread implements Controller{
 	private ServerGame game;
 	
 	public ServerGameThread(){
-		game = new ServerGame(this);
+		this.game = new ServerGame(this);
 	}
 	
 	public ServerGame getGame(){

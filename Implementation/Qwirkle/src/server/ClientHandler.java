@@ -6,6 +6,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import exceptions.protocol.CommandException;
+import model.components.move.Move;
+import model.game.ServerGame;
 import model.players.distant.SocketPlayer;
 import network.IProtocol;
 import network.commands.Command;
@@ -53,8 +55,10 @@ public class ClientHandler extends Thread {
 				continue;
 			}
 			
+			System.out.println("About to handle: " + c.toCommandString());
+			
 			if(c instanceof GameCommand){
-				player.getGame().addMove(((GameCommand) c).getMove());
+				player.getGame().addMove(((GameCommand)c).getMove());
 			} else if(c instanceof ClientQueueCommand){
 				for(int i: ((ClientQueueCommand) c).getQueues()){
 					server.getGameCreator().addPlayer(player, i);
@@ -72,10 +76,10 @@ public class ClientHandler extends Thread {
 		try {
 			input = in.readClientCommand(null, player);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
+		// ensure that clients first identifies itself
 		if (!(input instanceof ClientIdentifyCommand)) {
 			try {
 				out.write(new ServerErrorCommand(IProtocol.Error.INVALID_COMMAND,
@@ -126,7 +130,6 @@ public class ClientHandler extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(player.getName() + ": disconnected");
 	}
 
 	// ------------------------------- Queries

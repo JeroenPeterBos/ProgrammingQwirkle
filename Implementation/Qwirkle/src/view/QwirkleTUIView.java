@@ -80,7 +80,6 @@ public class QwirkleTUIView implements QwirkleView{
 	
 	public void showStatus(){
 		updateBoard(controller.getGame().getBoard());
-		System.out.println("It is " + controller.getGame().getCurrentPlayer().getName() + "'s turn");
 	}
 	
 	public void showError(IProtocol.Error e, String m){

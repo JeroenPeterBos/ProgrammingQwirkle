@@ -6,13 +6,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import controller.Controller;
 import exceptions.IllegalMoveStateException;
+import model.components.Block;
 import model.components.move.Move;
 import model.components.move.Play;
 import model.components.move.Trade;
 import model.players.Player;
 import model.players.distant.SocketPlayer;
 import network.commands.Command;
-import network.commands.server.ServerDrawtileCommand;
 import network.commands.server.ServerGamestartCommand;
 import network.commands.server.ServerMovePutCommand;
 import network.commands.server.ServerMoveTradeCommand;
@@ -36,7 +36,6 @@ public class ServerGame extends HostGame{
 	
 	public void startGame(){
 		init();
-		turn = getStartingPlayer();
 		
 		playTurn(true);
 		
@@ -49,30 +48,34 @@ public class ServerGame extends HostGame{
 	}
 
 	private synchronized void playTurn(boolean firstTurn) {
-		sendPlayers(new ServerTurnCommand(socketPlayers.get(turn)));
+		sendPlayers(new ServerTurnCommand(getCurrentPlayer()));
 		
 		Move move = null;
 		boolean validMove = false;
 		do{
 			while(currentMove >= moves.size()){
 				try {
+					System.out.println("No move available yet");
 					wait();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			System.out.println("New move available");
 			
 			move = moves.get(currentMove);
 			
-			if(move.validate(socketPlayers.get(turn), firstTurn)){
+			if(move.validate(getCurrentPlayer(), firstTurn)){
 				validMove = true;
 			} else {
 				moves.remove(currentMove);
-				
+				System.out.println("Move was not valid");
 				// TODO notify players
 			}
 		} while(move == null || !validMove);
+		System.out.println("The move was valid");
+		
 		
 		try {
 			move.execute();
@@ -81,13 +84,17 @@ public class ServerGame extends HostGame{
 		}
 		currentMove++;
 		
+		System.out.println("currentmove: " + currentMove + ", amountofthem: " + moves.size());
+		
 		if(move instanceof Play){
 			sendPlayers(new ServerMovePutCommand((Play) move));
 		} else if(move instanceof Trade){
 			sendPlayers(new ServerMoveTradeCommand(move.getNoBlocks()));
 		}
 		
-		socketPlayers.get(turn).giveBlocks(bag.popBlocks(move.getNoBlocks()));
+		
+		List<Block> newblocks = bag.popBlocks(move.getNoBlocks());
+		((SocketPlayer)getCurrentPlayer()).giveBlocks(newblocks);
 	}
 	
 	public void sendPlayers(Command c){
@@ -99,6 +106,7 @@ public class ServerGame extends HostGame{
 	public synchronized void addMove(Move m){
 		moves.add(m);
 		notify();
+		System.out.println("added move and notified the game");
 	}
 	
 	public void addPlayer(Player p){
@@ -115,7 +123,9 @@ public class ServerGame extends HostGame{
 		
 		for (SocketPlayer p: socketPlayers) {
 			p.sendCommand(new ServerGamestartCommand(socketPlayers));
-			p.sendCommand(new ServerDrawtileCommand(bag.popBlocks(6)));
+			p.giveBlocks(bag.popBlocks(6));
 		}
+		
+		turn = getStartingPlayer();
 	}
 }

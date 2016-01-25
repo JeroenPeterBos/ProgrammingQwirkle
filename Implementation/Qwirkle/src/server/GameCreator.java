@@ -72,9 +72,9 @@ public class GameCreator extends Thread{
 		for(int i = 0; i < amount; i++){
 			SocketPlayer p = pq.poll();
 			gameController.addPlayer(p);
+			p.setGame(gameController.getGame());
 			removeFromQueues(p);
 		}
-		
 		
 		server.addGame(gameController);
 		gameController.startQwirkle();

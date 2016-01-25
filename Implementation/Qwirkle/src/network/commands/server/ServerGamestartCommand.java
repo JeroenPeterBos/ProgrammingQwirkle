@@ -45,10 +45,13 @@ public class ServerGamestartCommand extends ServerCommand {
 		c.setGame(new ClientGame(c, c.getPlayer()));
 		
 		c.getPlayer().setGame(c.getGame());
+		c.getGame().addPlayer(c.getPlayer());
 		
 		for(String n: names){
 			if(!c.getPlayer().getName().equals(n)){
-				c.addPlayer(new ServerPlayer(n, c.getGame()));
+				ServerPlayer sp = new ServerPlayer(n, c.getGame());
+				c.addPlayer(sp);
+				System.out.println("Created new player : " + sp.getName());
 			}
 		}
 		c.startQwirkle();

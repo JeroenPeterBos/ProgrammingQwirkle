@@ -53,10 +53,7 @@ public class Client extends Thread implements Controller{
 			client.start();
 			
 			client.write(new ClientIdentifyCommand(client.getClientName(), supported));
-			
-			Scanner scanner = new Scanner(System.in);
-			
-			client.write(new ClientQueueCommand(new int[]{3,4}));
+			client.write(new ClientQueueCommand(new int[]{2,3,4}));
 			
 		} catch (IOException e) {
 			System.exit(0);
@@ -97,7 +94,7 @@ public class Client extends Thread implements Controller{
 				Game ga = player.getGame();
 				incomming = in.readServerCommand(ga);
 			} catch (IOException e) {
-				System.out.println(e.getMessage());
+				System.err.println(e.getMessage());
 				running = false;
 				continue;
 			}
@@ -105,13 +102,15 @@ public class Client extends Thread implements Controller{
 				running = false;
 				continue;
 			}
-			System.out.println(incomming.toCommandString());
+			System.out.println("received : " + incomming.toCommandString() + incomming.getClass());
 			incomming.selfHandle(this);
 		}
 	}
 	
 	public void startQwirkle(){
 		game.startGame();
+		
+		qv.showStatus();
 	}
 
 	/** close the socket connection. */
@@ -128,6 +127,7 @@ public class Client extends Thread implements Controller{
 	
 	public void write(Command c) throws IOException{
 		out.write(c);
+		System.out.println(c.toCommandString());
 	}
 	
 	public String getClientName(){

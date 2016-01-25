@@ -41,7 +41,7 @@ public class ClientMovePutCommand extends Command implements GameCommand{
 		
 		for(int i = 0; i < move.getNoBlocks(); i++){
 			Play.Entry e = move.getEntry(i);
-			command += e.getBlock().toInt() + "@" + e.getCoords().x + "," + e.getCoords().y;
+			command += " " +  e.getBlock().toInt() + "@" + e.getCoords().x + "," + e.getCoords().y;
 		}
 		
 		return command;

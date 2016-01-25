@@ -107,6 +107,8 @@ public abstract class Game extends Observable {
 				 return p;
 			 }
 		}
+		
+		System.err.println("Player " + name + " not found");
 		return null;
 	}
 }

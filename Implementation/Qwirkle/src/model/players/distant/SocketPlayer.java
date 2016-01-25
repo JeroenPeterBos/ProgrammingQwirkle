@@ -36,4 +36,10 @@ public class SocketPlayer extends Player{
 	public ServerGame getGame(){
 		return game;
 	}
+	
+	public void setGame(ServerGame game){
+		super.setGame(game);
+		
+		this.game = game;
+	}
 }

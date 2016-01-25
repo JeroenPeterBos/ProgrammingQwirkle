@@ -128,6 +128,8 @@ public abstract class Player {
 	
 	public void setGame(Game g){
 		this.game = g;
+		
+		System.out.println(getName() + " is now in a game " + game.toString());
 	}
 	// ------------------------------- Queries ----------------------------------------- //
 	

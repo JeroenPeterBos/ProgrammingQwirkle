@@ -101,6 +101,7 @@ public class Play extends Move {
 			boolean hasOrigin = false;
 			for (Entry e: blocks) {
 				if (e.getCoords().x < 0 || e.getCoords().y < 0) {
+					System.out.println("Negative starter block not allowed");
 					return false;
 				}
 				if (e.getCoords().equals(new Position(0, 0))) {
@@ -109,6 +110,7 @@ public class Play extends Move {
 			}
 			
 			if (!hasOrigin) {
+				System.out.println("First move should have origin");
 				return false;
 			}
 		}
@@ -116,6 +118,7 @@ public class Play extends Move {
 		// validate that its the current players turn and that the move has at least 1 block
 		
 		if (!p.equals(player) || blocks.size() < 1) {
+			System.out.println("it is not this players turn, or to few blocks");
 			return false;
 		}
 		
@@ -123,6 +126,7 @@ public class Play extends Move {
 		
 		for (Entry e : blocks) {
 			if (!player.hasBlock(e.getBlock())) {
+				System.out.println("Player dows not own this block" + e.getBlock().toString());
 				return false;
 			}
 		}
@@ -144,6 +148,7 @@ public class Play extends Move {
 		}
 		
 		if (!allOnX && !allOnY) {
+			System.out.println("Not all Blocks are on the same axis " + allOnX + allOnY);
 			return false;
 		}
 		
@@ -153,10 +158,12 @@ public class Play extends Move {
 		
 		List<Board.Row> rows = game.getBoard().getCreatingRows(this, orientation);
 		if (rows.size() < 1) {
+			System.out.println("to few rows created");
 			return false;
 		}
 		for (Board.Row row: rows) {
 			if (!row.isValid()) {
+				System.out.println("row not valid " + row.toString());
 				return false;
 			}
 		}
