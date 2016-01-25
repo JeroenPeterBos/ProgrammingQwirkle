@@ -2,12 +2,12 @@ package view;
 
 import java.util.Observer;
 
-import components.Board;
-import components.bag.Bag;
 import controller.Controller;
-import logic.Move;
-import players.Player;
-import players.local.human.HumanPlayer;
+import model.components.Board;
+import model.components.bag.Bag;
+import model.components.move.Move;
+import model.players.Player;
+import model.players.local.human.HumanPlayer;
 
 public interface QwirkleView extends Observer{
 

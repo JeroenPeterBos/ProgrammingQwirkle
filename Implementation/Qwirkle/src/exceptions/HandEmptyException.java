@@ -1,6 +1,6 @@
 package exceptions;
 
-import players.Player;
+import model.players.Player;
 
 public class HandEmptyException extends Exception {
 

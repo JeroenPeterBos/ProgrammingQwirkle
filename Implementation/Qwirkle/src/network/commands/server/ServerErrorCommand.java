@@ -3,7 +3,7 @@ package network.commands.server;
 import network.IProtocol;
 import network.commands.Command;
 
-public class ServerErrorCommand extends Command {
+public class ServerErrorCommand extends ServerCommand {
 
 	private IProtocol.Error error;
 	private String message;

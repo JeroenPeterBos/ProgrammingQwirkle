@@ -1,8 +1,8 @@
 package controller;
 
-import logic.game.LocalGame;
-import players.Player;
-import players.local.human.HumanPlayer;
+import model.game.LocalGame;
+import model.players.Player;
+import model.players.local.human.HumanPlayer;
 import view.QwirkleTUIView;
 import view.QwirkleView;
 

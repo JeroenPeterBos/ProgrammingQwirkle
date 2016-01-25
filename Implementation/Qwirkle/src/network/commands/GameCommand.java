@@ -1,6 +1,6 @@
 package network.commands;
 
-import logic.Move;
+import model.components.move.Move;
 
 public interface GameCommand {
 

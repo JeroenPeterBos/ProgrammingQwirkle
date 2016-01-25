@@ -1,7 +1,7 @@
 package controller;
 
-import logic.Game;
-import players.Player;
+import model.game.Game;
+import model.players.Player;
 import view.QwirkleView;
 
 public interface Controller {

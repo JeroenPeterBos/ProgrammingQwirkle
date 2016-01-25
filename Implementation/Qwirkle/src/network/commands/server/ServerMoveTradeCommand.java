@@ -1,6 +1,5 @@
 package network.commands.server;
 
-import logic.Game;
 import network.IProtocol;
 import network.commands.Command;
 

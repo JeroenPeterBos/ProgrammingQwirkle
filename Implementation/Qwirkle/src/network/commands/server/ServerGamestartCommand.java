@@ -3,10 +3,10 @@ package network.commands.server;
 import java.util.LinkedList;
 import java.util.List;
 
+import model.players.Player;
+import model.players.distant.ServerPlayer;
 import network.IProtocol;
 import network.commands.Command;
-import players.Player;
-import players.distant.ServerPlayer;
 
 public class ServerGamestartCommand extends Command {
 

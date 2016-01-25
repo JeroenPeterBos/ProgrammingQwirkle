@@ -2,8 +2,8 @@ package exceptions;
 
 import java.util.List;
 
-import components.Block;
-import players.Player;
+import model.components.Block;
+import model.players.Player;
 
 public class BlockNotInHandException extends Exception {
 	

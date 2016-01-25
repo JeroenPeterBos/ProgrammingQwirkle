@@ -1,13 +1,13 @@
 package network.commands.client;
 
-import components.Block;
-import components.Board.Position;
-import logic.game.ServerGame;
-import logic.move.Play;
+import model.components.Block;
+import model.components.Board.Position;
+import model.components.move.Play;
+import model.game.ServerGame;
+import model.players.Player;
 import network.IProtocol;
 import network.commands.Command;
 import network.commands.GameCommand;
-import players.Player;
 
 public class ClientMovePutCommand extends Command implements GameCommand{
 

@@ -3,21 +3,21 @@ package view;
 import java.util.Observable;
 import java.util.Scanner;
 
-import components.Board;
-import components.Board.Position;
-import components.bag.Bag;
 import controller.Controller;
 import exceptions.InvalidIndexException;
 import exceptions.UnknownInputFormatException;
-import logic.Game;
-import logic.Move;
-import logic.move.Trade;
-import logic.move.Play;
+import model.components.Board;
+import model.components.Board.Position;
+import model.components.bag.Bag;
+import model.components.move.Move;
+import model.components.move.Play;
+import model.components.move.Trade;
+import model.game.Game;
+import model.players.Player;
+import model.players.local.human.HumanPlayer;
 import network.commands.Command;
 import network.commands.server.ServerErrorCommand;
 import network.commands.server.ServerTurnCommand;
-import players.Player;
-import players.local.human.HumanPlayer;
 
 public class QwirkleTUIView implements QwirkleView{
 
@@ -47,7 +47,7 @@ public class QwirkleTUIView implements QwirkleView{
 	
 	@Override
 	public void updateScore(Player p){
-		System.out.println(p.getName() + " " + p.getScore() + " points");
+		System.out.println(p.getName() + " has " + p.getScore() + " points");
 	}
 
 	@Override

@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.Reader;
 
 import exceptions.protocol.InvalidSocketInputException;
-import logic.Game;
-import logic.game.ServerGame;
+import model.game.Game;
+import model.game.ServerGame;
+import model.players.Player;
 import network.commands.Command;
-import players.Player;
 
 public class CommandReader extends BufferedReader{
 

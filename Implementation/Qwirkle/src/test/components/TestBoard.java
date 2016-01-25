@@ -1,16 +1,21 @@
 package test.components;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import java.util.*;
-import org.junit.*;
-import components.*;
-import components.Block.Color;
-import components.Block.Shape;
-import exceptions.*;
-import players.Player;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import exceptions.protocol.FirstPositionNotOriginException;
-import logic.*;
+import model.components.Block;
+import model.components.Block.Color;
+import model.components.Block.Shape;
+import model.components.Board;
+import model.components.Board.Position;
+import model.game.Game;
+import model.players.Player;
 
 
 

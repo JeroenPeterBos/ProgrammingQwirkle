@@ -1,9 +1,9 @@
 package network.commands.server;
 
-import components.Block;
-import components.Board.Position;
-import logic.Game;
-import logic.move.Play;
+import model.components.Block;
+import model.components.Board.Position;
+import model.components.move.Play;
+import model.game.Game;
 import network.IProtocol;
 import network.commands.Command;
 import network.commands.GameCommand;

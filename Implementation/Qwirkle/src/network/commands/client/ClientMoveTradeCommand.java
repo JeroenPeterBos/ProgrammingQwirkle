@@ -1,12 +1,12 @@
 package network.commands.client;
 
-import components.Block;
-import logic.game.HostGame;
-import logic.move.Trade;
+import model.components.Block;
+import model.components.move.Trade;
+import model.game.HostGame;
+import model.players.Player;
 import network.IProtocol;
 import network.commands.Command;
 import network.commands.GameCommand;
-import players.Player;
 
 public class ClientMoveTradeCommand extends Command implements GameCommand{
 

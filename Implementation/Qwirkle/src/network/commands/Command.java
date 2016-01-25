@@ -1,8 +1,9 @@
 package network.commands;
 
 import exceptions.protocol.CommandException;
-import logic.Game;
-import logic.game.ServerGame;
+import model.game.Game;
+import model.game.ServerGame;
+import model.players.Player;
 import network.IProtocol;
 import network.commands.client.ClientIdentifyCommand;
 import network.commands.client.ClientMovePutCommand;
@@ -17,7 +18,6 @@ import network.commands.server.ServerIdentifyCommand;
 import network.commands.server.ServerMovePutCommand;
 import network.commands.server.ServerMoveTradeCommand;
 import network.commands.server.ServerTurnCommand;
-import players.Player;
 
 public abstract class Command {
 

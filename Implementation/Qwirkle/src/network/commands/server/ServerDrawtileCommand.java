@@ -3,12 +3,11 @@ package network.commands.server;
 import java.util.LinkedList;
 import java.util.List;
 
-import components.Block;
+import model.components.Block;
 import network.IProtocol;
 import network.commands.Command;
-import network.commands.GameCommand;
 
-public class ServerDrawtileCommand extends Command{
+public class ServerDrawtileCommand extends ServerCommand{
 
 	private List<Block> blocks;
 	

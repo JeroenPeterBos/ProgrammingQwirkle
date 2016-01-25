@@ -1,6 +1,6 @@
 package exceptions.protocol;
 
-import components.Board.Position;
+import model.components.Board.Position;
 
 public class FirstPositionNotOriginException extends ProtocolException {
 

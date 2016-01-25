@@ -1,9 +1,9 @@
 package network.commands.server;
 
-import logic.Game;
+import model.game.Game;
+import model.players.Player;
 import network.IProtocol;
 import network.commands.Command;
-import players.Player;
 
 public class ServerTurnCommand extends Command{
 

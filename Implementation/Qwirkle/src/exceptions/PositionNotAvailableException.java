@@ -1,7 +1,7 @@
 package exceptions;
 
-import components.Board;
-import components.Board.Position;
+import model.components.Board;
+import model.components.Board.Position;
 
 public class PositionNotAvailableException extends Exception {
 
