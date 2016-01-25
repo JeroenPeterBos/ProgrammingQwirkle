@@ -8,7 +8,9 @@ import exceptions.HandEmptyException;
 import exceptions.HandFullException;
 import model.components.Block;
 import model.components.Board.Position;
+import model.components.move.Move;
 import model.components.move.Play;
+import model.components.move.Trade;
 import model.game.Game;
 
 public abstract class Player {
@@ -148,6 +150,32 @@ public abstract class Player {
 		}
 		return false;
 	}
+	
+	
+	public Move getPossibleMove() {
+		Move move = null;
+		for (Block b : hand) {
+			Play m = new Play(this, game);
+			
+			for (Position p : game.getBoard().getOpenPositions()) {
+				m.addBlock(b, p);
+				if (m.validate(this, false)) {
+					move = m;
+					
+					return m;
+				}
+				m.unlock();
+				m.clearBlocks();
+				
+			}
+		}
+		if (move == null) {
+			move = new Trade(this, game);
+			move.addBlock();
+		}
+		return move;
+	}
+	
 	
 	/**
 	 * maxMove checks for every block what maxSet it can form on the board
