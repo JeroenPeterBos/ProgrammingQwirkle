@@ -42,6 +42,7 @@ public class RealBag implements Bag{
 	
 	public void returnBlocks(List<Block> b){
 		blocksLeft.addAll(b);
+		Collections.shuffle(blocksLeft);
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //

@@ -30,12 +30,12 @@ public class LocalGame extends HostGame {
 
 	public void startGame() {
 		init();
-		turn = getStartingPlayer();
 		playTurn(true);
 		while (running) {
 			if (rareSituation()) {
 				continue;
 			}
+			
 			playTurn();
 		}
 
@@ -47,6 +47,7 @@ public class LocalGame extends HostGame {
 	}
 
 	private void playTurn(boolean firstTurn) {
+		getController().getView().showStatus();
 		Move m = players.get(turn).determineMove();
 		while (m == null || !m.validate(players.get(turn), firstTurn)) {
 			System.out.println("Move was invalid");
@@ -77,8 +78,7 @@ public class LocalGame extends HostGame {
 		for (Player p : players) {
 			p.giveBlocks(bag.popBlocks(6));
 		}
-
-		getController().getView().showStatus();
+		turn = getStartingPlayer();
 	}
 	
 	public void addPlayer(Player p){
