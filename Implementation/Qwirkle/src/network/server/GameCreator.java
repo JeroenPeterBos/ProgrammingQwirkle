@@ -70,17 +70,17 @@ public class GameCreator extends Thread{
 	}
 	
 	public void createGame(ConcurrentLinkedQueue<SocketPlayer> pq, int amount){
-		List<SocketPlayer> socketPlayers = new LinkedList<SocketPlayer>();
+		ServerGameThread gameController = new ServerGameThread();
 		
 		for(int i = 0; i < amount; i++){
 			SocketPlayer p = pq.poll();
-			socketPlayers.add(p);
+			gameController.addPlayer(p);
 			removeFromQueues(p);
 		}
 		
-		GameThread newGame = new GameThread(new ServerGame(socketPlayers));
-		server.addGame(newGame);
-		newGame.start();
+		
+		server.addGame(gameController);
+		gameController.startQwirkle();
 	}
 	
 	public void end(){
@@ -92,19 +92,5 @@ public class GameCreator extends Thread{
 		twoPlayerQueue.remove(p);
 		threePlayerQueue.remove(p);
 		fourPlayerQueue.remove(p);
-	}
-	
-	public class GameThread extends Thread {
-		
-		private ServerGame game;
-		
-		public GameThread(ServerGame g){
-			super(g);
-			this.game = g;
-		}
-		
-		public ServerGame getGame(){
-			return game;
-		}
 	}
 }

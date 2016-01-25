@@ -1,29 +1,28 @@
 package controller;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import logic.game.LocalGame;
-import players.local.LocalPlayer;
+import players.Player;
 import players.local.human.HumanPlayer;
 import view.QwirkleTUIView;
 import view.QwirkleView;
 
-public class LocalController {
-
-	private static LocalController LC;
+public class LocalController implements Controller{
 	
 	private QwirkleView qv;
 	private LocalGame game;
 	
-	private LocalController(List<LocalPlayer> players){
-		this.game = new LocalGame(players);
-		this.qv = new QwirkleTUIView(game);
+	private LocalController(){
+		this.game = new LocalGame(this);
+		this.qv = new QwirkleTUIView(this);
 		this.game.addObserver(qv);
 	}
 	
-	public void start(){
-		game.run();
+	public void addPlayer(Player p){
+		game.addPlayer(p);
+	}
+	
+	public void startQwirkle(){
+		game.startGame();
 	}
 	
 	public QwirkleView getView(){
@@ -34,30 +33,13 @@ public class LocalController {
 		return game;
 	}
 	
-	public static LocalController instance(){
-		return instance(null);
-	}
-	
-	public static LocalController instance(List<LocalPlayer> players){
-		if(LC == null){
-			if(players == null || players.size() < 2){
-				throw new IllegalArgumentException();
-			} else {
-				LC = new LocalController(players);
-				return LC;
-			}
-		} else {
-			return LC;
-		}
-	}
-	
 	public static void main(String[] args){
-		List<LocalPlayer> players = new LinkedList<LocalPlayer>();
-		players.add(new HumanPlayer("Jeroen"));
-		players.add(new HumanPlayer("Geert"));
-		players.add(new HumanPlayer("kerel"));
+		LocalController lc = new LocalController();
 		
-		LocalController.instance(players);
-		LocalController.instance().start();
+		lc.addPlayer(new HumanPlayer("Jeroen", lc.getGame()));
+		lc.addPlayer(new HumanPlayer("Geert", lc.getGame()));
+		lc.addPlayer(new HumanPlayer("kerel", lc.getGame()));
+		
+		lc.startQwirkle();
 	}
 }

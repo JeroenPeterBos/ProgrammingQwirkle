@@ -14,7 +14,7 @@ import logic.Game;
 import logic.Move;
 import players.Player;
 
-public class PlayBlocksMove extends Move {
+public class Play extends Move {
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
@@ -51,7 +51,7 @@ public class PlayBlocksMove extends Move {
 	 * blocks = new LinkedList<Entry>();
 	 */
 	
-	public PlayBlocksMove(Player p, Game g) {
+	public Play(Player p, Game g) {
 		super(p, g);
 		
 		this.blocks = new LinkedList<Entry>();
@@ -70,21 +70,19 @@ public class PlayBlocksMove extends Move {
 		}
 		
 
-		boolean done = false;
-		while (!done) {
-			boolean allDone = true;
-			for (Entry e: blocks) {
-				if (player.hasBlock(e.getBlock())) {
-					if (game.getBoard().fill(e.getCoords(), e.getBlock())) {
-						player.removeBlock(e.getBlock());
-						allDone = false;
-					}
-				}
-			}
-			done = allDone;
-		}
+		fillBlocks(blocks);
 		
 		player.addScore(score);
+	}
+	
+	private void fillBlocks(List<Entry> entries){
+		for(Entry e: entries){
+			if(player.hasBlock(e.getBlock()) && game.getBoard().fill(e.getCoords(), e.getBlock())){
+				player.removeBlock(e.getBlock());
+				fillBlocks(entries);
+				return;
+			}
+		}
 	}
 	
 	/**.
@@ -106,7 +104,7 @@ public class PlayBlocksMove extends Move {
 				if (e.getCoords().x < 0 || e.getCoords().y < 0) {
 					return false;
 				}
-				if (e.getCoords().equals(game.getBoard().new Position(0, 0))) {
+				if (e.getCoords().equals(new Position(0, 0))) {
 					hasOrigin = true;
 				}
 			}

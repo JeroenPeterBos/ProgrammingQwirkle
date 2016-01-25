@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import exceptions.protocol.FirstPositionNotOriginException;
-import logic.move.PlayBlocksMove;
+import logic.move.Play;
 
 public class Board {
 
@@ -222,7 +222,7 @@ public class Board {
 	 *            the orientation in which the PlayBlockMove blocks are oriented
 	 * @return A List of Rows that the move will create or expand
 	 */
-	public List<Row> getCreatingRows(PlayBlocksMove m, RowOrientation ro) {
+	public List<Row> getCreatingRows(Play m, RowOrientation ro) {
 		List<Row> rows = new LinkedList<Row>();
 
 		if (!connectedToFilledPositions(m.getPositionList())) {
@@ -280,7 +280,7 @@ public class Board {
 	 *         blocks.
 	 */
 
-	private Row determineRow(Position base, RowOrientation ro, PlayBlocksMove moveRow) {
+	private Row determineRow(Position base, RowOrientation ro, Play moveRow) {
 		Row r = new Row();
 		r.setRowOrientation(ro);
 
@@ -437,7 +437,7 @@ public class Board {
 	 * 
 	 * @author Jeroen
 	 */
-	public class Position implements Comparable {
+	public static class Position implements Comparable {
 
 		/**
 		 * Instance variable that represents the position on the x-axis

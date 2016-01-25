@@ -2,8 +2,9 @@ package view;
 
 import java.util.Observer;
 
-import components.Bag;
 import components.Board;
+import components.bag.Bag;
+import controller.Controller;
 import logic.Move;
 import players.Player;
 import players.local.human.HumanPlayer;
@@ -17,4 +18,5 @@ public interface QwirkleView extends Observer{
 	public void showStatus();
 
 	public Move getMove(HumanPlayer p);
+	public Controller getController();
 }

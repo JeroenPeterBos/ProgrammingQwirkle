@@ -4,10 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import controller.Controller;
 import exceptions.IllegalMoveStateException;
 import logic.Move;
-import logic.move.ExchangeMove;
-import logic.move.PlayBlocksMove;
+import logic.move.Trade;
+import logic.move.Play;
 import network.commands.Command;
 import network.commands.server.ServerDrawtileCommand;
 import network.commands.server.ServerGamestartCommand;
@@ -24,21 +25,16 @@ public class ServerGame extends HostGame{
 	
 	private List<SocketPlayer> socketPlayers;
 	
-	public ServerGame(List<SocketPlayer> sp){
-		super(new LinkedList<Player>());
+	public ServerGame(Controller c){
+		super(c);
 		
-		for(SocketPlayer p: sp){
-			super.addPlayer(p);
-		}
-		
-		this.socketPlayers = sp;
+		this.socketPlayers = new LinkedList<SocketPlayer>();
 		
 		this.moves = new CopyOnWriteArrayList<Move>();
 		this.currentMove = 0;
 	}
 	
-	@Override
-	public void run(){
+	public void startGame(){
 		init();
 		turn = getStartingPlayer();
 		
@@ -85,13 +81,13 @@ public class ServerGame extends HostGame{
 		}
 		currentMove++;
 		
-		if(move instanceof PlayBlocksMove){
-			sendPlayers(new ServerMovePutCommand((PlayBlocksMove) move));
-		} else if(move instanceof ExchangeMove){
+		if(move instanceof Play){
+			sendPlayers(new ServerMovePutCommand((Play) move));
+		} else if(move instanceof Trade){
 			sendPlayers(new ServerMoveTradeCommand(move.getNoBlocks()));
 		}
 		
-		socketPlayers.get(turn).giveBlocks(bag.getBlocks(move.getNoBlocks()));
+		socketPlayers.get(turn).giveBlocks(bag.popBlocks(move.getNoBlocks()));
 	}
 	
 	public void sendPlayers(Command c){
@@ -105,6 +101,12 @@ public class ServerGame extends HostGame{
 		notify();
 	}
 	
+	public void addPlayer(SocketPlayer p){
+		super.addPlayer(p);
+		
+		socketPlayers.add(p);
+	}
+	
 	protected void init() {
 		String[] allNames = new String[socketPlayers.size()];
 		for(int i = 0; i < socketPlayers.size(); i++){
@@ -113,7 +115,7 @@ public class ServerGame extends HostGame{
 		
 		for (SocketPlayer p: socketPlayers) {
 			p.sendCommand(new ServerGamestartCommand(allNames));
-			p.sendCommand(new ServerDrawtileCommand(bag.getBlocks(6)));
+			p.sendCommand(new ServerDrawtileCommand(bag.popBlocks(6)));
 		}
 	}
 }

@@ -3,6 +3,8 @@ package logic.game;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import components.bag.VirtualBag;
+import controller.Controller;
 import exceptions.IllegalMoveStateException;
 import exceptions.protocol.WrongServerCommandException;
 import logic.Game;
@@ -23,8 +25,8 @@ public class ClientGame extends Game{
 	 private Player currentPlayer;
 	 private LocalPlayer localPlayer;
 	 
-	 public ClientGame(List<Player> players, LocalPlayer p){
-		 super(players);
+	 public ClientGame(Controller c, LocalPlayer p){
+		 super(c, new VirtualBag());
 		 
 		 this.localPlayer = p;
 		 
@@ -32,8 +34,7 @@ public class ClientGame extends Game{
 		 this.currentCommand = 0;
 	 }
 	 
-	 @Override
-	 public synchronized void run() {
+	 public synchronized void startGame() {
 		 while(running){
 			 while(currentCommand >= commands.size()){
 				try {

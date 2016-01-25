@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import network.IProtocol;
-import network.server.GameCreator.GameThread;
 
 public class Server {
 
@@ -28,7 +27,7 @@ public class Server {
 	private IProtocol.Feature[] supportedFeatures = new IProtocol.Feature[] {};
 	
 	private CopyOnWriteArrayList<ClientHandler> clients;
-	private CopyOnWriteArrayList<GameThread> games;
+	private CopyOnWriteArrayList<ServerGameThread> games;
 	
 	private GameCreator gameCreator;
 
@@ -38,7 +37,7 @@ public class Server {
 	public Server(int port) {
 		this.port = port;
 		this.clients = new CopyOnWriteArrayList<ClientHandler>();
-		this.games = new CopyOnWriteArrayList<GameThread>();
+		this.games = new CopyOnWriteArrayList<ServerGameThread>();
 		
 		this.gameCreator = new GameCreator(this);
 		this.gameCreator.start();
@@ -70,11 +69,11 @@ public class Server {
 		shutDown(ss);
 	}
 
-	public void addGame(GameThread g) {
+	public void addGame(ServerGameThread g) {
 		games.add(g);
 	}
 
-	public void removeGame(GameThread g) {
+	public void removeGame(ServerGameThread g) {
 		games.remove(g);
 	}
 

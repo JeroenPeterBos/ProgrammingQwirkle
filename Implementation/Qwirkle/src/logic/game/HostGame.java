@@ -2,7 +2,9 @@ package logic.game;
 
 import java.util.List;
 
-import components.Bag;
+import components.bag.Bag;
+import components.bag.RealBag;
+import controller.Controller;
 import logic.Game;
 import players.Player;
 
@@ -10,26 +12,16 @@ public abstract class HostGame extends Game {
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
-	protected Bag bag;
-	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	public HostGame(List<Player> players) {
-		super(players);
-		
-		this.bag = new Bag();
+	public HostGame(Controller c) {
+		super(c, new RealBag());
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //
 	
-	protected abstract void init();
-	
-	protected boolean hasPossibleMove() {
-		return players.get(turn).hasPossibleMove();
-	}
-	
 	public boolean rareSituation(){
-		if((bag.noBlocks() <= 0 && checkIfStuck(players.size())) || board.isPerfectSquare()){
+		if((bag.size() <= 0 && checkIfStuck(players.size())) || board.isPerfectSquare()){
 			running = false;
 			return true;
 		}
@@ -40,7 +32,7 @@ public abstract class HostGame extends Game {
 		if(playersLeft <= 0){
 			return true;
 		}
-		if(!hasPossibleMove()){
+		if(!getCurrentPlayer().hasPossibleMove()){
 			incrementTurn();
 			return checkIfStuck(playersLeft - 1);
 		}

@@ -1,13 +1,15 @@
 package logic;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
-import components.Bag;
 import components.Board;
+import components.bag.Bag;
+import controller.Controller;
 import players.Player;
 
-public abstract class Game extends Observable implements Runnable {
+public abstract class Game extends Observable {
 
 	public enum InputError{
 		INVALID_MOVE;
@@ -15,7 +17,10 @@ public abstract class Game extends Observable implements Runnable {
 	
 	// ------------------------------- Instance Variables ------------------------------ //
 	
+	private Controller controller;
+	
 	protected Board board;
+	protected Bag bag;
 	protected List<Player> players;
 	protected int turn;
 	
@@ -23,9 +28,12 @@ public abstract class Game extends Observable implements Runnable {
 	
 	// ------------------------------- Constructors ------------------------------------ //
 
-	public Game(List<Player> players) {
+	public Game(Controller c, Bag bag) {
+		this.controller = c;
+		
 		this.board = new Board();
-		this.players = players;
+		this.bag = bag;
+		this.players = new LinkedList<Player>();
 		
 		for(Player p: players){
 			p.setGame(this);
@@ -39,6 +47,8 @@ public abstract class Game extends Observable implements Runnable {
 		
 		running = false;
 	}
+	
+	public abstract void startGame();
 	
 	public void addPlayer(Player p) {
 		players.add(p);
@@ -80,11 +90,15 @@ public abstract class Game extends Observable implements Runnable {
 	}
 	
 	public Bag getBag(){
-		return null;
+		return bag;
 	}
 	
 	public Player getCurrentPlayer(){
 		return players.get(turn);
+	}
+	
+	public Controller getController(){
+		return controller;
 	}
 	
 	public Player getPlayerByName(String name){

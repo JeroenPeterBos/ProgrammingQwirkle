@@ -1,5 +1,7 @@
 package exceptions;
 
+import java.util.List;
+
 import components.Block;
 import players.Player;
 
@@ -32,6 +34,15 @@ public class BlockNotInHandException extends Exception {
 	public BlockNotInHandException(Player p, Block b) {
 		this.p = p;
 		this.b = b;
+	}
+	
+	public BlockNotInHandException(Player p, List<Block> b){
+		this.p = p;
+		for(Block block: b){
+			if(!p.hasBlock(block)){
+				this.b = block;
+			}
+		}
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //

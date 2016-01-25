@@ -10,7 +10,7 @@ import logic.Game;
 import logic.Move;
 import players.Player;
 
-public class ExchangeMove extends Move {
+public class Trade extends Move {
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
@@ -18,7 +18,7 @@ public class ExchangeMove extends Move {
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	public ExchangeMove(Player p, Game g) {
+	public Trade(Player p, Game g) {
 		super(p, g);
 		this.blocks = new LinkedList<Block>();
 	}
@@ -30,9 +30,9 @@ public class ExchangeMove extends Move {
 			throw new IllegalMoveStateException(valid);
 		}
 		
-		for (Block b : blocks) {
-			player.removeBlock(b);
-		}
+		player.removeBlocks(blocks);
+		game.getBag().returnBlocks(blocks);
+		
 	}
 	
 	public boolean validate(Player p, boolean firstMove) {
@@ -45,12 +45,7 @@ public class ExchangeMove extends Move {
 		
 		
 		boolean result = true;
-		for (Block b : blocks) {
-			if (!player.hasBlock(b)) {
-				result = false;
-				break;
-			}
-		}
+		result = p.hasBlocks(blocks);
 		
 		valid = result;
 		return result;

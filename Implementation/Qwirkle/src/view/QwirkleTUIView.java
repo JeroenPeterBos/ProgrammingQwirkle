@@ -3,19 +3,16 @@ package view;
 import java.util.Observable;
 import java.util.Scanner;
 
-import components.Bag;
 import components.Board;
 import components.Board.Position;
-import controller.LocalController;
+import components.bag.Bag;
+import controller.Controller;
 import exceptions.InvalidIndexException;
 import exceptions.UnknownInputFormatException;
 import logic.Game;
 import logic.Move;
-import logic.game.HostGame;
-import logic.move.ExchangeMove;
-import logic.move.ExchangeMoveLocal;
-import logic.move.PlayBlocksMove;
-import logic.move.PlayBlocksMoveLocal;
+import logic.move.Trade;
+import logic.move.Play;
 import network.commands.Command;
 import network.commands.server.ServerErrorCommand;
 import network.commands.server.ServerTurnCommand;
@@ -24,16 +21,16 @@ import players.local.human.HumanPlayer;
 
 public class QwirkleTUIView implements QwirkleView{
 
+	private Controller controller;
 	private Scanner scanner;
-	private Game game;
 	
 	private int amountOfBlocksLeft;
 	
-	public QwirkleTUIView(Game g){
+	public QwirkleTUIView(Controller c){
 		this.scanner = new Scanner(System.in);
-		this.game = g;
+		this.controller = c;
 		
-		this.amountOfBlocksLeft = 108 - g.getNoPlayers() * 6;
+		this.amountOfBlocksLeft = 108 - controller.getGame().getNoPlayers() * 6;
 	}
 
 	@Override
@@ -59,7 +56,7 @@ public class QwirkleTUIView implements QwirkleView{
 		for (int y = 0; y < bounds.length; y++) {
 			bounds[y] = "";
 			for (int x = b.xLow; x < b.xHigh + 1; x++) {
-				Position current = b.new Position(x, y + b.yLow);
+				Position current = new Position(x, y + b.yLow);
 				if (b.getOpenPositions().contains(current)) {
 					bounds[y] += String.format("%-6s", x + "," + (y + b.yLow));
 				} else if (b.getFilledPositions().containsKey(current)) {
@@ -84,13 +81,13 @@ public class QwirkleTUIView implements QwirkleView{
 		if(b == null){
 			System.out.println("Bag size: " + amountOfBlocksLeft);
 		} else {
-			System.out.println("Bag size: " + b.noBlocks());
+			System.out.println("Bag size: " + b.size());
 		}
 	}
 	
 	public void showStatus(){
-		updateBoard(LocalController.instance().getGame().getBoard());
-		System.out.println("It is " + LocalController.instance().getGame().getCurrentPlayer().getName() + "'s turn");
+		updateBoard(controller.getGame().getBoard());
+		System.out.println("It is " + controller.getGame().getCurrentPlayer().getName() + "'s turn");
 	}
 	
 	public Move getMove(HumanPlayer p){
@@ -106,18 +103,9 @@ public class QwirkleTUIView implements QwirkleView{
 		
 			String choice = scanner.nextLine();
 			if(choice.equals("e")){
-				if(game instanceof HostGame){
-					return fillExchangeMove(new ExchangeMoveLocal(p, (HostGame)game));
-				} else {
-					return fillExchangeMove(new ExchangeMove(p, game));
-				}
-				
+				return fillExchangeMove(new Trade(p, controller.getGame()));
 			} else if(choice.equals("p")){
-				if(game instanceof HostGame){
-					return fillPlayBlocksMove(new PlayBlocksMoveLocal(p, (HostGame)game));
-				} else {
-					return fillPlayBlocksMove(new PlayBlocksMove(p, game));
-				}
+				return fillPlayBlocksMove(new Play(p, controller.getGame()));
 			} else {
 				System.out.println("Invalid input");
 				continue;
@@ -125,7 +113,7 @@ public class QwirkleTUIView implements QwirkleView{
 		}
 	}
 		
-	private ExchangeMove fillExchangeMove(ExchangeMove m){
+	private Trade fillExchangeMove(Trade m){
 		System.out.println("Enter which blocks to play. [number]");
 		
 		try{
@@ -158,7 +146,7 @@ public class QwirkleTUIView implements QwirkleView{
 		return m;
 	}
 		
-	private PlayBlocksMove fillPlayBlocksMove(PlayBlocksMove m){
+	private Play fillPlayBlocksMove(Play m){
 		System.out.println("Enter which blocks to play. [number]@x,y");
 		
 		try{
@@ -183,7 +171,7 @@ public class QwirkleTUIView implements QwirkleView{
 				}
 				String[] coords = blockPos[1].split(",");
 				
-				m.addBlock(m.getPlayer().getHand().get(Integer.parseInt(blockPos[0])), game.getBoard().new Position(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]))); 
+				m.addBlock(m.getPlayer().getHand().get(Integer.parseInt(blockPos[0])), new Position(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]))); 
 			}
 		} catch(UnknownInputFormatException e) {
 			System.out.println(e.getMessage());
@@ -198,14 +186,14 @@ public class QwirkleTUIView implements QwirkleView{
 		if(arg instanceof Move){
 			updatePlayer(((Move)arg).getPlayer());
 			
-			if(arg instanceof PlayBlocksMove){
-				PlayBlocksMove move = (PlayBlocksMove) arg;
+			if(arg instanceof Play){
+				Play move = (Play) arg;
 				
 				amountOfBlocksLeft = amountOfBlocksLeft - move.getNoBlocks() < 0 ? 0 : amountOfBlocksLeft - move.getNoBlocks();
 				
-				updateBoard(game.getBoard());
+				updateBoard(controller.getGame().getBoard());
 				updateScore(move.getPlayer());
-				updateBag(game.getBag());
+				updateBag(controller.getGame().getBag());
 			}
 		} else if(arg instanceof Command){
 			if(arg instanceof ServerTurnCommand){
@@ -218,6 +206,10 @@ public class QwirkleTUIView implements QwirkleView{
 				System.out.println("An invalid move was entered");
 			}
 		}
+	}
+	
+	public Controller getController(){
+		return controller;
 	}
 }
 

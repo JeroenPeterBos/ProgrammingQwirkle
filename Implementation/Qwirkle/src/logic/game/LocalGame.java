@@ -3,10 +3,11 @@ package logic.game;
 import java.util.LinkedList;
 import java.util.List;
 
+import controller.Controller;
 import controller.LocalController;
 import exceptions.IllegalMoveStateException;
 import logic.Move;
-import logic.move.PlayBlocksMove;
+import logic.move.Play;
 import players.Player;
 import players.local.LocalPlayer;
 
@@ -20,21 +21,16 @@ public class LocalGame extends HostGame {
 	// ------------------------------- Constructors
 	// ------------------------------------ //
 
-	public LocalGame(List<LocalPlayer> players) {
-		super(new LinkedList<Player>());
+	public LocalGame(Controller c) {
+		super(c);
 
-		for (LocalPlayer p : players) {
-			super.addPlayer(p);
-		}
-
-		this.players = players;
+		this.players = new LinkedList<LocalPlayer>();
 	}
 
 	// ------------------------------- Commands
 	// ---------------------------------------- //
 
-	@Override
-	public void run() {
+	public void startGame() {
 		init();
 		turn = getStartingPlayer();
 		playTurn(true);
@@ -55,24 +51,23 @@ public class LocalGame extends HostGame {
 	private void playTurn(boolean firstTurn) {
 		Move m = players.get(turn).determineMove();
 		while (m == null || !m.validate(players.get(turn), firstTurn)) {
+			System.out.println("Move was invalid");
 			setChanged();
 			notifyObservers(InputError.INVALID_MOVE);
 			m = players.get(turn).determineMove();
 		}
-		
+		System.out.println("Move was valid");
 		try {
 			m.execute();
 		} catch (IllegalMoveStateException e) {
 			System.err.println("BUG: " + e.getMessage());
 		}
 
-		if (m instanceof PlayBlocksMove) {
-			for (int i = 0; i < m.getNoBlocks(); i++) {
-				if (getBag().noBlocks() > 0) {
-					players.get(turn).giveBlock(bag.getBlock());
-				}
-			}
-		}
+		if(getBag().size() > m.getNoBlocks()){
+			players.get(turn).giveBlocks(bag.popBlocks(m.getNoBlocks()));
+		} else {
+			players.get(turn).giveBlocks(bag.popBlocks(getBag().size()));
+		}			
 
 		setChanged();
 		notifyObservers(m);
@@ -82,12 +77,16 @@ public class LocalGame extends HostGame {
 
 	protected void init() {
 		for (Player p : players) {
-			for (int i = 0; i < 6; i++) {
-				p.giveBlock(bag.getBlock());
-			}
+			p.giveBlocks(bag.popBlocks(6));
 		}
 
-		LocalController.instance().getView().showStatus();
+		getController().getView().showStatus();
+	}
+	
+	public void addPlayer(Player p){
+		super.addPlayer(p);
+		
+		players.add((LocalPlayer)p);
 	}
 
 	// ------------------------------- Queries

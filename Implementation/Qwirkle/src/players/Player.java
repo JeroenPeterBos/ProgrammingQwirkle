@@ -9,7 +9,7 @@ import exceptions.BlockNotInHandException;
 import exceptions.HandEmptyException;
 import exceptions.HandFullException;
 import logic.Game;
-import logic.move.PlayBlocksMove;
+import logic.move.Play;
 
 public abstract class Player {
 
@@ -69,6 +69,24 @@ public abstract class Player {
 		hand.remove(b);
 	}
 	
+	public void removeBlocks(List<Block> blocks) {
+		try {
+			if (hand.size() - blocks.size() < 0) {
+				throw new HandEmptyException(this, hand.size());
+			}
+			if (!hasBlocks(blocks)) {
+				throw new BlockNotInHandException(this, blocks);
+			}
+		} catch (HandEmptyException e) {
+			System.err.println(e.getMessage());
+			return;
+		} catch (BlockNotInHandException e) {
+			System.err.println(e.getMessage());
+		}
+		
+		hand.removeAll(blocks);
+	}
+	
 	/**.
 	 * giveBlock will give the player a new block
 	 * @throws HandFullException if the player's hand is full
@@ -115,7 +133,7 @@ public abstract class Player {
 	
 	public boolean hasPossibleMove(){
 		for(Block b : hand){
-			PlayBlocksMove m = new PlayBlocksMove(this, game);
+			Play m = new Play(this, game);
 			
 			for(Position p: game.getBoard().getOpenPositions()){
 				m.addBlock(b, p);
@@ -192,8 +210,12 @@ public abstract class Player {
 	 * @return boolean
 	 */
 	
-	public boolean hasBlock(Block b) {
+	public boolean hasBlock(Block b){
 		return hand.contains(b);
+	}
+	
+	public boolean hasBlocks(List<Block> b) {
+		return hand.containsAll(b);
 	}
 	/**.
 	 * getName gets the name of the player
