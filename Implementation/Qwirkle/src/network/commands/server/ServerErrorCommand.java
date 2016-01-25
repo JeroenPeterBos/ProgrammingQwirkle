@@ -1,7 +1,7 @@
 package network.commands.server;
 
+import client.Client;
 import network.IProtocol;
-import network.commands.Command;
 
 public class ServerErrorCommand extends ServerCommand {
 
@@ -35,5 +35,9 @@ public class ServerErrorCommand extends ServerCommand {
 	
 	public String getMessage(){
 		return message;
+	}
+	
+	public void selfHandle(Client c){
+		c.getView().showError(error, message);
 	}
 }

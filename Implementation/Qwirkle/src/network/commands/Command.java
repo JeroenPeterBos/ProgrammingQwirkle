@@ -10,6 +10,7 @@ import network.commands.client.ClientMovePutCommand;
 import network.commands.client.ClientMoveTradeCommand;
 import network.commands.client.ClientQueueCommand;
 import network.commands.client.ClientQuitCommand;
+import network.commands.server.ServerCommand;
 import network.commands.server.ServerDrawtileCommand;
 import network.commands.server.ServerErrorCommand;
 import network.commands.server.ServerGameendCommand;
@@ -61,7 +62,7 @@ public abstract class Command {
 		}
 	}
 
-	public static Command toServerCommand(String c, Game g) throws CommandException {
+	public static ServerCommand toServerCommand(String c, Game g) throws CommandException {
 		String[] words = c.split(" ");
 		String command = words[0];
 

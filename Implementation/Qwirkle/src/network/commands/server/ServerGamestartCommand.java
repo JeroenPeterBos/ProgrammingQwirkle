@@ -1,40 +1,56 @@
 package network.commands.server;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import client.Client;
+import model.game.ClientGame;
 import model.players.Player;
 import model.players.distant.ServerPlayer;
+import model.players.distant.SocketPlayer;
 import network.IProtocol;
-import network.commands.Command;
 
-public class ServerGamestartCommand extends Command {
+public class ServerGamestartCommand extends ServerCommand {
 
-	private List<Player> players;
+	private ArrayList<String> names;
 	
-	public ServerGamestartCommand(List<Player> p){
-		this.players = p;
-	}
-	
-	public ServerGamestartCommand(String[] commandParts){
-		this.players = new LinkedList<Player>();
-		for(int i = 1; i < commandParts.length; i++){
-			players.add(new ServerPlayer(commandParts[i], null));
+	public ServerGamestartCommand(String[] names){
+		this.names = new ArrayList<String>(Arrays.asList(names));
+		if(this.names.get(0).equals(IProtocol.SERVER_GAMESTART)){
+			this.names.remove(0);
 		}
 	}
 	
-	public List<Player> getPlayers(){
-		return players;
+	public ServerGamestartCommand(List<SocketPlayer> players){
+		this.names = new ArrayList<String>();
+		
+		for(Player p: players){
+			this.names.add(p.getName());
+		}
 	}
 	
 	@Override
 	public String toCommandString(){
 		String command = IProtocol.SERVER_GAMESTART;
 		
-		for(int i = 0; i < players.size(); i++){
-			command += " " + players.get(i).getName();
+		for(int i = 0; i < names.size(); i++){
+			command += " " + names.get(i);
 		}
 		
 		return command;
+	}
+	
+	public void selfHandle(Client c){
+		c.setGame(new ClientGame(c, c.getPlayer()));
+		
+		c.getPlayer().setGame(c.getGame());
+		
+		for(String n: names){
+			if(!c.getPlayer().getName().equals(n)){
+				c.addPlayer(new ServerPlayer(n, c.getGame()));
+			}
+		}
+		c.startQwirkle();
 	}
 }

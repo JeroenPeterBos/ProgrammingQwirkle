@@ -1,14 +1,15 @@
 package network.commands.server;
 
+import client.Client;
+import exceptions.IllegalMoveStateException;
 import model.components.Block;
 import model.components.Board.Position;
 import model.components.move.Play;
 import model.game.Game;
 import network.IProtocol;
-import network.commands.Command;
 import network.commands.GameCommand;
 
-public class ServerMovePutCommand extends Command implements GameCommand{
+public class ServerMovePutCommand extends ServerCommand implements GameCommand{
 
 	private Play move;
 	
@@ -41,5 +42,14 @@ public class ServerMovePutCommand extends Command implements GameCommand{
 		}
 		
 		return command;
+	}
+	
+	public void selfHandle(Client c){
+		move.validate(c.getGame().getCurrentPlayer(), false);
+		try {
+			move.execute();
+		} catch (IllegalMoveStateException e) {
+			e.printStackTrace();
+		}
 	}
 }

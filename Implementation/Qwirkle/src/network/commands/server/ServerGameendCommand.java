@@ -1,9 +1,10 @@
 package network.commands.server;
 
+import client.Client;
 import network.IProtocol;
 import network.commands.Command;
 
-public class ServerGameendCommand extends Command{
+public class ServerGameendCommand extends ServerCommand{
 
 	private boolean win;
 	private int[] scores;
@@ -37,5 +38,10 @@ public class ServerGameendCommand extends Command{
 		}
 		
 		return command;
+	}
+	
+	public void selfHandle(Client c){
+		c.getGame().shutDown();
+		c.getPlayer().setGame(null);
 	}
 }

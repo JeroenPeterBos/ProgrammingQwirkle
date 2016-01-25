@@ -1,9 +1,10 @@
 package network.commands.server;
 
+import client.Client;
 import network.IProtocol;
 import network.commands.Command;
 
-public class ServerIdentifyCommand extends Command{
+public class ServerIdentifyCommand extends ServerCommand{
 
 	private IProtocol.Feature[] features;
 	
@@ -36,5 +37,9 @@ public class ServerIdentifyCommand extends Command{
 		}
 		
 		return command;
+	}
+	
+	public void selfHandle(Client c){
+		// TODO implement
 	}
 }

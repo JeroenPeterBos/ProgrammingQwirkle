@@ -15,6 +15,7 @@ import model.components.move.Trade;
 import model.game.Game;
 import model.players.Player;
 import model.players.local.human.HumanPlayer;
+import network.IProtocol;
 import network.commands.Command;
 import network.commands.server.ServerErrorCommand;
 import network.commands.server.ServerTurnCommand;
@@ -24,13 +25,9 @@ public class QwirkleTUIView implements QwirkleView{
 	private Controller controller;
 	private Scanner scanner;
 	
-	private int amountOfBlocksLeft;
-	
 	public QwirkleTUIView(Controller c){
 		this.scanner = new Scanner(System.in);
 		this.controller = c;
-		
-		this.amountOfBlocksLeft = 108 - controller.getGame().getNoPlayers() * 6;
 	}
 
 	@Override
@@ -78,16 +75,16 @@ public class QwirkleTUIView implements QwirkleView{
 	
 	@Override
 	public void updateBag(Bag b){
-		if(b == null){
-			System.out.println("Bag size: " + amountOfBlocksLeft);
-		} else {
-			System.out.println("Bag size: " + b.size());
-		}
+		System.out.println("Bag size: " + b.size());
 	}
 	
 	public void showStatus(){
 		updateBoard(controller.getGame().getBoard());
 		System.out.println("It is " + controller.getGame().getCurrentPlayer().getName() + "'s turn");
+	}
+	
+	public void showError(IProtocol.Error e, String m){
+		System.out.println(e + ": " + m);
 	}
 	
 	public Move getMove(HumanPlayer p){
@@ -188,8 +185,6 @@ public class QwirkleTUIView implements QwirkleView{
 			
 			if(arg instanceof Play){
 				Play move = (Play) arg;
-				
-				amountOfBlocksLeft = amountOfBlocksLeft - move.getNoBlocks() < 0 ? 0 : amountOfBlocksLeft - move.getNoBlocks();
 				
 				updateBoard(controller.getGame().getBoard());
 				updateScore(move.getPlayer());

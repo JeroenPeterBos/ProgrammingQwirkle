@@ -8,24 +8,23 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
-import exceptions.protocol.WrongServerCommandException;
+import controller.Controller;
 import model.game.ClientGame;
+import model.game.Game;
+import model.players.Player;
 import model.players.local.LocalPlayer;
 import model.players.local.human.HumanPlayer;
 import network.IProtocol;
 import network.commands.Command;
 import network.commands.client.ClientIdentifyCommand;
-import network.commands.server.ServerDrawtileCommand;
-import network.commands.server.ServerErrorCommand;
-import network.commands.server.ServerGameendCommand;
-import network.commands.server.ServerGamestartCommand;
-import network.commands.server.ServerMovePutCommand;
-import network.commands.server.ServerMoveTradeCommand;
-import network.commands.server.ServerTurnCommand;
+import network.commands.client.ClientQueueCommand;
+import network.commands.server.ServerCommand;
 import network.io.CommandReader;
 import network.io.CommandWriter;
+import view.QwirkleTUIView;
+import view.QwirkleView;
 
-public class Client extends Thread{
+public class Client extends Thread implements Controller{
 
 	public static IProtocol.Feature[] supported = new IProtocol.Feature[]{};
 	
@@ -56,9 +55,8 @@ public class Client extends Thread{
 			client.write(new ClientIdentifyCommand(client.getClientName(), supported));
 			
 			Scanner scanner = new Scanner(System.in);
-			do{
-				
-			}while(true);
+			
+			client.write(new ClientQueueCommand(new int[]{3,4}));
 			
 		} catch (IOException e) {
 			System.exit(0);
@@ -69,9 +67,12 @@ public class Client extends Thread{
 	private Socket sock;
 	private CommandReader in;
 	private CommandWriter out;
+	
 	private LocalPlayer player;
+	private ClientGame game;
 	
 	private String name;
+	private QwirkleView qv;
 
 	/**
 	 * Constructs a Client-object and tries to make a socket connection
@@ -82,15 +83,19 @@ public class Client extends Thread{
 		this.in = new CommandReader(new InputStreamReader(this.sock.getInputStream()));
 		this.out = new CommandWriter(new OutputStreamWriter(this.sock.getOutputStream()));
 		this.name = name;
-		this.player = null;
+		
+		this.game = null;
+		this.player = new HumanPlayer(name, null);
+		this.qv = new QwirkleTUIView(this);
 	}
 
 	public void run() {
 		boolean running = true;
 		while(running){
-			Command incomming = null;
+			ServerCommand incomming = null;
 			try {
-				incomming = in.readServerCommand(player.getGame());
+				Game ga = player.getGame();
+				incomming = in.readServerCommand(ga);
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
 				running = false;
@@ -100,29 +105,13 @@ public class Client extends Thread{
 				running = false;
 				continue;
 			}
-			
-			if(incomming instanceof ServerDrawtileCommand || 
-					incomming instanceof ServerMovePutCommand ||
-					incomming instanceof ServerMoveTradeCommand ||
-					incomming instanceof ServerTurnCommand){
-				if(player.getGame() == null){
-					try {
-						throw new WrongServerCommandException(incomming);
-					} catch (WrongServerCommandException e) {
-						e.printStackTrace();
-					}
-				}
-				((ClientGame)player.getGame()).addCommand(incomming);
-			} else if(incomming instanceof ServerGamestartCommand){
-				ClientGame game = new ClientGame(((ServerGamestartCommand)incomming).getPlayers(), player);
-				player.addGame(game);
-				new Thread(game).start();
-			} else if(incomming instanceof ServerGameendCommand){
-				player.getGame().shutDown();
-			} else if(incomming instanceof ServerErrorCommand){
-				// notify view about error
-			}
+			System.out.println(incomming.toCommandString());
+			incomming.selfHandle(this);
 		}
+	}
+	
+	public void startQwirkle(){
+		game.startGame();
 	}
 
 	/** close the socket connection. */
@@ -145,7 +134,23 @@ public class Client extends Thread{
 		return name;
 	}
 	
+	public QwirkleView getView(){
+		return qv;
+	}
+	
+	public void setGame(ClientGame cg){
+		this.game = cg;
+	}
+	
+	public ClientGame getGame(){
+		return game;
+	}
+	
 	public LocalPlayer getPlayer(){
 		return player;
+	}
+	
+	public void addPlayer(Player p){
+		game.addPlayer(p);
 	}
 }

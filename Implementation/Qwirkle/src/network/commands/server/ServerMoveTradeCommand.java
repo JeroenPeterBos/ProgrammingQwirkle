@@ -1,9 +1,9 @@
 package network.commands.server;
 
+import client.Client;
 import network.IProtocol;
-import network.commands.Command;
 
-public class ServerMoveTradeCommand extends Command{
+public class ServerMoveTradeCommand extends ServerCommand{
 
 	private int amount;
 	
@@ -18,5 +18,9 @@ public class ServerMoveTradeCommand extends Command{
 	@Override
 	public String toCommandString(){
 		return IProtocol.SERVER_MOVE_TRADE + " " + amount;
+	}
+	
+	public void selfHandle(Client c){
+		// notify the view on event
 	}
 }

@@ -8,6 +8,7 @@ import model.components.bag.Bag;
 import model.components.move.Move;
 import model.players.Player;
 import model.players.local.human.HumanPlayer;
+import network.IProtocol;
 
 public interface QwirkleView extends Observer{
 
@@ -16,6 +17,7 @@ public interface QwirkleView extends Observer{
 	public void updateScore(Player p);
 	public void updateBag(Bag b);
 	public void showStatus();
+	public void showError(IProtocol.Error e, String message);
 
 	public Move getMove(HumanPlayer p);
 	public Controller getController();

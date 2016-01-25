@@ -9,6 +9,7 @@ import exceptions.IllegalMoveStateException;
 import model.components.move.Move;
 import model.components.move.Play;
 import model.components.move.Trade;
+import model.players.Player;
 import model.players.distant.SocketPlayer;
 import network.commands.Command;
 import network.commands.server.ServerDrawtileCommand;
@@ -100,10 +101,10 @@ public class ServerGame extends HostGame{
 		notify();
 	}
 	
-	public void addPlayer(SocketPlayer p){
+	public void addPlayer(Player p){
 		super.addPlayer(p);
 		
-		socketPlayers.add(p);
+		socketPlayers.add((SocketPlayer) p);
 	}
 	
 	protected void init() {
@@ -113,7 +114,7 @@ public class ServerGame extends HostGame{
 		}
 		
 		for (SocketPlayer p: socketPlayers) {
-			p.sendCommand(new ServerGamestartCommand(allNames));
+			p.sendCommand(new ServerGamestartCommand(socketPlayers));
 			p.sendCommand(new ServerDrawtileCommand(bag.popBlocks(6)));
 		}
 	}

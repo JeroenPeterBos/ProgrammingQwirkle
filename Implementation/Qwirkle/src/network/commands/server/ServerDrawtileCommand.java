@@ -3,9 +3,9 @@ package network.commands.server;
 import java.util.LinkedList;
 import java.util.List;
 
+import client.Client;
 import model.components.Block;
 import network.IProtocol;
-import network.commands.Command;
 
 public class ServerDrawtileCommand extends ServerCommand{
 
@@ -25,6 +25,10 @@ public class ServerDrawtileCommand extends ServerCommand{
 	
 	public List<Block> getBlocks(){
 		return blocks;
+	}
+	
+	public void selfHandle(Client c){
+		c.getGame().getCurrentPlayer().giveBlocks(blocks);
 	}
 	
 	@Override

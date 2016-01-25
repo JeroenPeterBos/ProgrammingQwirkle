@@ -9,6 +9,7 @@ import model.game.Game;
 import model.game.ServerGame;
 import model.players.Player;
 import network.commands.Command;
+import network.commands.server.ServerCommand;
 
 public class CommandReader extends BufferedReader{
 
@@ -26,7 +27,7 @@ public class CommandReader extends BufferedReader{
 		return Command.toClientCommand(line, p, g);
 	}
 	
-	public Command readServerCommand(Game g) throws IOException{
+	public ServerCommand readServerCommand(Game g) throws IOException{
 		String line = readLine();
 		
 		if(line == null || line.split(" ").length < 1){
