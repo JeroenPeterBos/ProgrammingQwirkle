@@ -111,6 +111,9 @@ public class Play extends Move {
 			if (!hasOrigin) {
 				return false;
 			}
+			if (p.maxMove() != blocks.size()) {
+				return false;
+			}			
 		}
 		
 		// validate that its the current players turn and that the move has at least 1 block

@@ -45,7 +45,6 @@ public abstract class HostGame extends Game {
 				res = i;
 			}
 		}
-		
 		return res;
 	}
 	
