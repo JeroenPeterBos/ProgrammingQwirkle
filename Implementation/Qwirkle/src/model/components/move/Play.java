@@ -1,7 +1,5 @@
 package model.components.move;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,7 +9,6 @@ import model.components.Block;
 import model.components.Board;
 import model.components.Board.Position;
 import model.components.Board.Row;
-import model.game.Game;
 import model.players.Player;
 
 public class Play extends Move {

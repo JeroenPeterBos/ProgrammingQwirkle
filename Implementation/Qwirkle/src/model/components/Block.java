@@ -29,7 +29,7 @@ public class Block {
 	 * Holds a integer s that represents the shape in a short way.
 	 */
 	
-	public enum Shape{
+	public enum Shape {
 		STAR(0), CIRCLE(1), SQUARE(2), DIAMOND(3), CLOVER(4), CROSS(5);
 		
 		public final int s;
@@ -45,6 +45,7 @@ public class Block {
 	 * Private field that holds the Color of this Block.
 	 */
 	private Color color;
+	
 	/**
 	 * Private field that holds the Shape of this Block.
 	 */
@@ -64,6 +65,11 @@ public class Block {
 		this.shape = s;
 	}
 	
+	/**
+	 * Constructs a new Block based on a given number, which has a specified Color and
+	 * 			Shape, given in the Protocol.
+	 * @param i is the number of the block you want to construct
+	 */
 	public Block(int i){
 		this.color = Color.values()[i/6];
 		this.shape = Shape.values()[i%6];
@@ -74,7 +80,7 @@ public class Block {
 	
 
 	/**
-	 * @return the color of this block
+	 * @return the color of this block.
 	 */
 
 	public Color getColor() {
@@ -83,7 +89,7 @@ public class Block {
 	
 
 	/**
-	 * @return the shape of this block
+	 * @return the shape of this block.
 	 */
 
 	public Shape getShape() {
@@ -93,6 +99,7 @@ public class Block {
 
 	/**
 	 * Converts this block to an Integer based on the IProtocol.
+	 * @return a block's integer
 	 */
 
 	public int toInt() {
@@ -101,7 +108,8 @@ public class Block {
 	
 
 	/**.
-	 * Converts this block to represent itself in a combination of color and shape
+	 * Converts this block to represent itself in a combination of color and shape.
+	 * @return representation of color and shape in a string
 	 */
 
 	public String toString() {
