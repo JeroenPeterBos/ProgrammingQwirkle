@@ -18,6 +18,7 @@ import network.commands.server.ServerGamestartCommand;
 import network.commands.server.ServerIdentifyCommand;
 import network.commands.server.ServerMovePutCommand;
 import network.commands.server.ServerMoveTradeCommand;
+import network.commands.server.ServerQueueCommand;
 import network.commands.server.ServerTurnCommand;
 
 public abstract class Command {
@@ -73,6 +74,8 @@ public abstract class Command {
 			return new ServerErrorCommand(words);
 		case IProtocol.SERVER_GAMEEND:
 			return new ServerGameendCommand(words);
+		case IProtocol.SERVER_QUEUE:
+			return new ServerQueueCommand(words);
 		case IProtocol.SERVER_GAMESTART:
 			return new ServerGamestartCommand(words);
 		case IProtocol.SERVER_IDENTIFY:

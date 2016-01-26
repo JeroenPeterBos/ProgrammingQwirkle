@@ -6,8 +6,6 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import exceptions.protocol.CommandException;
-import model.components.move.Move;
-import model.game.ServerGame;
 import model.players.distant.SocketPlayer;
 import network.IProtocol;
 import network.commands.Command;
@@ -16,6 +14,8 @@ import network.commands.client.ClientIdentifyCommand;
 import network.commands.client.ClientQueueCommand;
 import network.commands.client.ClientQuitCommand;
 import network.commands.server.ServerErrorCommand;
+import network.commands.server.ServerIdentifyCommand;
+import network.commands.server.ServerQueueCommand;
 import network.io.CommandReader;
 import network.io.CommandWriter;
 
@@ -63,6 +63,11 @@ public class ClientHandler extends Thread {
 				for(int i: ((ClientQueueCommand) c).getQueues()){
 					server.getGameCreator().addPlayer(player, i);
 				}
+				try {
+					out.write(new ServerQueueCommand(((ClientQueueCommand) c).getQueues()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			} else if(c instanceof ClientQuitCommand){
 				player.getGame().shutDown();
 			}
@@ -72,43 +77,34 @@ public class ClientHandler extends Thread {
 	}
 
 	public boolean init() {
-		Command input = null;
+		Command inp = null;
 		try {
-			input = in.readClientCommand(null, player);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-
-		// ensure that clients first identifies itself
-		if (!(input instanceof ClientIdentifyCommand)) {
-			try {
-				out.write(new ServerErrorCommand(IProtocol.Error.INVALID_COMMAND,
-						"First client should identify itself"));
-			} catch (IOException e) {
-				// TODO terminate this client
+			inp = in.readClientCommand(null, player);
+			
+			if(!(inp instanceof ClientIdentifyCommand)){
+				out.write(new ServerErrorCommand(IProtocol.Error.INVALID_COMMAND, "First client should identify itself"));
 			}
+			
+			ClientIdentifyCommand input = (ClientIdentifyCommand) inp;
+			
+			String name = input.getName();
+			// check if name is unique
+			for (ClientHandler client : server.getClients()) {
+				if (!client.equals(this) && client.getClientName().equals(name)) {
+						out.write(new ServerErrorCommand(IProtocol.Error.NAME_USED, "Name is already in use"));
+				}
+			}
+			
+			this.features = server.matchingFeatures(input.getFeatures());
+			
+			this.player = new SocketPlayer(name, this, null);
+			System.out.println(name + ": connected");
+			
+			out.write(new ServerIdentifyCommand(server.getFeatures()));
+		} catch (IOException e) {
 			return false;
 		}
-
-		String name = ((ClientIdentifyCommand) input).getName();
-		// check if name is unique
-		for (ClientHandler client : server.getClients()) {
-			if (!client.equals(this) && client.getClientName().equals(name)) {
-				try {
-					out.write(new ServerErrorCommand(IProtocol.Error.NAME_USED, "Name is already in use"));
-				} catch (IOException e) {
-					// TODO Terminate this client
-				}
-				return false;
-			}
-		}
-
-		// check feature compatibility
-
-		this.player = new SocketPlayer(name, this, null);
-		System.out.println(name + ": connected");
-		
-		
+ 
 		server.getClients().add(this);
 		return true;
 	}

@@ -18,6 +18,7 @@ public class Play extends Move {
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
+	private Board board;
 	
 	/**
 	 * The blocks of the form Entry (block, position), which are requested to move.
@@ -44,9 +45,10 @@ public class Play extends Move {
 	 * @param g = game
 	 */
 	
-	public Play(Player p, Game g) {
-		super(p, g);
+	public Play(Player p, Board b) {
+		super(p);
 		
+		this.board = b;
 		this.blocks = new LinkedList<Entry>();
 	}
 	
@@ -71,7 +73,7 @@ public class Play extends Move {
 		fillBlocks(blocks);
 		
 		determineOrientation();
-		player.addScore(calculateScore(game.getBoard().getCreatingRows(this, orientation)));
+		player.addScore(calculateScore(board.getCreatingRows(this, orientation)));
 	}
 	
 	
@@ -95,7 +97,7 @@ public class Play extends Move {
 	 */
 	private void fillFromCopy(List<Entry> copy){
 		for(Entry e: copy){
-			if(game.getBoard().fill(e.getCoords(), e.getBlock())){
+			if(board.fill(e.getCoords(), e.getBlock())){
 				copy.remove(e);
 				fillFromCopy(copy);
 				return;
@@ -163,7 +165,7 @@ public class Play extends Move {
 				System.out.println("First move should have origin");
 				return false;
 			}
-			if (p.maxMove() != blocks.size()) {
+			if (p.maxStartMove().size() != blocks.size()) {
 				return false;
 			}			
 		}
@@ -188,7 +190,7 @@ public class Play extends Move {
 			return false;
 		}
 		
-		List<Board.Row> rows = game.getBoard().getCreatingRows(this, orientation);
+		List<Board.Row> rows = board.getCreatingRows(this, orientation);
 		if (rows.size() < 1) {
 			System.out.println("to few rows created");
 			return false;

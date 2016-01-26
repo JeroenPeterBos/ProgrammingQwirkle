@@ -18,6 +18,8 @@ public class ClientGame extends Game{
 	 private Player currentPlayer;
 	 private LocalPlayer localPlayer;
 	 
+	 private boolean firstTurn = true;
+	 
 	 public ClientGame(Controller c, LocalPlayer p){
 		 super(c, new VirtualBag());
 		 
@@ -42,6 +44,8 @@ public class ClientGame extends Game{
 		 System.out.println("just executed the move");
 		 setChanged();
 		 notifyObservers(p);
+		 
+		 this.firstTurn = false;
 	 }
 	 
 	 public void handleTrade(int a){
@@ -64,5 +68,9 @@ public class ClientGame extends Game{
 	 
 	 public LocalPlayer getLocalPlayer(){
 		 return localPlayer;
+	 }
+	 
+	 public boolean getFirstTurn(){
+		 return firstTurn;
 	 }
 }

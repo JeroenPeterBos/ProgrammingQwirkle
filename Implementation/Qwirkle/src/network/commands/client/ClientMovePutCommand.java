@@ -18,7 +18,7 @@ public class ClientMovePutCommand extends Command implements GameCommand{
 	}
 	
 	public ClientMovePutCommand(String[] commandParts, Player p, ServerGame g){
-		Play playmove = new Play(p, g);
+		Play playmove = new Play(p, g.getBoard());
 		
 		for(int i = 1; i < commandParts.length; i++){
 			String[] parts = commandParts[i].split("@");

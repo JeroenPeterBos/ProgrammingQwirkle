@@ -6,6 +6,7 @@ import controller.Client;
 import model.components.move.Move;
 import model.components.move.Play;
 import model.components.move.Trade;
+import model.game.ClientGame;
 import model.game.Game;
 import model.players.Player;
 import network.IProtocol;
@@ -15,6 +16,7 @@ import network.commands.client.ClientMoveTradeCommand;
 public class ServerTurnCommand extends ServerCommand{
 
 	private Player player;
+	private boolean firstTurn = false;
 	
 	public ServerTurnCommand(Player p){
 		this.player = p;
@@ -22,6 +24,7 @@ public class ServerTurnCommand extends ServerCommand{
 	
 	public ServerTurnCommand(String[] words, Game g){
 		this.player = g.getPlayerByName(words[1]);
+		this.firstTurn = ((ClientGame)g).getFirstTurn();
 	}
 	
 	public Player getPlayer(){
@@ -37,7 +40,7 @@ public class ServerTurnCommand extends ServerCommand{
 		c.getGame().setTurn(player);
 		
 		if(player.equals(c.getPlayer())){
-			Move m = c.getPlayer().determineMove();
+			Move m = c.getPlayer().determineMove(firstTurn);
 			
 			try{
 				if(m instanceof Play){

@@ -17,7 +17,7 @@ public abstract class LocalPlayer extends Player {
 	 * @return move
 	 */
 	
-	public abstract Move determineMove();
+	public abstract Move determineMove(boolean first);
 	
 	public void addGame(Game g){
 		game = g;

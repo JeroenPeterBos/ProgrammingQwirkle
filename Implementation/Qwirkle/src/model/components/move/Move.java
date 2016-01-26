@@ -16,11 +16,6 @@ public abstract class Move {
 	protected Player player;
 	
 	/**
-	 * game represents the game where the move takes place.
-	 */
-	protected Game game;
-	
-	/**
 	 * valid represents whether the checks of validation passed or not.
 	 */
 	protected boolean valid = false;
@@ -33,9 +28,8 @@ public abstract class Move {
 	 * @param g
 	 */
 	
-	public Move(Player p, Game g) {
+	public Move(Player p) {
 		this.player = p;
-		this.game = g;
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //

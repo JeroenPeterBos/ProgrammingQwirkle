@@ -6,12 +6,13 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
 
 import model.game.ClientGame;
 import model.game.Game;
 import model.players.Player;
 import model.players.local.LocalPlayer;
+import model.players.local.computer.ComputerPlayer;
+import model.players.local.computer.strategy.StupidStrategy;
 import model.players.local.human.HumanPlayer;
 import network.IProtocol;
 import network.commands.Command;
@@ -28,7 +29,7 @@ public class Client extends Thread implements Controller{
 	public static IProtocol.Feature[] supported = new IProtocol.Feature[]{};
 	
 	public static void main(String[] args) {
-		if (args.length != 3) {
+		if (args.length != 4 ) {
 			System.exit(0);
 		}
 		
@@ -49,11 +50,17 @@ public class Client extends Thread implements Controller{
 
 		try {
 			Client client = new Client(args[0], host, port);
-			client.start();
 			
 			client.write(new ClientIdentifyCommand(client.getClientName(), supported));
-			client.write(new ClientQueueCommand(new int[]{2,3,4}));
 			
+			String[] q = args[3].split(",");
+			int[] queues = new int[q.length];
+			for(int i = 0; i < q.length; i++){
+				queues[i] = Integer.parseInt(q[i]);
+			}
+			client.write(new ClientQueueCommand(queues));
+			
+			client.start();
 		} catch (IOException e) {
 			System.exit(0);
 		}
@@ -71,7 +78,7 @@ public class Client extends Thread implements Controller{
 	private QwirkleView qv;
 
 	/**
-	 * Constructs a Client-object and tries to make a socket connection
+	 * Constructs a Client-object and tries to make a socket 
 	 */
 	public Client(String name, InetAddress host, int port)
 			throws IOException {
@@ -81,7 +88,12 @@ public class Client extends Thread implements Controller{
 		this.name = name;
 		
 		this.game = null;
-		this.player = new HumanPlayer(name, null);
+		
+		if(name.startsWith("-STUPID")) {
+			this.player = new ComputerPlayer(name.split(" ")[1], null, name.split(" ")[0]);
+		} else {
+			this.player = new HumanPlayer(name, null);
+		}
 		this.qv = new QwirkleTUIView(this);
 	}
 
@@ -108,7 +120,6 @@ public class Client extends Thread implements Controller{
 	
 	public void startQwirkle(){
 		game.startGame();
-		
 		qv.showStatus();
 	}
 
