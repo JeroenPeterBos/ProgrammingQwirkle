@@ -1,4 +1,4 @@
-package client;
+package controller;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import controller.Controller;
 import model.game.ClientGame;
 import model.game.Game;
 import model.players.Player;

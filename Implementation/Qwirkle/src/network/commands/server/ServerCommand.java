@@ -1,6 +1,6 @@
 package network.commands.server;
 
-import client.Client;
+import controller.Client;
 import network.commands.Command;
 
 public abstract class ServerCommand extends Command{

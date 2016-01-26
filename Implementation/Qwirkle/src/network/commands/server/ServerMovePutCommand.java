@@ -1,6 +1,6 @@
 package network.commands.server;
 
-import client.Client;
+import controller.Client;
 import exceptions.IllegalMoveStateException;
 import model.components.Block;
 import model.components.Board.Position;

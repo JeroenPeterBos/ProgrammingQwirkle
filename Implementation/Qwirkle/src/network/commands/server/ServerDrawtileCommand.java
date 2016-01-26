@@ -3,7 +3,7 @@ package network.commands.server;
 import java.util.LinkedList;
 import java.util.List;
 
-import client.Client;
+import controller.Client;
 import model.components.Block;
 import model.game.ClientGame;
 import network.IProtocol;
