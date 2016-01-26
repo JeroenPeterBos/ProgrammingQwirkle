@@ -19,6 +19,6 @@ public interface QwirkleView extends Observer{
 	public void showStatus();
 	public void showError(IProtocol.Error e, String message);
 
-	public Move getMove(HumanPlayer p);
+	public Move getMove(HumanPlayer p, boolean first);
 	public Controller getController();
 }

@@ -28,6 +28,7 @@ public abstract class HostGame extends Game {
 		if(playersLeft <= 0){
 			return true;
 		}
+		
 		if(!getCurrentPlayer().hasPossibleMove()){
 			incrementTurn();
 			return checkIfStuck(playersLeft - 1);
@@ -41,7 +42,7 @@ public abstract class HostGame extends Game {
 		int res = 0;
 		
 		for (int i = 0; i < players.size(); i++) {
-			if (players.get(res).maxMove() < players.get(i).maxMove()) {
+			if (players.get(res).maxStartMove().size() < players.get(i).maxStartMove().size()) {
 				res = i;
 			}
 		}

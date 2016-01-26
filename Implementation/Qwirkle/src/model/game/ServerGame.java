@@ -38,13 +38,10 @@ public class ServerGame extends HostGame{
 		init();
 		
 		playTurn(true);
-		
-		while(running){
-			if(rareSituation()){
-				continue;
-			}
+		while(running && !rareSituation()){
 			playTurn(false);
 		}
+		
 	}
 
 	private synchronized void playTurn(boolean firstTurn) {
@@ -83,6 +80,8 @@ public class ServerGame extends HostGame{
 		} catch (IllegalMoveStateException e) {
 			e.printStackTrace();
 		}
+		move.getPlayer().removeBlocks(move.getBlocksView());
+		
 		currentMove++;
 		
 		System.out.println("currentmove: " + currentMove + ", amountofthem: " + moves.size());

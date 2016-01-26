@@ -1,5 +1,4 @@
 package network;
-
 /**
  * IProtocol is the interface for the Qwirkle Protocol implementation. This interface
  * contains definitions for all commands used in the protocol. An implementation has

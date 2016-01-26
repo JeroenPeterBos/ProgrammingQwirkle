@@ -18,7 +18,7 @@ public class ServerMovePutCommand extends ServerCommand implements GameCommand{
 	}
 	
 	public ServerMovePutCommand(String[] commandParts, Game g){
-		this.move = new Play(g.getCurrentPlayer(), g);
+		this.move = new Play(g.getCurrentPlayer(), g.getBoard());
 		
 		for(int i = 1; i < commandParts.length; i++){
 			Block b = new Block(Integer.parseInt(commandParts[i].split("@")[0]));

@@ -86,7 +86,7 @@ public class QwirkleTUIView implements QwirkleView{
 		System.out.println(e + ": " + m);
 	}
 	
-	public Move getMove(HumanPlayer p){
+	public Move getMove(HumanPlayer p, boolean first){
 		// printing the current blocks to the output
 		String blocks = "";
 		for(int i = 0; i < p.getHand().size(); i++){
@@ -99,9 +99,9 @@ public class QwirkleTUIView implements QwirkleView{
 		
 			String choice = scanner.nextLine();
 			if(choice.equals("e")){
-				return fillExchangeMove(new Trade(p, controller.getGame()));
+				return fillExchangeMove(new Trade(p, controller.getGame().getBag()));
 			} else if(choice.equals("p")){
-				return fillPlayBlocksMove(new Play(p, controller.getGame()));
+				return fillPlayBlocksMove(new Play(p, controller.getGame().getBoard()));
 			} else {
 				System.out.println("Invalid input");
 				continue;

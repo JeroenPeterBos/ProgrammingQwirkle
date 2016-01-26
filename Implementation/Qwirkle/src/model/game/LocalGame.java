@@ -48,7 +48,7 @@ public class LocalGame extends HostGame {
 
 	private void playTurn(boolean firstTurn) {
 		getController().getView().showStatus();
-		Move m = players.get(turn).determineMove();
+		Move m = players.get(turn).determineMove(firstTurn);
 		while (m == null || !m.validate(players.get(turn), firstTurn)) {
 			System.out.println("Move was invalid");
 			try {
@@ -58,7 +58,7 @@ public class LocalGame extends HostGame {
 			}
 			setChanged();
 			notifyObservers(InputError.INVALID_MOVE);
-			m = players.get(turn).determineMove();
+			m = players.get(turn).determineMove(firstTurn);
 		}
 		System.out.println("Move was valid");
 		try {

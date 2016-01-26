@@ -17,7 +17,7 @@ public class ClientMoveTradeCommand extends Command implements GameCommand{
 	}
 	
 	public ClientMoveTradeCommand(String[] commandParts, Player p, HostGame g){
-		Trade exchangemove = new Trade(g.getCurrentPlayer(), g);
+		Trade exchangemove = new Trade(g.getCurrentPlayer(), g.getBag());
 		
 		for(int i = 1; i < commandParts.length; i++){
 			exchangemove.addBlock(new Block(Integer.parseInt(commandParts[i])));

@@ -12,7 +12,6 @@ public abstract class Move {
 	// ------------------------------- Instance Variables ------------------------------ //
 	
 	protected Player player;
-	protected Game game;
 	
 	protected boolean valid = false;
 	
@@ -24,9 +23,8 @@ public abstract class Move {
 	 * @param g
 	 */
 	
-	public Move(Player p, Game g) {
+	public Move(Player p) {
 		this.player = p;
-		this.game = g;
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //

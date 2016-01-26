@@ -92,13 +92,48 @@ public class Server {
 			e.printStackTrace();
 		}
 		
-		// TODO implement
-		// end all the games and close all clienthandlers
+		for(ClientHandler ch : clients){
+			ch.shutDown();
+		}
+		for(ServerGameThread g : games){
+			g.endQwirkle();
+		}
 	}
 
 	// ------------------------------- Queries
 	// ----------------------------------------- //
 
+	public IProtocol.Feature[] matchingFeatures(IProtocol.Feature[] f){
+		int matches = 0;
+		for(IProtocol.Feature feature: f){
+			if(supportsFeature(feature)){
+				matches++;
+			}
+		}
+		
+		IProtocol.Feature[] matching = new IProtocol.Feature[matches];
+		for(IProtocol.Feature feature: f){
+			if(supportsFeature(feature)){
+				matching[--matches] = feature;
+			}
+		}
+		
+		return matching;
+	}
+	
+	public boolean supportsFeature(IProtocol.Feature f){
+		for(IProtocol.Feature feature: this.supportedFeatures){
+			if(feature == f){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public IProtocol.Feature[] getFeatures(){
+		return supportedFeatures;
+	}
+	
 	public List<ClientHandler> getClients() {
 		return clients;
 	}

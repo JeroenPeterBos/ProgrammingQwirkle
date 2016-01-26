@@ -136,75 +136,41 @@ public abstract class Player {
 	// ------------------------------- Queries ----------------------------------------- //
 	
 	public boolean hasPossibleMove(){
+		return possiblePlayMove() != null;
+	}
+	
+	public Move possiblePlayMove(){
 		for(Block b : hand){
-			Play m = new Play(this, game);
+			Play m = new Play(this, game.getBoard());
 			
 			for(Position p: game.getBoard().getOpenPositions()){
 				m.addBlock(b, p);
 				
 				if(m.validate(this, false)){
-					return true;
+					return m;
 				}
 				
 				m.unlock();
 				m.clearBlocks();
 			}
 		}
-		return false;
+		return null;
 	}
-	
-	
-	public Move getPossibleMove() {
-		Move move = null;
-		if (game.getBoard().getOpenPositions().size() == 1) {
-			Play m = new Play(this, game);
-			Position p = new Position(0, 0);
-			m.addBlock(hand.get(0), p);
-			move = m;
-			return m;
-			
-		} else {
-			System.out.println("eerste move is ergens of iets anders");
-			for (Block b : hand) {
-				Play m = new Play(this, game);
-				
-				for (Position p : game.getBoard().getOpenPositions()) {
-					m.addBlock(b, p);
-					if (m.validate(this, false)) {
-						move = m;
-						return m;
-					}
-					m.unlock();
-					m.clearBlocks();
-					
-				}
-			}
-			if (move == null) {
-				Trade t = new Trade(this, game);
-				t.addBlock(t.getPlayer().getHand().get(0));
-				move = t;
-			}
-			
-		}
-		return move;
-	}
-	
 	
 	/**
 	 * maxMove checks for every block what maxSet it can form on the board
 	 * @return res
 	 */
 	
-	public int maxMove(){
-		int res = 1;
-		
+	public List<Block> maxStartMove(){		
+		List<Block> max = new LinkedList<Block>();
 		for(Block b : hand){
-			int max = maxSet(b);
-			if(max > res){
-				res = max;
+			List<Block> maxSet = maxStartSetOnBlock(b);
+			if(maxSet.size() > max.size()){
+				max = maxSet;
 			}
 		}
-		return res;
+		return max;
 	}
 	
 	/**
@@ -214,35 +180,34 @@ public abstract class Player {
 	 * @return biggest set
 	 */
 	
-	private int maxSet(Block b){
-		List<Block> set = new LinkedList<Block>();
-		set.add(b);
+	private List<Block> maxStartSetOnBlock(Block b){
+		List<Block> setOnColor = new LinkedList<Block>();
+		setOnColor.add(b);
 		
 		for(Block c : hand){
-			if(set.contains(c)){
+			if(setOnColor.contains(c)){
 				continue;
 			}
 			
 			if(b.getColor() == c.getColor()){
-				set.add(c);
+				setOnColor.add(c);
 			}
 		}
-		int res = set.size();
 		
-		set.clear();
-		set.add(b);
+		List<Block> setOnShape = new LinkedList<Block>();
+		setOnShape.add(b);
 		
 		for(Block c : hand){
-			if(set.contains(c)){
+			if(setOnShape.contains(c)){
 				continue;
 			}
 			
 			if(b.getShape() == c.getShape()){
-				set.add(c);
+				setOnShape.add(c);
 			}
 		}
 		
-		return set.size() > res ? set.size() : res;
+		return setOnColor.size() > setOnShape.size() ? setOnColor : setOnShape;
 	}
 	
 	

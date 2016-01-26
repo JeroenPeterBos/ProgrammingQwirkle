@@ -26,6 +26,10 @@ public class ServerGameThread extends Thread implements Controller{
 		super.start();
 	}
 	
+	public void endQwirkle(){
+		//TODO implement
+	}
+	
 	public void addPlayer(Player p){
 		game.addPlayer(p);
 	}

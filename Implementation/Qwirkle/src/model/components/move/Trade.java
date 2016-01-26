@@ -7,19 +7,20 @@ import java.util.List;
 import exceptions.IllegalMoveStateException;
 import exceptions.MoveFullException;
 import model.components.Block;
-import model.game.Game;
+import model.components.bag.Bag;
 import model.players.Player;
 
 public class Trade extends Move {
 
 	// ------------------------------- Instance Variables ------------------------------ //
 	
+	private Bag bag;
 	protected List<Block> blocks;
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	public Trade(Player p, Game g) {
-		super(p, g);
+	public Trade(Player p, Bag b) {
+		super(p);
 		this.blocks = new LinkedList<Block>();
 	}
 	
@@ -31,7 +32,7 @@ public class Trade extends Move {
 		}
 		
 		player.removeBlocks(blocks);
-		game.getBag().returnBlocks(blocks);
+		bag.returnBlocks(blocks);
 		
 	}
 	

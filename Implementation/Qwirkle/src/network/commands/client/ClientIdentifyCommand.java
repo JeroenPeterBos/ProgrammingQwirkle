@@ -31,6 +31,10 @@ public class ClientIdentifyCommand extends Command{
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	
+	public IProtocol.Feature[] getFeatures(){
+		return features;
+	}
+	
 	@Override
 	public String toCommandString(){
 		String command = IProtocol.CLIENT_IDENTIFY + " " + name + " ";
