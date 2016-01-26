@@ -11,6 +11,8 @@ import model.game.Game;
 import model.players.Player;
 
 public interface Strategy {
+	public static final String STUPID = "-S";
+	
 	
 	public Move determineMove(Game game, boolean first);
 	

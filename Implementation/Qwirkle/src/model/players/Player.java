@@ -130,8 +130,6 @@ public abstract class Player {
 	
 	public void setGame(Game g){
 		this.game = g;
-		
-		System.out.println(getName() + " is now in a game " + game.toString());
 	}
 	// ------------------------------- Queries ----------------------------------------- //
 	
@@ -141,17 +139,13 @@ public abstract class Player {
 	
 	public Move possiblePlayMove(){
 		for(Block b : hand){
-			Play m = new Play(this, game.getBoard());
-			
 			for(Position p: game.getBoard().getOpenPositions()){
+				Play m = new Play(this, game.getBoard());
 				m.addBlock(b, p);
 				
 				if(m.validate(this, false)){
 					return m;
 				}
-				
-				m.unlock();
-				m.clearBlocks();
 			}
 		}
 		return null;

@@ -39,9 +39,14 @@ public class ServerTurnCommand extends ServerCommand{
 	public void selfHandle(Client c){
 		c.getGame().setTurn(player);
 		
+		System.out.println("Set a new current player :" + player.getName());
+		
 		if(player.equals(c.getPlayer())){
+			System.out.println("Start handling the move for local player");
+			
 			Move m = c.getPlayer().determineMove(firstTurn);
 			
+			System.out.println("send the determined move by localplayer");
 			try{
 				if(m instanceof Play){
 					c.write(new ClientMovePutCommand((Play)m));

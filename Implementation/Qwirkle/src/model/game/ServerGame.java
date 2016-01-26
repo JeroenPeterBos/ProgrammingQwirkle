@@ -38,10 +38,9 @@ public class ServerGame extends HostGame{
 		init();
 		
 		playTurn(true);
-		while(running && !rareSituation()){
+		while(running && !rareSituation() && !hasWinner()){
 			playTurn(false);
-		}
-		
+		}		
 	}
 
 	private synchronized void playTurn(boolean firstTurn) {

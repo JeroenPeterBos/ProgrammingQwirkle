@@ -12,8 +12,10 @@ public class ComputerPlayer extends LocalPlayer {
 	
 	public ComputerPlayer(String n, Game g, String identifier) {
 		super(n, g);
-		if(identifier.equals("-S")){
+		if(identifier.equals(Strategy.STUPID)){
 			this.strategy = new StupidStrategy(this);
+		} else {
+			System.out.println("no valid strategy identifier found");
 		}
 	}
 	

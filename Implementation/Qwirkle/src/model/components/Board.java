@@ -386,15 +386,9 @@ public class Board {
 			if(b.getFilledPositions().containsKey(p)){
 				blocks.add(b.getFilledPositions().get(p));
 				next(b, p, pl, o, a);
-				
-				System.out.println("board does have " + p.toString());
 			} else if(pl.getPositionList().contains(p)){
 				blocks.add(pl.getBlock(p));
 				next(b, p, pl, o, a);
-				
-				System.out.println("move does have " + p.toString());
-			} else {
-				System.out.println("Neighter does have " + p.toString());
 			}
 		}
 		

@@ -12,7 +12,7 @@ import model.game.Game;
 import model.players.Player;
 import model.players.local.LocalPlayer;
 import model.players.local.computer.ComputerPlayer;
-import model.players.local.computer.strategy.StupidStrategy;
+import model.players.local.computer.strategy.Strategy;
 import model.players.local.human.HumanPlayer;
 import network.IProtocol;
 import network.commands.Command;
@@ -89,8 +89,8 @@ public class Client extends Thread implements Controller{
 		
 		this.game = null;
 		
-		if(name.startsWith("-STUPID")) {
-			this.player = new ComputerPlayer(name.split(" ")[1], null, name.split(" ")[0]);
+		if(name.startsWith(Strategy.STUPID)) {
+			this.player = new ComputerPlayer(name, null, Strategy.STUPID);
 		} else {
 			this.player = new HumanPlayer(name, null);
 		}
@@ -137,7 +137,7 @@ public class Client extends Thread implements Controller{
 	
 	public void write(Command c) throws IOException{
 		out.write(c);
-		System.out.println(c.toCommandString());
+		System.out.println("Send : " + c.toCommandString());
 	}
 	
 	public String getClientName(){

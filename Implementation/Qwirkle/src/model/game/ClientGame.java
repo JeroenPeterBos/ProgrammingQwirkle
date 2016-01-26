@@ -41,7 +41,6 @@ public class ClientGame extends Game{
 			 getLocalPlayer().removeBlocks(p.getBlocksView());
 		 }
 		 
-		 System.out.println("just executed the move");
 		 setChanged();
 		 notifyObservers(p);
 		 
