@@ -11,8 +11,7 @@ import model.components.move.Play;
 
 public class Board {
 
-	// ------------------------------- Instance Variables
-	// ------------------------------ //
+	// ------------------------------- Instance Variable ------------------------------ //
 
 	/**
 	 * List that holds all the positions that are open. Open means that it is a
@@ -31,8 +30,7 @@ public class Board {
 
 	public int xLow = 0, xHigh = 0, yLow = 0, yHigh = 0;
 
-	// ------------------------------- Constructors
-	// ------------------------------------ //
+	// ------------------------------- Constructors ------------------------------------ //
 
 	/**
 	 * Constructs a Board and initializes the openPositions List and the
@@ -46,17 +44,15 @@ public class Board {
 		this.openPositions.add(new Position(0, 0));
 	}
 
-	// ------------------------------- Commands
-	// ---------------------------------------- //
+	// ------------------------------- Commands ---------------------------------------- //
 
 	/**
 	 * Fills the given position with the given Block. Also opens up new
 	 * positions according to the given position.
-	 * 
-	 * @param p
-	 *            the position where the block will be put
-	 * @param b
-	 *            the Block that will be added to the Board
+	 * @throws FirstPositionNotOriginException if the first move of the game is not placed in position 0,0
+	 * @param p  the position where the block will be put
+	 * @param b  the Block that will be added to the Board
+	 * @return true if the position is filled with the block
 	 */
 	public boolean fill(Position p, Block b) {
 		if (filledPositions.size() == 0 && !p.equals(new Position(0, 0))) {
@@ -70,9 +66,6 @@ public class Board {
 		if (!openPositions.contains(p)) {
 			return false;
 		}
-		if (b == null) {
-			throw new NullPointerException();
-		}
 
 		openPositions.remove(p);
 		filledPositions.put(p, b);
@@ -85,9 +78,7 @@ public class Board {
 
 	/**
 	 * Updates the bounds according to the position p.
-	 * 
-	 * @param p
-	 *            the Position from where will be expanded
+	 * @param p  the Position from where will be expanded
 	 */
 
 	private void updateBounds(Position p) {
@@ -108,9 +99,7 @@ public class Board {
 
 	/**
 	 * Opens the positions next to position p
-	 * 
-	 * @param p
-	 *            the Position from where will be expanded.
+	 * @param p  the Position from where will be expanded.
 	 */
 
 	private void openNewPositions(Position p) {
@@ -123,10 +112,8 @@ public class Board {
 	/**
 	 * Opens all adjecent Positions into the given list.
 	 * 
-	 * @param p
-	 *            the central postion
-	 * @param pos
-	 *            the list in which the positions will be opened.
+	 * @param p  the central position
+	 * @param pos  the list in which the positions will be opened.
 	 */
 	private void openNewPositions(Position p, List<Position> pos) {
 		openPositionIn(new Position(p.x + 1, p.y), pos);
@@ -139,10 +126,8 @@ public class Board {
 	 * The position that will be opened. Opening can happen in the global
 	 * openPositions list or in an external list.
 	 * 
-	 * @param p
-	 *            the Position that will be opened
-	 * @param pos
-	 *            the list in which the position will be opened
+	 * @param p  the Position that will be opened
+	 * @param pos  the list in which the position will be opened
 	 */
 	private void openPositionIn(Position p, List<Position> pos) {
 		if (!pos.contains(p) && !filledPositions.containsKey(p)) {
@@ -152,9 +137,7 @@ public class Board {
 
 	/**
 	 * Open a position in the default List openPositions.
-	 * 
-	 * @param p
-	 *            the Position that will be opened
+	 * @param p  the Position that will be opened
 	 */
 	private void openPosition(Position p) {
 		openPositionIn(p, openPositions);
@@ -164,9 +147,8 @@ public class Board {
 	 * Check if a given list of positions are connected to the Board by creating
 	 * an empty list and passing it to checkNextPosition.
 	 * 
-	 * @param positions
-	 *            the list with the positions that will be checked
-	 * @return wether the possitions are connected to the main board
+	 * @param positions  the list with the positions that will be checked
+	 * @return whether the positions are connected to the main board or not
 	 */
 	private boolean connectedToFilledPositions(List<Position> positions) {
 		List<Position> freePositions = new LinkedList<Position>();
@@ -181,9 +163,8 @@ public class Board {
 	 * positions can be connected to the Board via the other Positions in the
 	 * given List. But also a combination of these two is possible.
 	 * 
-	 * @param positions
-	 *            the positions that are checked
-	 * @return wether the possitions are connected to the main board
+	 * @param positions  the positions that are checked
+	 * @return whether the positions are connected to the main board
 	 */
 	private boolean checkNextPosition(List<Position> positions, List<Position> freePositions) {
 		if (positions.size() < 1) {
@@ -205,10 +186,8 @@ public class Board {
 	 * Creates a List of Row objects that represent all the individual rows that
 	 * will be expanded or created by executing PlayBlocksMove m.
 	 * 
-	 * @param m
-	 *            the move that will create the rows
-	 * @param ro
-	 *            the orientation in which the PlayBlockMove blocks are oriented
+	 * @param m  the move that will create the rows
+	 * @param ro  the orientation in which the PlayBlockMove blocks are oriented
 	 * @return A List of Rows that the move will create or expand
 	 */
 	public List<Row> getCreatingRows(Play m, Row.Orientation or) {
@@ -227,8 +206,7 @@ public class Board {
 		return rows;
 	}
 
-	// ------------------------------- Queries
-	// ----------------------------------------- //
+	// ------------------------------- Queries ----------------------------------------- //
 
 	/**
 	 * Checks if the board is a PerfectSquare which would mean that the game got
@@ -245,32 +223,28 @@ public class Board {
 		return false;
 	}
 
-	/**
-	 * Converts the Board into a TUI usable String using the shortstrings form
-	 * Block to represent blocks.
-	 * 
-	 * @return string that represents the Board in a textual way.
-	 */
-
 
 	/**
 	 * returns a list of the open Positions on the board
-	 * 
-	 * @return
+	 * @return openPositions
 	 */
 	public List<Position> getOpenPositions() {
 		return openPositions;
 	}
 	
+	/**
+	 * getFilledPositions will give the list of filled positions by a block
+	 * @return filledPositions
+	 */
 	public Map<Position, Block> getFilledPositions() {
 		return filledPositions;
 	}
 
-	// Internal class
+	// -------------------------------- Internal class -------------------------------- //
+	
+	
 	/**
 	 * Class that represents Positions on the Board.
-	 * 
-	 * @author Jeroen
 	 */
 	public static class Position implements Comparable {
 
@@ -322,7 +296,7 @@ public class Board {
 		}
 
 		/**
-		 * Determines wether this Position is equal to the given Position.
+		 * Determines whether this Position is equal to the given Position.
 		 */
 
 		@Override

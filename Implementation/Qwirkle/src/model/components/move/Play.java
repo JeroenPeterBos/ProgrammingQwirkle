@@ -1,7 +1,5 @@
 package model.components.move;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,7 +9,6 @@ import model.components.Block;
 import model.components.Board;
 import model.components.Board.Position;
 import model.components.Board.Row;
-import model.game.Game;
 import model.players.Player;
 
 public class Play extends Move {
@@ -441,37 +438,38 @@ public class Play extends Move {
 	public class Entry {
 
 		/**
-		 * coords will
+		 * coords represents a Position on the board.
 		 */
 
 		private Board.Position coords;
-		private Block block;
-
+		
 		/**
-		 * . Entry is an constructor, which sets block to b and coords to p
-		 * 
-		 * @param b
-		 * @param p
+		 * block represents a block
+		 */
+		private Block block;
+		
+		/**.
+		 * Entry is an constructor which makes a link between a block and a position.
+		 * @param b = block
+		 * @param p = coords
 		 */
 
 		public Entry(Block b, Position p) {
 			this.coords = p;
 			this.block = b;
 		}
-
+		
 		/**
-		 * . getCoords will get the block's coordinates
-		 * 
+		 * getCoords will get the block's position.
 		 * @return coords
 		 */
 
 		public Board.Position getCoords() {
 			return coords;
 		}
-
-		/**
-		 * . getBlock will get the block
-		 * 
+		
+		/**.
+		 * getBlock will get the block of the entry.
 		 * @return block
 		 */
 
