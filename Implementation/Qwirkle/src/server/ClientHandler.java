@@ -15,7 +15,6 @@ import network.commands.client.ClientQueueCommand;
 import network.commands.client.ClientQuitCommand;
 import network.commands.server.ServerErrorCommand;
 import network.commands.server.ServerIdentifyCommand;
-import network.commands.server.ServerQueueCommand;
 import network.io.CommandReader;
 import network.io.CommandWriter;
 

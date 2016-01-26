@@ -4,7 +4,6 @@ import java.util.List;
 
 import exceptions.IllegalMoveStateException;
 import model.components.Block;
-import model.game.Game;
 import model.players.Player;
 
 public abstract class Move {

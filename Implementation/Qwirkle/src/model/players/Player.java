@@ -10,7 +10,6 @@ import model.components.Block;
 import model.components.Board.Position;
 import model.components.move.Move;
 import model.components.move.Play;
-import model.components.move.Trade;
 import model.game.Game;
 
 public abstract class Player {

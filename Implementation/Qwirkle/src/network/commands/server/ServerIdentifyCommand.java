@@ -2,7 +2,6 @@ package network.commands.server;
 
 import controller.Client;
 import network.IProtocol;
-import network.commands.Command;
 
 public class ServerIdentifyCommand extends ServerCommand{
 

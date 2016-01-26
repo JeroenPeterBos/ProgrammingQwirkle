@@ -18,7 +18,6 @@ import network.commands.server.ServerGamestartCommand;
 import network.commands.server.ServerIdentifyCommand;
 import network.commands.server.ServerMovePutCommand;
 import network.commands.server.ServerMoveTradeCommand;
-import network.commands.server.ServerQueueCommand;
 import network.commands.server.ServerTurnCommand;
 
 public abstract class Command {

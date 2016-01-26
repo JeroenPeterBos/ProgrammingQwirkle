@@ -13,7 +13,6 @@ import model.components.Block;
 import model.components.Block.Color;
 import model.components.Block.Shape;
 import model.components.Board;
-import model.components.Board.Position;
 import model.game.Game;
 import model.players.Player;
 

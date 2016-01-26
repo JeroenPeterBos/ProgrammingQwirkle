@@ -1,8 +1,5 @@
 package model.players.local.computer.strategy;
 
-import java.util.List;
-
-import model.components.Block;
 import model.components.move.Move;
 import model.game.Game;
 import model.players.Player;
