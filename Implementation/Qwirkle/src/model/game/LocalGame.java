@@ -67,6 +67,8 @@ public class LocalGame extends HostGame {
 			System.err.println("BUG: " + e.getMessage());
 		}
 
+		players.get(turn).removeBlocks(m.getBlocksView());
+		
 		if(getBag().size() > m.getNoBlocks()){
 			players.get(turn).giveBlocks(bag.popBlocks(m.getNoBlocks()));
 		} else {

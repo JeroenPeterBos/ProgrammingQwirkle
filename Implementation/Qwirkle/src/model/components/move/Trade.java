@@ -1,5 +1,6 @@
 package model.components.move;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -70,5 +71,9 @@ public class Trade extends Move {
 	
 	public Block getBlock(int i) {
 		return blocks.get(i);
+	}
+	
+	public List<Block> getBlocksView(){
+		return Collections.unmodifiableList(blocks);
 	}
 }

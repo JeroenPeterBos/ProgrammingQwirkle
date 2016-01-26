@@ -1,5 +1,6 @@
 package model.components.move;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +20,8 @@ public class Play extends Move {
 	
 	private List<Entry> blocks;
 	private int score;
+	
+	private Row.Orientation orientation;
 	
 
 	private Comparator<Entry> comp = new Comparator<Entry>() {
@@ -68,20 +71,60 @@ public class Play extends Move {
 			throw new IllegalMoveStateException(valid);
 		}
 		
-
+		String helper = "";
+		for(Entry e : blocks){
+			helper += e.getBlock().toShortString() + " @ " + e.getCoords().toString();
+		}
+		System.out.println("filling in the blocks " + helper);
 		fillBlocks(blocks);
 		
-		player.addScore(score);
+		determineOrientation();
+		player.addScore(calculateScore(game.getBoard().getCreatingRows(this, orientation)));
 	}
 	
 	private void fillBlocks(List<Entry> entries){
+		List<Entry> copy = new LinkedList<Entry>();
 		for(Entry e: entries){
-			if(player.hasBlock(e.getBlock()) && game.getBoard().fill(e.getCoords(), e.getBlock())){
-				player.removeBlock(e.getBlock());
-				fillBlocks(entries);
+			copy.add(e);
+		}
+		
+		fillFromCopy(copy);
+	}
+	
+	private void fillFromCopy(List<Entry> copy){
+		for(Entry e: copy){
+			if(game.getBoard().fill(e.getCoords(), e.getBlock())){
+				copy.remove(e);
+				fillFromCopy(copy);
 				return;
 			}
 		}
+	}
+	
+	public boolean determineOrientation(){
+		boolean allOnX = true;
+		boolean allOnY = true;
+		int x = blocks.get(0).getCoords().x;
+		int y = blocks.get(0).getCoords().y;
+		
+		for (Entry e: blocks) {
+			if (e.getCoords().x != x) {
+				allOnX = false;
+			}
+			if (e.getCoords().y != y) {
+				allOnY = false;
+			}
+		}
+		
+		if (!allOnX && !allOnY) {
+			System.out.println("Not all Blocks are on the same axis " + allOnX + allOnY);
+			return false;
+		}
+		
+		// define orientation
+		
+		this.orientation = allOnX ? Row.Orientation.Y : Row.Orientation.X;
+		return true;
 	}
 	
 	/**.
@@ -134,30 +177,9 @@ public class Play extends Move {
 			}
 		}
 		
-		// validate if all blocks are in the same direction
-		
-		boolean allOnX = true;
-		boolean allOnY = true;
-		int x = blocks.get(0).getCoords().x;
-		int y = blocks.get(0).getCoords().y;
-		
-		for (Entry e: blocks) {
-			if (e.getCoords().x != x) {
-				allOnX = false;
-			}
-			if (e.getCoords().y != y) {
-				allOnY = false;
-			}
-		}
-		
-		if (!allOnX && !allOnY) {
-			System.out.println("Not all Blocks are on the same axis " + allOnX + allOnY);
+		if(!determineOrientation()){
 			return false;
 		}
-		
-		// define orientation
-		
-		Row.Orientation orientation = allOnX ? Row.Orientation.Y : Row.Orientation.X;
 		
 		List<Board.Row> rows = game.getBoard().getCreatingRows(this, orientation);
 		if (rows.size() < 1) {
@@ -171,7 +193,7 @@ public class Play extends Move {
 			}
 		}
 		
-		calculateScore(rows);
+		
 		valid = true;
 		return valid;
 	}
@@ -214,16 +236,7 @@ public class Play extends Move {
 	 * @param rows are all the rows that are changed by the move
 	 */
 	
-	private void calculateScore(List<Board.Row> rows) {
-		if (valid) {
-			try {
-				throw new IllegalMoveStateException(valid);
-			} catch (IllegalMoveStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
+	private int calculateScore(List<Board.Row> rows) {		
 		int result = 0;
 		for (Row row : rows) {
 			if(row.size() > 1){
@@ -240,6 +253,7 @@ public class Play extends Move {
 		}
 		
 		score = result;
+		return score;
 	}
 	
 	/**.
@@ -312,6 +326,16 @@ public class Play extends Move {
 	 * @param i = the number of the move you want to know
 	 * @return block.get(i)
 	 */
+	
+	public List<Block> getBlocksView(){
+		List<Block> b = new LinkedList<Block>();
+		
+		for(Entry e: blocks){
+			b.add(e.getBlock());
+		}
+		
+		return b;
+	}
 	
 	public Entry getEntry(int i) {
 		return blocks.get(i);

@@ -46,5 +46,6 @@ public class ServerMovePutCommand extends ServerCommand implements GameCommand{
 	
 	public void selfHandle(Client c){
 		c.getGame().handlePlay(move);
+		c.getView().showStatus();
 	}
 }
