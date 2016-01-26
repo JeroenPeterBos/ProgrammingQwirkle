@@ -406,16 +406,20 @@ public class Play extends Move {
 	public class Entry {
 		
 		/**
-		 * coords will
+		 * coords represents a Position on the board.
 		 */
 		
 		private Board.Position coords;
+		
+		/**
+		 * block represents a block
+		 */
 		private Block block;
 		
 		/**.
-		 * Entry is an constructor, which sets block to b and coords to p
-		 * @param b
-		 * @param p
+		 * Entry is an constructor which makes a link betwee a block and a position.
+		 * @param b = block
+		 * @param p = coords
 		 */
 		
 		public Entry(Block b, Position p) {
@@ -423,8 +427,8 @@ public class Play extends Move {
 			this.block = b;
 		}
 		
-		/**.
-		 * getCoords will get the block's coordinates
+		/**
+		 * getCoords will get the block's position.
 		 * @return coords
 		 */
 		
@@ -433,7 +437,7 @@ public class Play extends Move {
 		}
 		
 		/**.
-		 * getBlock will get the block
+		 * getBlock will get the block of the entry.
 		 * @return block
 		 */
 		
