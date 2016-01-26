@@ -30,7 +30,6 @@ public abstract class Game extends Observable {
 
 	public Game(Controller c, Bag bag) {
 		this.controller = c;
-		
 		this.board = new Board();
 		this.bag = bag;
 		this.players = new LinkedList<Player>();
@@ -112,4 +111,5 @@ public abstract class Game extends Observable {
 		System.err.println("Player " + name + " not found");
 		return null;
 	}
+	
 }

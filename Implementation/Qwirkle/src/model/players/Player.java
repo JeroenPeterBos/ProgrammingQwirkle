@@ -156,24 +156,35 @@ public abstract class Player {
 	
 	public Move getPossibleMove() {
 		Move move = null;
-		for (Block b : hand) {
+		if (game.getBoard().getOpenPositions().size() == 1) {
 			Play m = new Play(this, game);
+			Position p = new Position(0, 0);
+			m.addBlock(hand.get(0), p);
+			move = m;
+			return m;
 			
-			for (Position p : game.getBoard().getOpenPositions()) {
-				m.addBlock(b, p);
-				if (m.validate(this, false)) {
-					move = m;
-					
-					return m;
-				}
-				m.unlock();
-				m.clearBlocks();
+		} else {
+			System.out.println("eerste move is ergens of iets anders");
+			for (Block b : hand) {
+				Play m = new Play(this, game);
 				
+				for (Position p : game.getBoard().getOpenPositions()) {
+					m.addBlock(b, p);
+					if (m.validate(this, false)) {
+						move = m;
+						return m;
+					}
+					m.unlock();
+					m.clearBlocks();
+					
+				}
 			}
-		}
-		if (move == null) {
-			move = new Trade(this, game);
-			move.addBlock();
+			if (move == null) {
+				Trade t = new Trade(this, game);
+				t.addBlock(t.getPlayer().getHand().get(0));
+				move = t;
+			}
+			
 		}
 		return move;
 	}
@@ -233,6 +244,7 @@ public abstract class Player {
 		
 		return set.size() > res ? set.size() : res;
 	}
+	
 	
 	/**.
 	 * hasBlock checks whether the player has block b or not

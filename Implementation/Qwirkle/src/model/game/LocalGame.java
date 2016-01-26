@@ -51,6 +51,11 @@ public class LocalGame extends HostGame {
 		Move m = players.get(turn).determineMove();
 		while (m == null || !m.validate(players.get(turn), firstTurn)) {
 			System.out.println("Move was invalid");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			setChanged();
 			notifyObservers(InputError.INVALID_MOVE);
 			m = players.get(turn).determineMove();
@@ -89,5 +94,6 @@ public class LocalGame extends HostGame {
 
 	// ------------------------------- Queries
 	// ----------------------------------------- //
+	
 
 }

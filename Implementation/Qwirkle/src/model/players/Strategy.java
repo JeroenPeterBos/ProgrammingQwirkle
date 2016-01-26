@@ -6,6 +6,6 @@ import model.game.Game;
 public interface Strategy {
 	public String getName();
 	
-	public Move determineMove(Player p, Game g);
+	public Move determineMove();
 
 }
