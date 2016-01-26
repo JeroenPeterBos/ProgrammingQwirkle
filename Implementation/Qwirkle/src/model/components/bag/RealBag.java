@@ -6,52 +6,74 @@ import java.util.List;
 
 import model.components.Block;
 
-public class RealBag implements Bag{
+public class RealBag implements Bag {
 
 	// ------------------------------- Instance Variables ------------------------------ //
-		
+	
+	/**
+	 * blocksLeft is a list of the remaining blocks in the bag.	
+	 */
 	private LinkedList<Block> blocksLeft;
 	
 	// ------------------------------- Constructors ------------------------------------ //
 	
-	public RealBag(){
+	/**
+	 * Creates a RealBag, used by the game. 
+	 * Creates all the possible blocks and adds them random to the bag.
+	 * 
+	 */
+	
+	public RealBag() {
 		this.blocksLeft = new LinkedList<Block>();
-		
-		// fill the list with all the existing blocks in the game
-		for(int s = 0; s < 3; s++){
-			for(int i = 0; i < 36; i++){
+		for (int s = 0; s < 3; s++) {
+			for (int i = 0; i < 36; i++) {
 				blocksLeft.add(new Block(i));
 			}
 		}
-		
-		// shuffle the bag so it can be used to play a game
 		Collections.shuffle(blocksLeft);
 	}
 	
 	// ------------------------------- Commands ---------------------------------------- //
-	
-	public List<Block> popBlocks(int a){
+	/**
+	 * popBlocks will give a(amount) random blocks out of the bag.
+	 * @param a amount of required blocks
+	 * @return List of Blocks
+	 */
+	public List<Block> popBlocks(int a) {
 		List<Block> result = new LinkedList<Block>();
-		
-		for(int i = 0; i < a; i++){
+		for (int i = 0; i < a; i++) {
 			result.add(blocksLeft.pop());
 		}
 		
 		return result;
 	}
 	
-	public void returnBlocks(List<Block> b){
+	/**
+	 * returnBlocks will add the given Blocks b back to the bag.
+	 * @param b the to exchange blocks
+	 */
+	public void returnBlocks(List<Block> b) {
 		blocksLeft.addAll(b);
 		Collections.shuffle(blocksLeft);
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
 	
-	public int size(){
+	
+	/**
+	 * size() gives the amount of blocks in the bag.
+	 * @return amount of blocks in the bag
+	 */
+	public int size() {
 		return blocksLeft.size();
 	}
 	
-	public boolean isEmpty(){
+	
+	/**
+	 * Checks whether the bag is empty or not.
+	 * @return boolean
+	 */
+	public boolean isEmpty() {
 		return size() <= 0;
 	}
 	
