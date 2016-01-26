@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import client.Client;
+import controller.Client;
 import model.game.ClientGame;
 import model.players.Player;
 import model.players.distant.ServerPlayer;

@@ -2,7 +2,7 @@ package network.commands.server;
 
 import java.io.IOException;
 
-import client.Client;
+import controller.Client;
 import model.components.move.Move;
 import model.components.move.Play;
 import model.components.move.Trade;
