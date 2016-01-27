@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 import exceptions.IllegalMoveStateException;
 import model.components.move.Trade;
@@ -30,11 +31,27 @@ public class Client extends Thread implements Controller{
 	public static IProtocol.Feature[] supported = new IProtocol.Feature[]{};
 	
 	public static void main(String[] args) {
+		Scanner scanner = new Scanner(System.in);
+		
+		InetAddress host = null;
+		do{
+			System.out.println("Enter the ip address of the server:");
+			scanner.nextLine();
+			
+			try {
+				host = InetAddress.getByName(args[1]);
+			} catch (UnknownHostException e) {
+				host = null;
+			}
+		} while (host == null);
+		
+		System.out.println("Enter the port number of the server:");
+		scanner.nextLine();
+		
 		if (args.length != 4 ) {
 			System.exit(0);
 		}
 		
-		InetAddress host=null;
 		int port = 0;
 
 		try {
@@ -48,7 +65,7 @@ public class Client extends Thread implements Controller{
 		} catch (NumberFormatException e) {
 			System.exit(0);
 		}
-
+		System.out.println("Create new client");
 		try {
 			Client client = new Client(args[0], host, port);
 			
