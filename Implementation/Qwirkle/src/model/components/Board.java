@@ -111,7 +111,7 @@ public class Board {
 	}
 
 	/**
-	 * Opens all adjecent Positions into the given list.
+	 * Opens all adjacent Positions into the given list.
 	 * 
 	 * @param p  the central position
 	 * @param pos  the list in which the positions will be opened.
@@ -124,7 +124,7 @@ public class Board {
 	}
 
 	/**
-	 * The position that will be opened. Opening can happen in the global
+	 * The position that will be opened. Opening can happen in board's
 	 * openPositions list or in an external list.
 	 * 
 	 * @param p  the Position that will be opened
@@ -237,6 +237,10 @@ public class Board {
 		return openPositions;
 	}
 	
+	/**
+	 * returns a copy of the openpositions such that an other class can use the list without modifying the board.
+	 * @return
+	 */
 	public List<Position> getOpenPositionsCopy() {
 		List<Position> lp = new LinkedList<Position>();
 		lp.addAll(openPositions);
@@ -255,7 +259,9 @@ public class Board {
 	
 	
 	/**
-	 * Class that represents Positions on the Board.
+	 * Class that represents a connection between an x and an y integer so it can be used in an 2 dimensional playfield.
+	 * @author Jeroen
+	 *
 	 */
 	public static class Position implements Comparable {
 
@@ -368,6 +374,15 @@ public class Board {
 			
 		}
 		
+		/**
+		 * A recursive function used to construct this row.
+		 * It is given a start block and a direction used to determine if there is a next block. if there is one it will continue to the next one.
+		 * @param b the board on which the rows lay
+		 * @param p the current position from which the next position will be determined
+		 * @param pl the move from which blocks will be added to the board, that is why it is taken into account when creating a row.
+		 * @param o the orientation in which the next block lays, horizontal or vertical
+		 * @param a the amount of distance between this block and the next. should either be -1 or 1;
+		 */
 		private void next(Board b, Position p, Play pl, Orientation o, int a){
 			p = nextPosition(p, o, a);
 			if(b.getFilledPositions().containsKey(p)){
@@ -379,10 +394,21 @@ public class Board {
 			}
 		}
 		
+		/**
+		 * Determines the next Position using the current position, the direction and the distance.
+		 * @param p the current position
+		 * @param o the direction
+		 * @param a the distance, should either be 1 or -1
+		 * @return the next position
+		 */
 		private Position nextPosition(Position p, Orientation o, int a){
 			return new Position(o == Orientation.X ? p.x + a : p.x, o == Orientation.Y ? p.y + a : p.y);
 		}
 		
+		/**
+		 * Determines if this row is a valid row according to the game rules.
+		 * @return whether the row is a valid row
+		 */
 		public boolean isValid(){
 			if (size() > 6 || size() < 1) {
 				return false;
@@ -418,16 +444,23 @@ public class Board {
 			if (!allSameColor && !allSameShape) {
 				return false;
 			}
-			
-			
 
 			return true;
 		}
 		
+		/**
+		 * Determines if this row contains all the given blocks
+		 * @param b the given blocks
+		 * @return whether the row contains the given blocks
+		 */
 		public boolean containsAll(List<Block> b){
 			return blocks.containsAll(b);
 		}
 
+		/**
+		 * The size/length of this row.
+		 * @return the size of the row
+		 */
 		public int size(){
 			return blocks.size();
 		}

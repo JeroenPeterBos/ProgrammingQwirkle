@@ -15,6 +15,7 @@ import network.commands.client.ClientIdentifyCommand;
 import network.commands.client.ClientQueueCommand;
 import network.commands.client.ClientQuitCommand;
 import network.commands.server.ServerErrorCommand;
+import network.commands.server.ServerGameendCommand;
 import network.commands.server.ServerIdentifyCommand;
 import network.commands.server.ServerQueueCommand;
 import network.io.CommandReader;
@@ -53,6 +54,12 @@ public class ClientHandler extends Observable implements Runnable{
 				e.printStackTrace();
 				continue;
 			} catch (IOException e) {
+				if(player.getGame() != null){
+					player.getGame().removePlayer(player);
+					player.getGame().sendPlayers(new ServerGameendCommand(false, null, null));
+				}
+				
+				shutDown();
 				running = false;
 				continue;
 			}
@@ -111,6 +118,7 @@ public class ClientHandler extends Observable implements Runnable{
 			
 			out.write(new ServerIdentifyCommand(server.getFeatures()));
 		} catch (IOException e) {
+			shutDown();
 			return false;
 		}
  

@@ -23,7 +23,7 @@ public interface Strategy {
 		S;
 	}
 	
-	public Move determineMove(Game game, boolean first);
+	public Move determineMove(Game game, boolean first, int thinkingTime);
 	
 	public static Play makeFirstMove(Player p, Board b){
 		List<Block> blocks = p.maxStartMove();

@@ -55,6 +55,10 @@ public abstract class Game extends Observable {
 		players.add(p);
 	}
 	
+	public void removePlayer(Player p) {
+		players.remove(p);
+	}
+	
 	protected void incrementTurn() {
 		turn = (turn + 1) % getNoPlayers();
 	}

@@ -36,42 +36,48 @@ public class Client extends Thread implements Controller{
 		InetAddress host = null;
 		do{
 			System.out.println("Enter the ip address of the server:");
-			scanner.nextLine();
+			String in = scanner.nextLine();
 			
 			try {
-				host = InetAddress.getByName(args[1]);
+				host = InetAddress.getByName(in);
 			} catch (UnknownHostException e) {
 				host = null;
 			}
 		} while (host == null);
 		
-		System.out.println("Enter the port number of the server:");
-		scanner.nextLine();
-		
-		if (args.length != 4 ) {
-			System.exit(0);
-		}
-		
-		int port = 0;
-
-		try {
-			host = InetAddress.getByName(args[1]);
-		} catch (UnknownHostException e) {
-			System.exit(0);
-		}
-
-		try {
-			port = Integer.parseInt(args[2]);
-		} catch (NumberFormatException e) {
-			System.exit(0);
-		}
-		System.out.println("Create new client");
-		try {
-			Client client = new Client(args[0], host, port);
+		int port = -1;
+		do{
+			System.out.println("Enter the port number of the server:");
+			String in = scanner.nextLine();
 			
+			port = Integer.parseInt(in);
+		} while(port < 0 || port > 49151);
+		
+		System.out.println("Choose a name:");
+		String name = scanner.nextLine();
+		
+		int thinkingTime = 0;
+		
+		if(name.startsWith("-")){
+			while(thinkingTime <= 0){
+				System.out.println("Enter a thinkingtime for the ComputerPlayer");
+				thinkingTime = Integer.parseInt(scanner.nextLine());
+			}
+		}
+		
+		Client client = null;
+		try {
+			client = new Client(name, host, port);
 			client.write(new ClientIdentifyCommand(client.getClientName(), supported));
 			
-			String[] q = args[3].split(",");
+			if(thinkingTime > 0){
+				((ComputerPlayer)client.getPlayer()).setThinkingTime(thinkingTime);
+			}
+			
+			System.out.println("Select the queues you want to join: Example: 2,3");
+			String queue = scanner.nextLine();
+			
+			String[] q = queue.split(",");
 			int[] queues = new int[q.length];
 			for(int i = 0; i < q.length; i++){
 				queues[i] = Integer.parseInt(q[i]);
@@ -80,6 +86,10 @@ public class Client extends Thread implements Controller{
 			
 			client.start();
 		} catch (IOException e) {
+			System.out.println("No connection could be made or connection was lost.");
+			if(client != null){
+				client.shutdown();
+			}
 			System.exit(0);
 		}
 
@@ -131,7 +141,8 @@ public class Client extends Thread implements Controller{
 				incomming.selfHandle(this);
 			}
 		} catch (IOException e){
-			System.err.println("Connection was lost or shut down");
+			System.out.println("Connection was lost or shut down");
+			shutdown();
 		}
 	}
 	

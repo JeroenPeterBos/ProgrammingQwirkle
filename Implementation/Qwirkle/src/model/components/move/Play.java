@@ -12,21 +12,31 @@ import model.components.Board.Row;
 import model.players.Player;
 import model.players.distant.SocketPlayer;
 
+/**
+ * One of the three most complex classes on the server side.
+ * The play class represents the connection between a player, the board and the blocks he would like to play.
+ * Therefore Play holds methods to validate if the board allows the placement of these blocks and
+ * also holds a method to actually execute this move.
+ * @author Jeroen
+ *
+ */
 public class Play extends Move {
 
 	// ------------------------------- Instance Variables
 	// ------------------------------ //
 
+	/**
+	 * The board on which the blocks will be placed when executed.
+	 */
 	private Board board;
 
 	/**
-	 * The blocks of the form Entry (block, position), which are requested to
-	 * move.
+	 * A List of all combinations of Block and Position. The list itself represents the move with the chosen blocks and their positions.
 	 */
 	private List<Entry> blocks;
 
 	/**
-	 * The amount of points the player became by the move.
+	 * The amount of points this move will be worth when executed.
 	 */
 	private int score;
 
@@ -36,7 +46,7 @@ public class Play extends Move {
 	private Row.Orientation orientation;
 	
 	/**
-	 * the rows that get created or extended by the move
+	 * the rows that get created or extended by executing this move
 	 */
 	private List<Row> rows;
 
@@ -44,15 +54,10 @@ public class Play extends Move {
 	// ------------------------------------ //
 
 	/**
-	 * Constructor of Play, uses the extended class Move by calling the super
-	 * method. Creates an empty list of Entry's, called blocks.
-	 * 
-	 * @param p
-	 *            = player
-	 * @param g
-	 *            = game
+	 * Creates a new play object that will represent the move made by the player on the board b.
+	 * @param p the player that makes the move
+	 * @param b the board on which the blocks will be placed
 	 */
-
 	public Play(Player p, Board b) {
 		super(p);
 
@@ -64,12 +69,11 @@ public class Play extends Move {
 	// ---------------------------------------- //
 
 	/**
-	 * execute() fills the position on the board with a specified block and
-	 * removes block in the hand of the player. execute() also adds the score of
+	 * execute fills the position on the board with a specified block of the player. execute() also adds the score of
 	 * the move to the player's total amount.
 	 * 
-	 * @throws ILlegalMoveStateException
-	 *             if the move is not valid.
+	 * @throws IllegalMoveStateException
+	 *             if the move has not yet been validated.
 	 */
 
 	public void execute() throws IllegalMoveStateException {
@@ -89,10 +93,8 @@ public class Play extends Move {
 	}
 
 	/**
-	 * fillBlocks fills a specified position of the board with a block.
-	 * 
+	 * Copies the entries list and than calls fillFromCopy to acutally fill the blocks on the board
 	 * @param entries
-	 *            are the to be moved blocks
 	 */
 	private void fillBlocks(List<Entry> entries) {
 		List<Entry> copy = new LinkedList<Entry>();
@@ -125,7 +127,7 @@ public class Play extends Move {
 	 * or all on the same y coordinate, and if so, then orientation will be set
 	 * to this value(X/Y).
 	 * 
-	 * @return true if all entries are on the same x or y
+	 * @return true if all entries are on the same x or y false if the move is not valid
 	 */
 	public boolean determineOrientation() {
 		boolean allOnX = true;
@@ -207,6 +209,8 @@ public class Play extends Move {
 			}
 		}
 		
+		
+		// checks if the move does not contain double blocks placements or double position selections
 		for(Entry e: blocks) {
 			for(Entry f: blocks){
 				if(!e.equals(f) && (e.getCoords().equals(f.getCoords()) || e.getBlock().equals(f.getBlock()))){
@@ -216,27 +220,6 @@ public class Play extends Move {
 					return false;
 				}
 			}
-		}
-		
-		int minx = 0;
-		int maxx = 0;
-		int miny = 0;
-		int maxy = 0;
-		for(Entry e: blocks){
-			if(e.getCoords().x < minx){
-				minx = e.getCoords().x;
-			} else if(e.getCoords().x > maxx){
-				maxx = e.getCoords().x;
-			}
-			if(e.getCoords().y < miny){
-				miny = e.getCoords().y;
-			} else if(e.getCoords().y > maxy){
-				maxy = e.getCoords().y;
-			}
-		}
-		
-		if(maxx - minx > 6 || maxy - miny > 6){
-			return false;
 		}
 
 		if (!determineOrientation()) {
@@ -267,7 +250,7 @@ public class Play extends Move {
 	}
 
 	/**
-	 * addBlock adds new blocks to the move.
+	 * Adds a new block to the move with the given position.
 	 * 
 	 * @throws IllegalMoveStateException
 	 *             if the move is not valid
@@ -299,6 +282,10 @@ public class Play extends Move {
 		blocks.add(new Entry(b, p));
 	}
 	
+	/**
+	 * removes the block with its position from the Move
+	 * @param b the blocks that will be removed from the Move
+	 */
 	public void removeBlock(Block b){
 		 for(Entry e: blocks){
 			 if(e.getBlock().equals(b)){
@@ -334,46 +321,6 @@ public class Play extends Move {
 	}
 
 	/**
-	 * unlock undoes the last move's validity and score
-	 * 
-	 * @throws IllegalMoveStateException
-	 *             if the move is not valid
-	 */
-
-	public void unlock() {
-		if (!valid) {
-			try {
-				throw new IllegalMoveStateException(valid);
-			} catch (IllegalMoveStateException e) {
-				System.err.println(e.getMessage());
-			}
-		}
-
-		score = 0;
-		valid = false;
-	}
-
-	/**
-	 * clearBlocks removes the move's blocks from the board. This is only
-	 * possible if the move is not valid.
-	 * 
-	 * @throws IllegalMoveStateException
-	 *             if the move is valid
-	 */
-	public void clearBlocks() {
-		if (valid) {
-			try {
-				throw new IllegalMoveStateException(valid);
-			} catch (IllegalMoveStateException e) {
-				System.err.println(e.getMessage());
-				return;
-			}
-		}
-
-		blocks.clear();
-	}
-
-	/**
 	 * setValidity is the only function, besides validation, which can change
 	 * valid.
 	 * 
@@ -382,17 +329,6 @@ public class Play extends Move {
 	 */
 	public void setValidity(boolean v) {
 		this.valid = v;
-	}
-	
-	public boolean doublePositions(){
-		for(int i = 0; i < blocks.size() - 1; i++){
-			for(int j = i + 1; j < blocks.size(); j++){
-				if(blocks.get(i).getCoords().equals(blocks.get(j).getCoords())){
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 
 	// ------------------------------- Queries
@@ -418,6 +354,10 @@ public class Play extends Move {
 		return score;
 	}
 	
+	/**
+	 * Determines the score that this move will deliver without validating the move. Usefull for ComputerPlayer.
+	 * @return the score that the move will deliver the player;
+	 */
 	public int predictScore(){
 		determineOrientation();
 		return calculateScore(board.getCreatingRows(this, orientation));
@@ -434,8 +374,8 @@ public class Play extends Move {
 
 	/**
 	 * getBlocksView gives a list of Blocks which are requested to move. The
-	 * method or class who requests for the blocks, can't change the value of
-	 * Block
+	 * method or class who requests for the blocks, can't change the List of blocks held by the Move.
+	 * It just receives a copy.
 	 * 
 	 * @return the list of the to be moved blocks
 	 */
@@ -511,10 +451,19 @@ public class Play extends Move {
 		return null;
 	}
 
+
+	/**
+	 * Gives the orientation in which this move lays.
+	 * @return the orientation of this move
+	 */
 	public Row.Orientation getOrientation(){
 		return orientation;
 	}
 	
+	/**
+	 * Returns an exact copy of this move. Usefull for ComputerPlayer.
+	 * @return copy of this Play
+	 */
 	public Play getCopy(){
 		Play result = new Play(player, board);
 		for(Entry e: blocks){
@@ -523,8 +472,11 @@ public class Play extends Move {
 		return result;
 	}
 	
+	/**
+	 * Converts the elements of this move into a humanReadable string. Usefull for TUI.
+	 */
 	public String toString(){
-		String result = player.getName() + " played : ";
+		String result = player.getName() + ": ";
 		for(Entry e: blocks){
 			result += e.getBlock().toShortString() + e.getCoords().toString() + " ";
 		}
@@ -534,16 +486,21 @@ public class Play extends Move {
 	// ------------------------------- Inner Class
 	// ---------------------------------- //
 
+	/**
+	 * Represents the connection between the Block and the 
+	 * @author Jeroen
+	 *
+	 */
 	public class Entry {
 
 		/**
-		 * coords represents a Position on the board.
+		 * coords represents the Position on the board.
 		 */
 
-		private Board.Position coords;
+		private Position coords;
 		
 		/**
-		 * block represents a block
+		 * block represents the block
 		 */
 		private Block block;
 		

@@ -17,7 +17,7 @@ public class StupidStrategy implements Strategy {
 	
 	
 	@Override
-	public Move determineMove(Game game, boolean first) {
+	public Move determineMove(Game game, boolean first, int thinkingTime) {
 		if(first){
 			return Strategy.makeFirstMove(player, game.getBoard());
 		}

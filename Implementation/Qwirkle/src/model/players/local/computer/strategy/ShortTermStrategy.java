@@ -25,7 +25,7 @@ public class ShortTermStrategy implements Strategy, Runnable{
 		this.player = p;
 	}
 	
-	public Move determineMove(Game g, boolean first){
+	public Move determineMove(Game g, boolean first, int thinkingTime){
 		if(first){
 			return Strategy.makeFirstMove(player, g.getBoard());
 		} else {
@@ -41,9 +41,17 @@ public class ShortTermStrategy implements Strategy, Runnable{
 			this.board = g.getBoard();
 			this.finished = false;
 			
-			run();
-			
+			Thread parrallel = new Thread(this);
+			parrallel.start();
+			synchronized(this){
+				try {
+					wait(thinkingTime);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			return getDeterminedMove();
+			}
 		}
 	}
 	
@@ -108,8 +116,8 @@ public class ShortTermStrategy implements Strategy, Runnable{
 	private synchronized void setMove(Move m){
 		if(m != null){
 			move = m;
-			System.out.println("Calculated Move was not null");
 		}
+		notify();
 		finished = true;
 	}
 	

@@ -1,7 +1,11 @@
 package network.commands.server;
 
+import java.io.IOException;
+import java.util.Scanner;
+
 import controller.Client;
 import network.IProtocol;
+import network.commands.client.ClientQueueCommand;
 
 public class ServerGameendCommand extends ServerCommand{
 
@@ -43,5 +47,21 @@ public class ServerGameendCommand extends ServerCommand{
 		c.getGame().endGame();
 		c.getPlayer().setGame(null);
 		c.getView().showResults(players, scores);
+		
+		
+		Scanner scanner = new Scanner(System.in);
+		System.out.println("Select the queues you want to join: Example: 2,3");
+		String queue = scanner.nextLine();
+		
+		String[] q = queue.split(",");
+		int[] queues = new int[q.length];
+		for(int i = 0; i < q.length; i++){
+			queues[i] = Integer.parseInt(q[i]);
+		}
+		try {
+			c.write(new ClientQueueCommand(queues));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -133,6 +133,12 @@ public class ServerGame extends HostGame{
 		socketPlayers.add((SocketPlayer) p);
 	}
 	
+	public void removePlayer(Player p){
+		super.removePlayer(p);
+		
+		socketPlayers.remove(p);
+	}
+	
 	protected void init() {
 		String[] allNames = new String[socketPlayers.size()];
 		for(int i = 0; i < socketPlayers.size(); i++){
