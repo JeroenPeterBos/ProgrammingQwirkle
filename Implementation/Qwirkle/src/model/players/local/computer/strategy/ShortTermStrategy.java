@@ -1,5 +1,6 @@
 package model.players.local.computer.strategy;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import model.components.Block;
@@ -7,6 +8,7 @@ import model.components.Board;
 import model.components.Board.Position;
 import model.components.move.Move;
 import model.components.move.Play;
+import model.components.move.Trade;
 import model.game.Game;
 import model.players.Player;
 
@@ -17,6 +19,8 @@ public class ShortTermStrategy implements Strategy, Runnable{
 	private Move move = null;
 	private Board board = null;
 	
+	private boolean finished;
+	
 	public ShortTermStrategy(Player p){
 		this.player = p;
 	}
@@ -26,13 +30,26 @@ public class ShortTermStrategy implements Strategy, Runnable{
 			return Strategy.makeFirstMove(player, g.getBoard());
 		} else {
 			move = (Strategy.simplestPossibleMove(player, g.getBoard()));
-			this.board = g.getBoard();
-			Thread calculator = new Thread(this);
-			try {
-				calculator.join(9500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			if(move == null){
+				Trade t = new Trade(player, g.getBag());
+				for(Block b: player.getHand()){
+					t.addBlock(b);
+				}
+				move = t;
 			}
+			
+			this.board = g.getBoard();
+			this.finished = false;
+			
+			run();
+			
+//			Thread calculator = new Thread(this);
+//			calculator.start();
+//			try {
+//				calculator.join(9500);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
 			
 			return getDeterminedMove();
 		}
@@ -40,63 +57,73 @@ public class ShortTermStrategy implements Strategy, Runnable{
 	
 	@Override
 	public void run(){
-		Play best = new Play(player, board);
-		int bestScore = best.predictScore();
-		System.out.println(best.predictScore());
-		
-		for(Block b: player.getHand()){
-			Play current = highestScorePlayForBlock(b);
-			int currentScore = current.predictScore();
-			if(currentScore > bestScore){
-				best = current;
-				bestScore = currentScore;
-			}
-		}
-		
-		setMove(best);
-	}
-	
-	private Play highestScorePlayForBlock(Block b){
-		for(Position p: board.getOpenPositions()){
-			Play best = new Play(player, board);
-			best.addBlock(b, p);
-			
-		}
-	}
-	
-	private Play possibleMovesForBlock(Block block){
-		for(Position p: board.getOpenPositions()){
-			Play play = new Play(player, board);
-			play.addBlock(b, p);
-			if(play.validate(player, false)){
-				
-				
-				
-				// continue with calculation
-			}
-		}
-	}
-	
-	private Play determineBestPlay(Play play){
-		List<Block> copy = player.handCopy();
-		copy.removeAll(play.getBlocksView());
-		
-		for(Block b: copy){
+		List<Play> plays = new LinkedList<Play>();
+		for(Block b : player.getHand()){
 			for(Position p: board.getOpenPositions()){
-				
+				Play play = new Play(player, board);
+				play.addBlock(b, p);
+				if(play.validate(player, false)){
+					List<Position> open = board.getOpenPositionsCopy();
+					board.openPositionIn(p, open);
+					plays.addAll(extendedPlays(play, open));
+				}
 			}
 		}
+		
+		setMove(determineBestPlay(plays));
 	}
 	
+	public List<Play> extendedPlays(Play p, List<Position> o){
+		List<Play> plays = new LinkedList<Play>();
+		plays.add(p.getCopy());
+		
+		List<Block> hand = player.handCopy();
+		hand.removeAll(p.getBlocksView());
+		for(Block b: hand){
+			for(Position pos: o){
+				Play play = p.getCopy();
+				play.addBlock(b, pos);
+				if(play.validate(player, false)){
+					List<Position> open = new LinkedList<Position>();
+					open.addAll(o);
+					board.openPositionIn(pos, open);
+					plays.addAll(extendedPlays(play,open));
+				}
+			}
+		}
+		
+		return plays;
+	}
 	
+	private Play determineBestPlay(List<Play> plays){
+		if(plays.size() < 1){
+			return null;
+		}
+		
+		Play best = plays.get(0);
+		int score = best.predictScore();
+		
+		for(int i = 1; i < plays.size(); i++){
+			int current = plays.get(i).predictScore();
+			if(current > score){
+				best = plays.get(i);
+				score = current;
+			}
+		}
+		return best;
+	}
 	
 	private synchronized void setMove(Move m){
-		move = m;
-		
-		System.out.println("finished in time");
+		if(m != null){
+			move = m;
+			System.out.println("Calculated Move was not null");
+		}
+		finished = true;
 	}
 	
 	private synchronized Move getDeterminedMove(){
+		System.out.println("Finished? : " + finished);
+		System.out.println(move.toString());
 		return move;
 	}
 }

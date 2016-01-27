@@ -1,5 +1,6 @@
 package model.players.local.computer;
 
+import model.components.Block;
 import model.components.move.Move;
 import model.game.Game;
 import model.players.local.LocalPlayer;
@@ -29,6 +30,12 @@ public class ComputerPlayer extends LocalPlayer {
 	
 	@Override
 	public Move determineMove(boolean first) {
+		String result = getName() + ": ";
+		for(Block b: hand){
+			result += b.toShortString();
+		}
+		System.out.println(result);
+		
 		return strategy.determineMove(game, first);
 	}	
 }

@@ -3,6 +3,7 @@ package controller;
 import model.game.LocalGame;
 import model.players.Player;
 import model.players.local.computer.ComputerPlayer;
+import model.players.local.human.HumanPlayer;
 import view.QwirkleTUIView;
 import view.QwirkleView;
 
@@ -35,8 +36,12 @@ public class LocalController implements Controller{
 	
 	public static void main(String[] args){
 		LocalController lc = new LocalController();
-		lc.addPlayer(new ComputerPlayer("Jeroen", lc.getGame(), "D"));
-		lc.addPlayer(new ComputerPlayer("Gerry", lc.getGame(), "D"));
+		lc.addPlayer(new ComputerPlayer("Goofy", lc.getGame(), "S"));
+		lc.addPlayer(new ComputerPlayer("Pluto", lc.getGame(), "S"));
+		
+		//lc.addPlayer(new HumanPlayer("Geert", lc.getGame()));
+		//lc.addPlayer(new HumanPlayer("Jeroen", lc.getGame()));
+		//lc.addPlayer(new ComputerPlayer("WillyWortel", lc.getGame(), "S"));
 		lc.startQwirkle();
 	}
 }

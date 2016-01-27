@@ -42,6 +42,7 @@ public class LocalGame extends HostGame {
 	 */
 	public void startGame() {
 		init();
+		getController().getView().showStatus();
 		playTurn(true);
 		while (running && !rareSituation() && !hasWinner()) {
 			
@@ -54,7 +55,14 @@ public class LocalGame extends HostGame {
 			playTurn();
 		}
 
-		// TODO notify view that game is finished
+		
+		String[] names = new String[players.size()];
+		int[] scores = new int[players.size()];
+		for(int i = 0; i < players.size(); i++){
+			names[i] = players.get(i).getName();
+			scores[i] = players.get(i).getScore();
+		}
+		getController().getView().showResults(names,scores);
 	}
 	
 	/**
@@ -69,7 +77,6 @@ public class LocalGame extends HostGame {
 	 * @param firstTurn
 	 */
 	private void playTurn(boolean firstTurn) {
-		getController().getView().showStatus();
 		Move m = players.get(turn).determineMove(firstTurn);
 		while (m == null || !m.validate(players.get(turn), firstTurn)) {
 			System.out.println("Move was invalid");

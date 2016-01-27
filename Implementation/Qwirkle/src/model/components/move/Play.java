@@ -10,6 +10,7 @@ import model.components.Board;
 import model.components.Board.Position;
 import model.components.Board.Row;
 import model.players.Player;
+import model.players.distant.SocketPlayer;
 
 public class Play extends Move {
 
@@ -33,6 +34,11 @@ public class Play extends Move {
 	 * The direction the blocks are heading, horizontal or vertical.
 	 */
 	private Row.Orientation orientation;
+	
+	/**
+	 * the rows that get created or extended by the move
+	 */
+	private List<Row> rows;
 
 	// ------------------------------- Constructors
 	// ------------------------------------ //
@@ -184,6 +190,10 @@ public class Play extends Move {
 		// least 1 block
 
 		if (!p.equals(player) || blocks.size() < 1) {
+			if(player instanceof SocketPlayer){
+				System.out.println("Player not current player or blocks size less then 0");
+			}
+			
 			return false;
 		}
 
@@ -191,20 +201,43 @@ public class Play extends Move {
 
 		for (Entry e : blocks) {
 			if (!player.hasBlock(e.getBlock())) {
+				if(player instanceof SocketPlayer){
+					System.out.println("Player does not have block" + e.getBlock().toShortString());
+				}
 				return false;
+			}
+		}
+		
+		for(Entry e: blocks) {
+			for(Entry f: blocks){
+				if(!e.equals(f) && (e.getCoords().equals(f.getCoords()) || e.getBlock().equals(f.getBlock()))){
+					if(player instanceof SocketPlayer){
+						System.out.println("Move has double coordinate or has double block");
+					}
+					return false;
+				}
 			}
 		}
 
 		if (!determineOrientation()) {
+			if(player instanceof SocketPlayer){
+				System.out.println("Not all blocks are on the same direction");
+			}
 			return false;
 		}
 
-		List<Board.Row> rows = board.getCreatingRows(this, orientation);
+		this.rows = board.getCreatingRows(this, orientation);
 		if (rows.size() < 1) {
+			if(player instanceof SocketPlayer){
+				System.out.println("Not enough rows were created");
+			}
 			return false;
 		}
 		for (Board.Row row : rows) {
 			if (!row.isValid()) {
+				if(player instanceof SocketPlayer){
+					System.out.println("Row was not valid: " + row.toString());
+				}
 				return false;
 			}
 		}
@@ -330,6 +363,17 @@ public class Play extends Move {
 	public void setValidity(boolean v) {
 		this.valid = v;
 	}
+	
+	public boolean doublePositions(){
+		for(int i = 0; i < blocks.size() - 1; i++){
+			for(int j = i + 1; j < blocks.size(); j++){
+				if(blocks.get(i).getCoords().equals(blocks.get(j).getCoords())){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 	// ------------------------------- Queries
 	// ----------------------------------------- //
@@ -446,9 +490,25 @@ public class Play extends Move {
 		}
 		return null;
 	}
-	
+
 	public Row.Orientation getOrientation(){
 		return orientation;
+	}
+	
+	public Play getCopy(){
+		Play result = new Play(player, board);
+		for(Entry e: blocks){
+			result.addBlock(e.getBlock(), e.getCoords());
+		}
+		return result;
+	}
+	
+	public String toString(){
+		String result = player.getName() + " played : ";
+		for(Entry e: blocks){
+			result += e.getBlock().toShortString() + e.getCoords().toString() + " ";
+		}
+		return result;
 	}
 
 	// ------------------------------- Inner Class
