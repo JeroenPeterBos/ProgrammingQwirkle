@@ -12,7 +12,9 @@ import model.components.move.Play;
 import model.components.move.Trade;
 import model.players.Player;
 import model.players.distant.SocketPlayer;
+import network.IProtocol;
 import network.commands.Command;
+import network.commands.server.ServerErrorCommand;
 import network.commands.server.ServerGameendCommand;
 import network.commands.server.ServerGamestartCommand;
 import network.commands.server.ServerMovePutCommand;
@@ -82,7 +84,7 @@ public class ServerGame extends HostGame{
 			} else {
 				moves.remove(currentMove);
 				System.out.println("Move was not valid " + move.toString());
-				// TODO notify players
+				sendPlayers(new ServerErrorCommand(IProtocol.Error.MOVE_INVALID, "The entered move was not valid"));
 			}
 		} while(move == null || !validMove);
 		System.out.println("The move was valid");

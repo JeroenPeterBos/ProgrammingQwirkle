@@ -218,6 +218,27 @@ public class Play extends Move {
 				}
 			}
 		}
+		
+		int minx = 0;
+		int maxx = 0;
+		int miny = 0;
+		int maxy = 0;
+		for(Entry e: blocks){
+			if(e.getCoords().x < minx){
+				minx = e.getCoords().x;
+			} else if(e.getCoords().x > maxx){
+				maxx = e.getCoords().x;
+			}
+			if(e.getCoords().y < miny){
+				miny = e.getCoords().y;
+			} else if(e.getCoords().y > maxy){
+				maxy = e.getCoords().y;
+			}
+		}
+		
+		if(maxx - minx > 6 || maxy - miny > 6){
+			return false;
+		}
 
 		if (!determineOrientation()) {
 			if(player instanceof SocketPlayer){
