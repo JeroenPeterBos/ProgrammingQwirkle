@@ -15,6 +15,7 @@ import network.commands.client.ClientQueueCommand;
 import network.commands.client.ClientQuitCommand;
 import network.commands.server.ServerErrorCommand;
 import network.commands.server.ServerIdentifyCommand;
+import network.commands.server.ServerQueueCommand;
 import network.io.CommandReader;
 import network.io.CommandWriter;
 
@@ -59,9 +60,13 @@ public class ClientHandler extends Thread {
 			if(c instanceof GameCommand){
 				player.getGame().addMove(((GameCommand)c).getMove());
 			} else if(c instanceof ClientQueueCommand){
-				for(int i: ((ClientQueueCommand) c).getQueues()){
-					server.getGameCreator().addPlayer(player, i);
-				}
+				
+				server.getGameCreator().addPlayerToQueues(player, ((ClientQueueCommand) c).getQueues());
+				
+//				for(int i: ((ClientQueueCommand) c).getQueues()){
+//					server.getGameCreator().addPlayer(player, i);
+//				}
+				
 				try {
 					out.write(new ServerQueueCommand(((ClientQueueCommand) c).getQueues()));
 				} catch (IOException e) {
@@ -82,15 +87,18 @@ public class ClientHandler extends Thread {
 			
 			if(!(inp instanceof ClientIdentifyCommand)){
 				out.write(new ServerErrorCommand(IProtocol.Error.INVALID_COMMAND, "First client should identify itself"));
+				return false;
 			}
 			
 			ClientIdentifyCommand input = (ClientIdentifyCommand) inp;
 			
 			String name = input.getName();
+			
 			// check if name is unique
 			for (ClientHandler client : server.getClients()) {
 				if (!client.equals(this) && client.getClientName().equals(name)) {
 						out.write(new ServerErrorCommand(IProtocol.Error.NAME_USED, "Name is already in use"));
+						return false;
 				}
 			}
 			
@@ -104,7 +112,7 @@ public class ClientHandler extends Thread {
 			return false;
 		}
  
-		server.getClients().add(this);
+		server.addClient(this);
 		return true;
 	}
 	

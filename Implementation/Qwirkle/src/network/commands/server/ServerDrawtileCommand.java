@@ -29,6 +29,7 @@ public class ServerDrawtileCommand extends ServerCommand{
 	}
 	
 	public void selfHandle(Client c){
+		c.getGame().getBag().popBlocks(blocks.size());
 		((ClientGame)c.getGame()).getLocalPlayer().giveBlocks(blocks);
 	}
 	

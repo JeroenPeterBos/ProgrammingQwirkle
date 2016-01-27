@@ -62,9 +62,10 @@ public abstract class Player {
 			}
 		} catch (HandEmptyException e) {
 			System.err.println(e.getMessage());
-			return;
+			e.printStackTrace();
 		} catch (BlockNotInHandException e) {
 			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		hand.remove(b);
@@ -80,9 +81,10 @@ public abstract class Player {
 			}
 		} catch (HandEmptyException e) {
 			System.err.println(e.getMessage());
-			return;
+			e.printStackTrace();
 		} catch (BlockNotInHandException e) {
 			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		hand.removeAll(blocks);
@@ -136,7 +138,7 @@ public abstract class Player {
 		return possiblePlayMove() != null;
 	}
 	
-	public Move possiblePlayMove(){
+	public Play possiblePlayMove(){
 		for(Block b : hand){
 			for(Position p: game.getBoard().getOpenPositions()){
 				Play m = new Play(this, game.getBoard());
@@ -245,5 +247,11 @@ public abstract class Player {
 	
 	public List<Block> getHand(){
 		return hand;
+	}
+	
+	public List<Block> handCopy(){
+		List<Block> copy = new LinkedList<Block>();
+		copy.addAll(hand);
+		return copy;
 	}
 }

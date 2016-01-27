@@ -43,7 +43,13 @@ public class GameCreator extends Thread{
 		}
 	}
 	
-	public synchronized void addPlayer(SocketPlayer p, int i){
+	public synchronized void addPlayerToQueues(SocketPlayer p, int[] queues){
+		for(int i: queues){
+			addPlayer(p, i);
+		}
+	}
+	
+	private synchronized void addPlayer(SocketPlayer p, int i){
 		switch(i){
 		case 2:
 			if(!twoPlayerQueue.contains(p)){
@@ -85,7 +91,7 @@ public class GameCreator extends Thread{
 		notify();
 	}
 	
-	public void removeFromQueues(SocketPlayer p){
+	public synchronized void removeFromQueues(SocketPlayer p){
 		twoPlayerQueue.remove(p);
 		threePlayerQueue.remove(p);
 		fourPlayerQueue.remove(p);

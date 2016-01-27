@@ -54,7 +54,7 @@ public class ClientGame extends Game{
 	 
 	 public synchronized void startGame() {
 		 System.out.println("game started");
-	 }
+	 } 
 	 
 	 public synchronized void addCommand(Command c){
 		 commands.add(c);

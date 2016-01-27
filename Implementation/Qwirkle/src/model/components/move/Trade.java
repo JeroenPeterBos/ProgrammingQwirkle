@@ -50,9 +50,7 @@ public class Trade extends Move {
 			throw new IllegalMoveStateException(valid);
 		}
 		
-		player.removeBlocks(blocks);
 		bag.returnBlocks(blocks);
-		
 	}
 	
 	/**
@@ -70,12 +68,15 @@ public class Trade extends Move {
 			return false;
 		}
 		
+		if(!p.hasBlocks(blocks)){
+			return false;
+		}
+		if(!bagBigEnough()){
+			return false;
+		}
 		
-		boolean result = true;
-		result = p.hasBlocks(blocks);
-		
-		valid = result;
-		return result;
+		valid = true;
+		return true;
 	}
 	
 	
@@ -96,6 +97,10 @@ public class Trade extends Move {
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
+	
+	public boolean bagBigEnough(){
+		return bag.size() >= blocks.size();
+	}
 	
 	/**
 	 * getNoBlocks will give the number of blocks of the trade move.

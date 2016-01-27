@@ -21,6 +21,9 @@ public class ServerMoveTradeCommand extends ServerCommand{
 	}
 	
 	public void selfHandle(Client c){
+		if(c.getGame().getCurrentPlayer().equals(c.getGame().getLocalPlayer())){
+			c.executeBufferedTrade();
+		}
 		c.getGame().handleTrade(amount);
 	}
 }

@@ -244,6 +244,15 @@ public class Play extends Move {
 		}
 		blocks.add(new Entry(b, p));
 	}
+	
+	public void removeBlock(Block b){
+		 for(Entry e: blocks){
+			 if(e.getBlock().equals(b)){
+				 blocks.remove(e);
+				 return;
+			 }
+		 }
+	}
 
 	/**
 	 * calculateScore calculates the move's score. Checks all the rows that are
@@ -343,6 +352,11 @@ public class Play extends Move {
 
 		return score;
 	}
+	
+	public int predictScore(){
+		determineOrientation();
+		return calculateScore(board.getCreatingRows(this, orientation));
+	}
 
 	/**
 	 * getNoBlocks will provide the number of blocks that are requested to move.
@@ -430,6 +444,10 @@ public class Play extends Move {
 			}
 		}
 		return null;
+	}
+	
+	public Row.Orientation getOrientation(){
+		return orientation;
 	}
 
 	// ------------------------------- Inner Class

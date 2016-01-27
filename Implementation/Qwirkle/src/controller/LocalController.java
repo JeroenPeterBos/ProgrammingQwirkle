@@ -35,8 +35,8 @@ public class LocalController implements Controller{
 	
 	public static void main(String[] args){
 		LocalController lc = new LocalController();
-		lc.addPlayer(new ComputerPlayer("Jeroen", lc.getGame(), "-S"));
-		lc.addPlayer(new ComputerPlayer("Gerry", lc.getGame(), "-S"));
+		lc.addPlayer(new ComputerPlayer("Jeroen", lc.getGame(), "D"));
+		lc.addPlayer(new ComputerPlayer("Gerry", lc.getGame(), "D"));
 		lc.startQwirkle();
 	}
 }
