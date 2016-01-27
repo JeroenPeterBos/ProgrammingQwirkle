@@ -7,6 +7,7 @@ import model.game.ServerGame;
 import model.players.Player;
 import network.commands.Command;
 import network.commands.server.ServerDrawtileCommand;
+import network.commands.server.ServerTurnCommand;
 import server.ClientHandler;
 
 public class SocketPlayer extends Player{
@@ -30,6 +31,8 @@ public class SocketPlayer extends Player{
 		super.giveBlocks(blocks);
 		
 		sendCommand(new ServerDrawtileCommand(blocks));
+		System.out.println("Just send: " + new ServerDrawtileCommand(blocks).toCommandString());
+		
 	}
 	
 	@Override

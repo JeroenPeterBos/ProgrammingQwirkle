@@ -43,20 +43,12 @@ public class ShortTermStrategy implements Strategy, Runnable{
 			
 			run();
 			
-//			Thread calculator = new Thread(this);
-//			calculator.start();
-//			try {
-//				calculator.join(9500);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-			
 			return getDeterminedMove();
 		}
 	}
 	
 	@Override
-	public void run(){
+	public void run(){		
 		List<Play> plays = new LinkedList<Play>();
 		for(Block b : player.getHand()){
 			for(Position p: board.getOpenPositions()){
