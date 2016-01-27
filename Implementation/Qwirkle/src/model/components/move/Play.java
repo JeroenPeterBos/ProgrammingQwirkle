@@ -172,6 +172,7 @@ public class Play extends Move {
 			boolean hasOrigin = false;
 			for (Entry e : blocks) {
 				if (e.getCoords().x < 0 || e.getCoords().y < 0) {
+					System.out.println("Negatieve coordinaat");
 					return false;
 				}
 				if (e.getCoords().equals(new Position(0, 0))) {
@@ -180,9 +181,11 @@ public class Play extends Move {
 			}
 
 			if (!hasOrigin) {
+				System.out.println("niet bij 0,0");
 				return false;
 			}
 			if (p.maxStartMove().size() != blocks.size()) {
+				System.out.println("Niet je maximale Move " + p.maxStartMove().toString());
 				return false;
 			}
 		}
@@ -191,9 +194,9 @@ public class Play extends Move {
 		// least 1 block
 
 		if (!p.equals(player) || blocks.size() < 1) {
-			if(player instanceof SocketPlayer){
-				System.out.println("Player not current player or blocks size less then 0");
-			}
+			
+			System.out.println("Player not current player or blocks size less then 0");
+
 			
 			return false;
 		}
@@ -202,9 +205,9 @@ public class Play extends Move {
 
 		for (Entry e : blocks) {
 			if (!player.hasBlock(e.getBlock())) {
-				if(player instanceof SocketPlayer){
+
 					System.out.println("Player does not have block" + e.getBlock().toShortString());
-				}
+
 				return false;
 			}
 		}
@@ -214,33 +217,33 @@ public class Play extends Move {
 		for(Entry e: blocks) {
 			for(Entry f: blocks){
 				if(!e.equals(f) && (e.getCoords().equals(f.getCoords()) || e.getBlock().equals(f.getBlock()))){
-					if(player instanceof SocketPlayer){
+
 						System.out.println("Move has double coordinate or has double block");
-					}
+
 					return false;
 				}
 			}
 		}
 
 		if (!determineOrientation()) {
-			if(player instanceof SocketPlayer){
+
 				System.out.println("Not all blocks are on the same direction");
-			}
+
 			return false;
 		}
 
 		this.rows = board.getCreatingRows(this, orientation);
 		if (rows.size() < 1) {
-			if(player instanceof SocketPlayer){
+
 				System.out.println("Not enough rows were created");
-			}
+
 			return false;
 		}
 		for (Board.Row row : rows) {
 			if (!row.isValid()) {
-				if(player instanceof SocketPlayer){
+
 					System.out.println("Row was not valid: " + row.toString());
-				}
+
 				return false;
 			}
 		}

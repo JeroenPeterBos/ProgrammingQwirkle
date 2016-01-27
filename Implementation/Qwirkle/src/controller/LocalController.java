@@ -12,7 +12,7 @@ public class LocalController implements Controller{
 	private QwirkleView qv;
 	private LocalGame game;
 	
-	private LocalController(){
+	public LocalController(){
 		this.game = new LocalGame(this);
 		this.qv = new QwirkleTUIView(this);
 		this.game.addObserver(qv);

@@ -151,7 +151,7 @@ public class Board {
 	 * @param positions  the list with the positions that will be checked
 	 * @return whether the positions are connected to the main board or not
 	 */
-	private boolean connectedToFilledPositions(List<Position> positions) {
+	public boolean connectedToFilledPositions(List<Position> positions) {
 		List<Position> freePositions = new LinkedList<Position>();
 
 		return checkNextPosition(positions, freePositions);
