@@ -10,7 +10,7 @@ import model.players.local.computer.strategy.StupidStrategy;
 
 public class ComputerPlayer extends LocalPlayer {
 	private Strategy strategy;
-	
+	private int thinkingTime;
 	
 	public ComputerPlayer(String n, Game g, String identifier) {
 		super(n, g);
@@ -36,6 +36,10 @@ public class ComputerPlayer extends LocalPlayer {
 		}
 		System.out.println(result);
 		
-		return strategy.determineMove(game, first);
+		return strategy.determineMove(game, first, thinkingTime);
 	}	
+	
+	public void setThinkingTime(int tt){
+		this.thinkingTime = tt;
+	}
 }

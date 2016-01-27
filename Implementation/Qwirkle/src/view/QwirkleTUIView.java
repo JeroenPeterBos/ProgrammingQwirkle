@@ -105,16 +105,21 @@ public class QwirkleTUIView implements QwirkleView{
 		
 		while(true){
 			System.out.println("Your hand: " + blocks);
-			System.out.println("First decide, exchange or play (e/p):");
+			System.out.println("First decide, exchange or play (e/p/hint):");
 		
 			String choice = scanner.nextLine();
 			if(choice.equals("e")){
 				return fillExchangeMove(new Trade(p, controller.getGame().getBag()));
 			} else if(choice.equals("p")){
 				return fillPlayBlocksMove(new Play(p, controller.getGame().getBoard()));
+			} else if(choice.equals("hint")){
+				if(p.hasPossibleMove()){
+					System.out.println(p.possiblePlayMove().toString());
+				} else {
+					System.out.println("You do not have a valid play move. You should trade some blocks");
+				}
 			} else {
 				System.out.println("Invalid input");
-				continue;
 			}
 		}
 	}

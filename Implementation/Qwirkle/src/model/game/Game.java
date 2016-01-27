@@ -110,6 +110,7 @@ public abstract class Game extends Observable {
 	 * incrementTurn will set the turn to the next player, which means the next player can decide
 	 * 				his move.
 	 */
+
 	protected void incrementTurn() {
 		turn = (turn + 1) % getNoPlayers();
 	}

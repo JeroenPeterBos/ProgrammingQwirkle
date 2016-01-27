@@ -37,7 +37,7 @@ public class LocalController implements Controller{
 	public static void main(String[] args){
 		LocalController lc = new LocalController();
 		lc.addPlayer(new ComputerPlayer("Goofy", lc.getGame(), "S"));
-		lc.addPlayer(new ComputerPlayer("Pluto", lc.getGame(), "S"));
+		lc.addPlayer(new ComputerPlayer("Pluto", lc.getGame(), "D"));
 		
 		//lc.addPlayer(new HumanPlayer("Geert", lc.getGame()));
 		//lc.addPlayer(new HumanPlayer("Jeroen", lc.getGame()));

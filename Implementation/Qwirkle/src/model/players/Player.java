@@ -39,17 +39,13 @@ public abstract class Player {
 		this.game = g;
 	}
 	
-	protected Player(String n){
-		this(n, null);
-	}
-	
 	// ------------------------------- Commands ---------------------------------------- //
 	
 	/**.
-	 * removeBlock removes a block of the player's hand
+	 * removeBlock removes a block of the player's hand if this player has more than 0 blocks and owns the block
 	 * @throws HandEmptyException if the player's hand is empty
 	 * @throws BlockNotInHandException if the player doesn't have block b
-	 * @param b
+	 * @param b the block to be removed from the hand
 	 */
 	
 	public void removeBlock(Block b) {
@@ -71,6 +67,10 @@ public abstract class Player {
 		hand.remove(b);
 	}
 	
+	/**
+	 * Does the same as remove block, but removes a couple of blocks at once.
+	 * @param blocks the to be removed blocks
+	 */
 	public void removeBlocks(List<Block> blocks) {
 		try {
 			if (hand.size() - blocks.size() < 0) {
@@ -108,6 +108,10 @@ public abstract class Player {
 		hand.add(b);
 	}
 	
+	/**
+	 * Gives a set of blocks to the player
+	 * @param blocks the blocks that are given
+	 */
 	public void giveBlocks(List<Block> blocks){
 		if(hand.size() + blocks.size() > 6){
 			try {
@@ -129,15 +133,27 @@ public abstract class Player {
 		score += s;
 	}
 	
+	/**
+	 * Points the game variable to this players game
+	 * @param g the players game
+	 */
 	public void setGame(Game g){
 		this.game = g;
 	}
 	// ------------------------------- Queries ----------------------------------------- //
 	
+	/**
+	 * Determines whether this player has a move that can be played.
+	 * @return whether it has a valid play move
+	 */
 	public boolean hasPossibleMove(){
 		return possiblePlayMove() != null;
 	}
 	
+	/**
+	 * Gives a simple one block play move
+	 * @return one block valid play move
+	 */
 	public Play possiblePlayMove(){
 		for(Block b : hand){
 			for(Position p: game.getBoard().getOpenPositions()){
@@ -216,6 +232,11 @@ public abstract class Player {
 		return hand.contains(b);
 	}
 	
+	/**
+	 * Checks if the player has the given blocks in its hand.
+	 * @param b the blocks that are checked to be in its hand
+	 * @return whether the player owns the blocks
+	 */
 	public boolean hasBlocks(List<Block> b) {
 		return hand.containsAll(b);
 	}
@@ -237,18 +258,34 @@ public abstract class Player {
 		return score;
 	}
 	
+	/**
+	 * Gives the game the player is currently in.
+	 * @return this players game.
+	 */
 	public Game getGame() {
 		return game;
 	}
 	
+	/**
+	 * The amount of blocks the player currently owns
+	 * @return
+	 */
 	public int handSize() {
 		return hand.size();
 	}
 	
+	/**
+	 * The blocks the player currently has.
+	 * @return players hand
+	 */
 	public List<Block> getHand(){
 		return hand;
 	}
 	
+	/**
+	 * Creates a copy of the hand such that in example the computer player can use it and modify it in its calculations
+	 * @return a copy of hand
+	 */
 	public List<Block> handCopy(){
 		List<Block> copy = new LinkedList<Block>();
 		copy.addAll(hand);
