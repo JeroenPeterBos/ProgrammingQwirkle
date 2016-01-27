@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.Observable;
 
 import exceptions.protocol.CommandException;
 import model.players.distant.SocketPlayer;
@@ -19,7 +20,7 @@ import network.commands.server.ServerQueueCommand;
 import network.io.CommandReader;
 import network.io.CommandWriter;
 
-public class ClientHandler extends Thread {
+public class ClientHandler extends Observable implements Runnable{
 
 	// ------------------------------- Instance Variables
 	// ------------------------------ //
@@ -29,6 +30,7 @@ public class ClientHandler extends Thread {
 	private CommandReader in;
 	
 	private SocketPlayer player;
+	private String name = "unidentified";
 	private IProtocol.Feature[] features;
 
 	// ------------------------------- Constructors
@@ -63,10 +65,6 @@ public class ClientHandler extends Thread {
 				
 				server.getGameCreator().addPlayerToQueues(player, ((ClientQueueCommand) c).getQueues());
 				
-//				for(int i: ((ClientQueueCommand) c).getQueues()){
-//					server.getGameCreator().addPlayer(player, i);
-//				}
-				
 				try {
 					out.write(new ServerQueueCommand(((ClientQueueCommand) c).getQueues()));
 				} catch (IOException e) {
@@ -92,6 +90,9 @@ public class ClientHandler extends Thread {
 			
 			ClientIdentifyCommand input = (ClientIdentifyCommand) inp;
 			
+			setChanged();
+			notifyObservers(input);
+			
 			String name = input.getName();
 			
 			// check if name is unique
@@ -104,6 +105,7 @@ public class ClientHandler extends Thread {
 			
 			this.features = server.matchingFeatures(input.getFeatures());
 			
+			this.name = name;
 			this.player = new SocketPlayer(name, this, null);
 			System.out.println(name + ": connected");
 			
@@ -119,6 +121,8 @@ public class ClientHandler extends Thread {
 	public void send(Command c){
 		try {
 			out.write(c);
+			setChanged();
+			notifyObservers(c);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -138,6 +142,6 @@ public class ClientHandler extends Thread {
 	// ------------------------------- Queries
 
 	public String getClientName() {
-		return player.getName();
+		return name;
 	}
 }

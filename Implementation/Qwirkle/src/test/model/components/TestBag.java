@@ -1,4 +1,4 @@
-package test.components;
+package test.model.components;
 
 public class TestBag {
 	

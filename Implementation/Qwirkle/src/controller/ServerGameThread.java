@@ -1,6 +1,5 @@
-package server;
+package controller;
 
-import controller.Controller;
 import model.game.ServerGame;
 import model.players.Player;
 import view.QwirkleView;

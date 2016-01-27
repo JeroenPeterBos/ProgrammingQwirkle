@@ -2,6 +2,7 @@ package server;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import controller.ServerGameThread;
 import model.players.distant.SocketPlayer;
 
 public class GameCreator extends Thread{

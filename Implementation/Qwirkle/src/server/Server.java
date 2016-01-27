@@ -1,22 +1,47 @@
 package server;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import controller.ServerGameThread;
 import network.IProtocol;
+import view.QwirkleServerTuiView;
+import view.QwirkleServerView;
 
 public class Server {
 
-	public static void main(String[] args) {
-		if (args.length != 1) {
-			System.out.println("invalid amount of arguments. Shutting down...");
-			System.exit(0);
+	public static void main(String[] args) {				
+		Scanner scanner = new Scanner(System.in);
+		
+		int port = -1;
+		ServerSocket ss = null;
+		while(ss == null){
+			while(port < 0 || port > 49151){
+				System.out.println("Choose a portnumber to host the server (0 - 49151):");
+				port = scanner.nextInt();
+			}
+			
+			try {
+				ss = new ServerSocket(port);
+			} catch (IOException e) {
+				System.out.println("This port was not available");
+				ss = null;
+			}
 		}
 
-		Server server = new Server(Integer.parseInt(args[0]));
+		try {
+			System.out.println("Server is hosted at: " + InetAddress.getLocalHost().getHostAddress() + ":" + port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		
+		Server server = new Server(ss);
 		server.run();
 	}
 
@@ -30,43 +55,43 @@ public class Server {
 	private CopyOnWriteArrayList<ServerGameThread> games;
 	
 	private GameCreator gameCreator;
+	private ServerSocket serverSocket;
+	
+	private QwirkleServerView qsv;
 
 	// ------------------------------- Constructors
 	// ------------------------------------ //
 
-	public Server(int port) {
+	public Server(ServerSocket ss) {
 		this.port = port;
 		this.clients = new CopyOnWriteArrayList<ClientHandler>();
 		this.games = new CopyOnWriteArrayList<ServerGameThread>();
 		
 		this.gameCreator = new GameCreator(this);
 		this.gameCreator.start();
+		this.serverSocket = ss;
+		
+		this.qsv = new QwirkleServerTuiView(this);
 	}
 
 	// ------------------------------- Commands
 	// ---------------------------------------- //
 
-	public void run() {
-		ServerSocket ss = null;
-		try {
-			ss = new ServerSocket(port);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+	public void run() {		
 		boolean running = true;
 		while (running) {
 			Socket clientSocket = null;
 			try {
-				clientSocket = ss.accept();
+				clientSocket = serverSocket.accept();
 				ClientHandler ch = new ClientHandler(this, clientSocket);
-				ch.start();
+				ch.addObserver(qsv);
+				new Thread(ch).start();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		shutDown(ss);
+		shutDown(serverSocket);
 	}
 
 	public void addGame(ServerGameThread g) {
