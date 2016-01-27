@@ -25,10 +25,10 @@ public class Server {
 
 	private int port;
 	private IProtocol.Feature[] supportedFeatures = new IProtocol.Feature[] {};
-	
+
 	private CopyOnWriteArrayList<ClientHandler> clients;
 	private CopyOnWriteArrayList<ServerGameThread> games;
-	
+
 	private GameCreator gameCreator;
 
 	// ------------------------------- Constructors
@@ -38,7 +38,7 @@ public class Server {
 		this.port = port;
 		this.clients = new CopyOnWriteArrayList<ClientHandler>();
 		this.games = new CopyOnWriteArrayList<ServerGameThread>();
-		
+
 		this.gameCreator = new GameCreator(this);
 		this.gameCreator.start();
 	}
@@ -80,22 +80,22 @@ public class Server {
 	public void addClient(ClientHandler c) {
 		clients.add(c);
 	}
-	
-	public void removeClient(ClientHandler c){
+
+	public void removeClient(ClientHandler c) {
 		clients.remove(c);
 	}
-	
-	public void shutDown(ServerSocket ss){
+
+	public void shutDown(ServerSocket ss) {
 		try {
 			ss.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		for(ClientHandler ch : clients){
+
+		for (ClientHandler ch : clients) {
 			ch.shutDown();
 		}
-		for(ServerGameThread g : games){
+		for (ServerGameThread g : games) {
 			g.endQwirkle();
 		}
 	}
@@ -103,42 +103,42 @@ public class Server {
 	// ------------------------------- Queries
 	// ----------------------------------------- //
 
-	public IProtocol.Feature[] matchingFeatures(IProtocol.Feature[] f){
+	public IProtocol.Feature[] matchingFeatures(IProtocol.Feature[] f) {
 		int matches = 0;
-		for(IProtocol.Feature feature: f){
-			if(supportsFeature(feature)){
+		for (IProtocol.Feature feature : f) {
+			if (supportsFeature(feature)) {
 				matches++;
 			}
 		}
-		
+
 		IProtocol.Feature[] matching = new IProtocol.Feature[matches];
-		for(IProtocol.Feature feature: f){
-			if(supportsFeature(feature)){
+		for (IProtocol.Feature feature : f) {
+			if (supportsFeature(feature)) {
 				matching[--matches] = feature;
 			}
 		}
-		
+
 		return matching;
 	}
-	
-	public boolean supportsFeature(IProtocol.Feature f){
-		for(IProtocol.Feature feature: this.supportedFeatures){
-			if(feature == f){
+
+	public boolean supportsFeature(IProtocol.Feature f) {
+		for (IProtocol.Feature feature : this.supportedFeatures) {
+			if (feature == f) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	public IProtocol.Feature[] getFeatures(){
+
+	public IProtocol.Feature[] getFeatures() {
 		return supportedFeatures;
 	}
-	
+
 	public List<ClientHandler> getClients() {
 		return clients;
 	}
-	
-	public GameCreator getGameCreator(){
+
+	public GameCreator getGameCreator() {
 		return gameCreator;
 	}
 }
