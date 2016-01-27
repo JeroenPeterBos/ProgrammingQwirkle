@@ -11,66 +11,68 @@ import model.players.local.LocalPlayer;
 import network.commands.Command;
 
 public class ClientGame extends Game{
-
-	 private CopyOnWriteArrayList<Command> commands;
-	 private int currentCommand;
+	
+	
+	
+	private CopyOnWriteArrayList<Command> commands;
+	private int currentCommand;
+	
+	private Player currentPlayer;
+	private LocalPlayer localPlayer;
 	 
-	 private Player currentPlayer;
-	 private LocalPlayer localPlayer;
+	private boolean firstTurn = true;
 	 
-	 private boolean firstTurn = true;
-	 
-	 public ClientGame(Controller c, LocalPlayer p){
-		 super(c, new VirtualBag());
-		 
-		 this.localPlayer = p;
-		 
-		 this.commands = new CopyOnWriteArrayList<Command>();
-		 this.currentCommand = 0;
+	public ClientGame(Controller c, LocalPlayer p){
+		super(c, new VirtualBag());
+		
+		this.localPlayer = p;
+		
+		this.commands = new CopyOnWriteArrayList<Command>();
+		this.currentCommand = 0;
 	 }
 	 
-	 public void handlePlay(Play p){
-		 p.setValidity(true);
-		 try {
+	public void handlePlay(Play p){
+		p.setValidity(true);
+		try {
 			p.execute();
-		 } catch (IllegalMoveStateException e) {
+		} catch (IllegalMoveStateException e) {
 			e.printStackTrace();
-		 }
+		}
 		 
-		 if(p.getPlayer().equals(getLocalPlayer())){
-			 getLocalPlayer().removeBlocks(p.getBlocksView());
-		 }
+		if(p.getPlayer().equals(getLocalPlayer())){
+			getLocalPlayer().removeBlocks(p.getBlocksView());
+		}
 		 
-		 System.out.println("just executed the move");
-		 setChanged();
-		 notifyObservers(p);
+		System.out.println("just executed the move");
+		setChanged();
+		notifyObservers(p);
 		 
-		 this.firstTurn = false;
-	 }
+		this.firstTurn = false;
+	}
 	 
-	 public void handleTrade(int a){
-		 setChanged();
-		 notifyObservers(a);
-	 }
+	public void handleTrade(int a){
+		setChanged();
+		notifyObservers(a);
+	}
 	 
-	 public synchronized void startGame() {
-		 System.out.println("game started");
-	 }
+	public synchronized void startGame() {
+		System.out.println("game started");
+	}
 	 
-	 public synchronized void addCommand(Command c){
-		 commands.add(c);
-		 notify();
-	 }
+	public synchronized void addCommand(Command c){
+		commands.add(c);
+		notify();
+	}
 	 
-	 public void setCurrentPlayer(Player p){
-		 super.setTurn(p);
-	 }
+	public void setCurrentPlayer(Player p){
+		super.setTurn(p);
+	}
 	 
-	 public LocalPlayer getLocalPlayer(){
-		 return localPlayer;
-	 }
+	public LocalPlayer getLocalPlayer(){
+		return localPlayer;
+	}
 	 
-	 public boolean getFirstTurn(){
-		 return firstTurn;
-	 }
+	public boolean getFirstTurn(){
+		return firstTurn;
+	}
 }
