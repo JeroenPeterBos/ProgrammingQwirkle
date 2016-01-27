@@ -11,23 +11,35 @@ import model.players.local.LocalPlayer;
 
 public class LocalGame extends HostGame {
 
-	// ------------------------------- Instance Variables
-	// ------------------------------ //
+	
+	// ------------------------------- Instance Variables ------------------------------ //
 
+	/**
+	 * players represents a list of the LocalPlayers in the localgame.
+	 * So that are all the players who play the game locally.
+	 */
 	private List<LocalPlayer> players;
 
-	// ------------------------------- Constructors
-	// ------------------------------------ //
+	// ------------------------------- Constructors ------------------------------------ //
 
+	
+	/**
+	 * LocalGame constructs a localGame, which does the same as the constructor of
+	 * 			HostGame, but it also creates a list of LocalPlayers.
+	 * @param c is the controller which is used in the game
+	 */
 	public LocalGame(Controller c) {
 		super(c);
 
 		this.players = new LinkedList<LocalPlayer>();
 	}
 
-	// ------------------------------- Commands
-	// ---------------------------------------- //
+	// ------------------------------- Commands ---------------------------------------- //
 
+	/**
+	 * startGame starts the game and will makes sure that playTurn will keep running, unless
+	 * 			unless the game is ended.
+	 */
 	public void startGame() {
 		init();
 		getController().getView().showStatus();
@@ -37,7 +49,6 @@ public class LocalGame extends HostGame {
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -53,11 +64,18 @@ public class LocalGame extends HostGame {
 		}
 		getController().getView().showResults(names,scores);
 	}
-
+	
+	/**
+	 * playTurn will run playTurn(firstTurn) with firstTurn as false.
+	 */
 	private void playTurn() {
 		playTurn(false);
 	}
-
+	
+	/**
+	 * playTurn manages the turn and will invoke methods to let the player know 
+	 * @param firstTurn
+	 */
 	private void playTurn(boolean firstTurn) {
 		Move m = players.get(turn).determineMove(firstTurn);
 		while (m == null || !m.validate(players.get(turn), firstTurn)) {

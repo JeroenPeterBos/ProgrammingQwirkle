@@ -55,7 +55,7 @@ public class QwirkleTUIView implements QwirkleView{
 			for (int x = b.xLow; x < b.xHigh + 1; x++) {
 				Position current = new Position(x, y + b.yLow);
 				if (b.getOpenPositions().contains(current)) {
-					bounds[y] += String.format("%-6s", x + "," + (y + b.yLow)); //TODO replace "" with |  |
+					bounds[y] += String.format("%-6s", x + "," + (y + b.yLow));
 				} else if (b.getFilledPositions().containsKey(current)) {
 					bounds[y] += String.format("%-6s", b.getFilledPositions().get(current).toShortString());
 				} else {
