@@ -159,6 +159,7 @@ public class Play extends Move {
 
 	public boolean validate(Player p, boolean firstMove) {
 		// validate that the first move is always started at 0,0
+		// and the move is the maximum size.
 
 		if (firstMove) {
 			boolean hasOrigin = false;

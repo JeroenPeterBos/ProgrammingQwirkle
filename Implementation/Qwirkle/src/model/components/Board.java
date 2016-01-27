@@ -330,8 +330,6 @@ public class Board {
 		 * stones is oriented.
 		 * if Orientation is X than all blocks have the same value of Y
 		 * if Orientation is Y than all blocks have the same value of X
-		 * 
-		 * @author Jeroen
 		 */
 		
 		public enum Orientation{
@@ -414,8 +412,7 @@ public class Board {
 		}
 		
 		/**
-		 * Converts this row to a combination of the String version of the
-		 * blocks
+		 * Converts this row to a combination of the String version of the blocks
 		 */
 		public String toString() {
 			String res = "Row : ";
