@@ -88,12 +88,12 @@ public class Client extends Thread implements Controller{
 		this.sock = new Socket(host, port);
 		this.in = new CommandReader(new InputStreamReader(this.sock.getInputStream()));
 		this.out = new CommandWriter(new OutputStreamWriter(this.sock.getOutputStream()));
-		this.name = name;
+		this.name = name.replace("-", "").replace(",", "");
 		
 		this.game = null;
 		
 		if(name.startsWith("-")) {
-			this.player = new ComputerPlayer(name, null, name.split(",")[0].replace("-", ""));
+			this.player = new ComputerPlayer(name.replace("-", "").replace(",", ""), null, name.split(",")[0].replace("-", ""));
 		} else {
 			this.player = new HumanPlayer(name, null);
 		}

@@ -1,6 +1,7 @@
 package model.components;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -129,7 +130,7 @@ public class Board {
 	 * @param p  the Position that will be opened
 	 * @param pos  the list in which the position will be opened
 	 */
-	private void openPositionIn(Position p, List<Position> pos) {
+	public void openPositionIn(Position p, List<Position> pos) {
 		if (!pos.contains(p) && !filledPositions.containsKey(p)) {
 			pos.add(p);
 		}
@@ -198,6 +199,10 @@ public class Board {
 		}
 		
 		rows.add(new Row(this, m.getEntry(0), m, or));
+		if(rows.get(0).size() < 1 || !rows.get(0).containsAll(m.getBlocksView())){
+			rows.remove(0);
+			return rows;
+		}
 
 		Row.Orientation opposite = or == Row.Orientation.X ? Row.Orientation.Y : Row.Orientation.X;
 		for (int i = 0; i < m.getNoBlocks(); i++) {
@@ -230,6 +235,12 @@ public class Board {
 	 */
 	public List<Position> getOpenPositions() {
 		return openPositions;
+	}
+	
+	public List<Position> getOpenPositionsCopy() {
+		List<Position> lp = new LinkedList<Position>();
+		lp.addAll(openPositions);
+		return lp;
 	}
 	
 	/**
@@ -353,6 +364,8 @@ public class Board {
 			
 			next(b, e.getCoords(), p, or, 1);
 			next(b, e.getCoords(), p, or, -1);
+			
+			
 		}
 		
 		private void next(Board b, Position p, Play pl, Orientation o, int a){
@@ -405,8 +418,14 @@ public class Board {
 			if (!allSameColor && !allSameShape) {
 				return false;
 			}
+			
+			
 
 			return true;
+		}
+		
+		public boolean containsAll(List<Block> b){
+			return blocks.containsAll(b);
 		}
 
 		public int size(){

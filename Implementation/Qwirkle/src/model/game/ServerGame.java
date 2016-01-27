@@ -81,7 +81,7 @@ public class ServerGame extends HostGame{
 				validMove = true;
 			} else {
 				moves.remove(currentMove);
-				System.out.println("Move was not valid");
+				System.out.println("Move was not valid " + move.toString());
 				// TODO notify players
 			}
 		} while(move == null || !validMove);
