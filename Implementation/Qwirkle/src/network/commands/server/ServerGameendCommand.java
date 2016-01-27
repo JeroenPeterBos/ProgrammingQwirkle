@@ -2,7 +2,6 @@ package network.commands.server;
 
 import controller.Client;
 import network.IProtocol;
-import network.commands.Command;
 
 public class ServerGameendCommand extends ServerCommand{
 
@@ -41,7 +40,8 @@ public class ServerGameendCommand extends ServerCommand{
 	}
 	
 	public void selfHandle(Client c){
-		c.getGame().shutDown();
+		c.getGame().endGame();
 		c.getPlayer().setGame(null);
+		c.getView().showResults(players, scores);
 	}
 }

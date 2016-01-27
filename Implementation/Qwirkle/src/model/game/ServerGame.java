@@ -13,6 +13,7 @@ import model.components.move.Trade;
 import model.players.Player;
 import model.players.distant.SocketPlayer;
 import network.commands.Command;
+import network.commands.server.ServerGameendCommand;
 import network.commands.server.ServerGamestartCommand;
 import network.commands.server.ServerMovePutCommand;
 import network.commands.server.ServerMoveTradeCommand;
@@ -38,10 +39,22 @@ public class ServerGame extends HostGame{
 		init();
 		
 		playTurn(true);
-		while(running && !rareSituation()){
+		while(running && !rareSituation() && !hasWinner()){
 			playTurn(false);
 		}
 		
+		if(hasWinner()){
+			int[] s = new int[players.size()];
+			String[] names = new String[players.size()];
+			
+			for(int i = 0; i < players.size(); i++){
+				s[i] = players.get(i).getScore();
+				names[i] = players.get(i).getName();
+			}
+			
+			System.out.println("Game ended: blockssize:" + bag.size());
+			sendPlayers(new ServerGameendCommand(true, s, names));
+		}
 	}
 
 	private synchronized void playTurn(boolean firstTurn) {

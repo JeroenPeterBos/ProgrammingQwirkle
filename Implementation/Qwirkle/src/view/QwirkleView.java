@@ -17,7 +17,9 @@ public interface QwirkleView extends Observer{
 	public void updateScore(Player p);
 	public void updateBag(Bag b);
 	public void showStatus();
+	public void showResults(String[] n, int[] s);
 	public void showError(IProtocol.Error e, String message);
+	public void updateTurn(Player p);
 
 	public Move getMove(HumanPlayer p, boolean first);
 	public Controller getController();

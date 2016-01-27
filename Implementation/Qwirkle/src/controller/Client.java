@@ -7,12 +7,13 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import exceptions.IllegalMoveStateException;
+import model.components.move.Trade;
 import model.game.ClientGame;
 import model.game.Game;
 import model.players.Player;
 import model.players.local.LocalPlayer;
 import model.players.local.computer.ComputerPlayer;
-import model.players.local.computer.strategy.StupidStrategy;
 import model.players.local.human.HumanPlayer;
 import network.IProtocol;
 import network.commands.Command;
@@ -76,6 +77,8 @@ public class Client extends Thread implements Controller{
 	
 	private String name;
 	private QwirkleView qv;
+	
+	private Trade bufferedTrade;
 
 	/**
 	 * Constructs a Client-object and tries to make a socket 
@@ -89,8 +92,8 @@ public class Client extends Thread implements Controller{
 		
 		this.game = null;
 		
-		if(name.startsWith("-STUPID")) {
-			this.player = new ComputerPlayer(name.split(" ")[1], null, name.split(" ")[0]);
+		if(name.startsWith("-")) {
+			this.player = new ComputerPlayer(name, null, name.split(",")[0].replace("-", ""));
 		} else {
 			this.player = new HumanPlayer(name, null);
 		}
@@ -99,22 +102,19 @@ public class Client extends Thread implements Controller{
 
 	public void run() {
 		boolean running = true;
-		while(running){
-			ServerCommand incomming = null;
-			try {
+		try{
+			while(running){
+				ServerCommand incomming = null;
 				Game ga = player.getGame();
 				incomming = in.readServerCommand(ga);
-			} catch (IOException e) {
-				System.err.println(e.getMessage());
-				running = false;
-				continue;
+				if(incomming == null){
+					running = false;
+					continue;
+				}
+				incomming.selfHandle(this);
 			}
-			if(incomming == null){
-				running = false;
-				continue;
-			}
-			System.out.println("received : " + incomming.toCommandString() + incomming.getClass());
-			incomming.selfHandle(this);
+		} catch (IOException e){
+			System.err.println("Connection was lost or shut down");
 		}
 	}
 	
@@ -137,7 +137,7 @@ public class Client extends Thread implements Controller{
 	
 	public void write(Command c) throws IOException{
 		out.write(c);
-		System.out.println(c.toCommandString());
+		System.out.println("Send : " + c.toCommandString());
 	}
 	
 	public String getClientName(){
@@ -162,5 +162,19 @@ public class Client extends Thread implements Controller{
 	
 	public void addPlayer(Player p){
 		game.addPlayer(p);
+	}
+	
+	public void setBufferedTrade(Trade t){
+		this.bufferedTrade = t;
+	}
+	
+	public void executeBufferedTrade(){
+		try {
+			this.bufferedTrade.execute();
+		} catch (IllegalMoveStateException e) {
+			e.printStackTrace();
+		}
+		
+		bufferedTrade.getPlayer().removeBlocks(bufferedTrade.getBlocksView());
 	}
 }

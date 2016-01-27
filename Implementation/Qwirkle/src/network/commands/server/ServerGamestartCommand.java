@@ -52,7 +52,6 @@ public class ServerGamestartCommand extends ServerCommand {
 			if(!c.getPlayer().getName().equals(n)){
 				ServerPlayer sp = new ServerPlayer(n, c.getGame());
 				c.addPlayer(sp);
-				System.out.println("Created new player : " + sp.getName());
 			}
 		}
 		c.startQwirkle();

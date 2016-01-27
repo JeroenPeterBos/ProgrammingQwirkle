@@ -1,7 +1,6 @@
 package network.commands.server;
 
 import controller.Client;
-import exceptions.IllegalMoveStateException;
 import model.components.Block;
 import model.components.Board.Position;
 import model.components.move.Play;
@@ -46,6 +45,5 @@ public class ServerMovePutCommand extends ServerCommand implements GameCommand{
 	
 	public void selfHandle(Client c){
 		c.getGame().handlePlay(move);
-		c.getView().showStatus();
 	}
 }

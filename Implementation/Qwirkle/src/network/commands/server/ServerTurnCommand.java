@@ -38,18 +38,27 @@ public class ServerTurnCommand extends ServerCommand{
 	
 	public void selfHandle(Client c){
 		c.getGame().setTurn(player);
+		c.getView().updateTurn(player);
+		System.out.println("Set a new current player :" + player.getName());
 		
 		if(player.equals(c.getPlayer())){
-			Move m = c.getPlayer().determineMove(firstTurn);
+			System.out.println("Start handling the move for local player");
 			
+			Move m;
+			do{
+				m = c.getPlayer().determineMove(firstTurn);
+			} while (m == null || !m.validate(player, firstTurn));			
+			
+			System.out.println("send the determined move by localplayer");
 			try{
 				if(m instanceof Play){
 					c.write(new ClientMovePutCommand((Play)m));
 				} else if(m instanceof Trade){
 					c.write(new ClientMoveTradeCommand((Trade)m));
+					c.setBufferedTrade((Trade)m);
 				}
 			} catch (IOException e){
-				e.printStackTrace();
+				player.getGame().shutDown();
 			}
 		}
 	}

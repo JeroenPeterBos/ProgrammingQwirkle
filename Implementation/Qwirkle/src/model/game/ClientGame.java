@@ -42,11 +42,11 @@ public class ClientGame extends Game{
 		if(p.getPlayer().equals(getLocalPlayer())){
 			getLocalPlayer().removeBlocks(p.getBlocksView());
 		}
-		 
+
 		System.out.println("just executed the move");
 		setChanged();
 		notifyObservers(p);
-		 
+
 		this.firstTurn = false;
 	}
 	 
@@ -54,7 +54,7 @@ public class ClientGame extends Game{
 		setChanged();
 		notifyObservers(a);
 	}
-	 
+
 	public synchronized void startGame() {
 		System.out.println("game started");
 	}

@@ -82,8 +82,18 @@ public class QwirkleTUIView implements QwirkleView{
 		updateBoard(controller.getGame().getBoard());
 	}
 	
+	public void showResults(String[] n, int[] s){
+		for(int i = 0; i < n.length; i++){
+			System.out.println(n[i] + ": " + s[i]);
+		}
+	}
+	
 	public void showError(IProtocol.Error e, String m){
 		System.out.println(e + ": " + m);
+	}
+	
+	public void updateTurn(Player p){
+		System.out.println("It is " + p.getName() + "'s turn");
 	}
 	
 	public Move getMove(HumanPlayer p, boolean first){

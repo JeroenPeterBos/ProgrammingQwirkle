@@ -42,12 +42,14 @@ public abstract class Game extends Observable {
 	// ------------------------------- Commands ---------------------------------------- //
 	
 	public void shutDown() {
-		// TODO notify players
-		
 		running = false;
 	}
 	
 	public abstract void startGame();
+	
+	public void endGame(){
+		running = false;
+	}
 	
 	public void addPlayer(Player p) {
 		players.add(p);
@@ -63,7 +65,6 @@ public abstract class Game extends Observable {
 				turn = i;
 			}
 		}
-		System.out.println("The new current Player = " + p.getName() + " | " + players.get(turn).getName());
 	}
 	
 	// ------------------------------- Queries ----------------------------------------- //
@@ -111,5 +112,4 @@ public abstract class Game extends Observable {
 		System.err.println("Player " + name + " not found");
 		return null;
 	}
-	
 }

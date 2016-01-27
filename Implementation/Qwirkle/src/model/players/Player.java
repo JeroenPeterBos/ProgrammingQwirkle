@@ -10,7 +10,6 @@ import model.components.Block;
 import model.components.Board.Position;
 import model.components.move.Move;
 import model.components.move.Play;
-import model.components.move.Trade;
 import model.game.Game;
 
 public abstract class Player {
@@ -63,9 +62,10 @@ public abstract class Player {
 			}
 		} catch (HandEmptyException e) {
 			System.err.println(e.getMessage());
-			return;
+			e.printStackTrace();
 		} catch (BlockNotInHandException e) {
 			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		hand.remove(b);
@@ -81,9 +81,10 @@ public abstract class Player {
 			}
 		} catch (HandEmptyException e) {
 			System.err.println(e.getMessage());
-			return;
+			e.printStackTrace();
 		} catch (BlockNotInHandException e) {
 			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 		
 		hand.removeAll(blocks);
@@ -130,8 +131,6 @@ public abstract class Player {
 	
 	public void setGame(Game g){
 		this.game = g;
-		
-		System.out.println(getName() + " is now in a game " + game.toString());
 	}
 	// ------------------------------- Queries ----------------------------------------- //
 	
@@ -139,19 +138,15 @@ public abstract class Player {
 		return possiblePlayMove() != null;
 	}
 	
-	public Move possiblePlayMove(){
+	public Play possiblePlayMove(){
 		for(Block b : hand){
-			Play m = new Play(this, game.getBoard());
-			
 			for(Position p: game.getBoard().getOpenPositions()){
+				Play m = new Play(this, game.getBoard());
 				m.addBlock(b, p);
 				
 				if(m.validate(this, false)){
 					return m;
 				}
-				
-				m.unlock();
-				m.clearBlocks();
 			}
 		}
 		return null;
@@ -252,5 +247,11 @@ public abstract class Player {
 	
 	public List<Block> getHand(){
 		return hand;
+	}
+	
+	public List<Block> handCopy(){
+		List<Block> copy = new LinkedList<Block>();
+		copy.addAll(hand);
+		return copy;
 	}
 }

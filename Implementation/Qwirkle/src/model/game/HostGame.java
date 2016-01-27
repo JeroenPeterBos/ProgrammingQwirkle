@@ -3,6 +3,7 @@ package model.game;
 import controller.Controller;
 import model.components.bag.Bag;
 import model.components.bag.RealBag;
+import model.players.Player;
 
 public abstract class HostGame extends Game {
 
@@ -20,6 +21,15 @@ public abstract class HostGame extends Game {
 		if((bag.size() <= 0 && checkIfStuck(players.size())) || board.isPerfectSquare()){
 			running = false;
 			return true;
+		}
+		return false;
+	}
+	
+	public boolean hasWinner(){
+		for(Player p: players){
+			if(p.handSize() <= 0){
+				return true;
+			}
 		}
 		return false;
 	}

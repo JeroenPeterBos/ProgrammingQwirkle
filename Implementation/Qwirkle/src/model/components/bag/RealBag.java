@@ -41,6 +41,9 @@ public class RealBag implements Bag {
 	 */
 	public List<Block> popBlocks(int a) {
 		List<Block> result = new LinkedList<Block>();
+		
+		a = blocksLeft.size() >= a ? a : blocksLeft.size();
+		
 		for (int i = 0; i < a; i++) {
 			result.add(blocksLeft.pop());
 		}
